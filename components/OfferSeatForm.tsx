@@ -46,6 +46,9 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
     if (formData.ride_category === 'auto_split' && formData.vehicle_type === 'bike') {
       setFormData(prev => ({ ...prev, vehicle_type: 'auto' }));
     }
+    if (formData.ride_category === 'personal_vehicle' && formData.vehicle_type === 'auto') {
+      setFormData(prev => ({ ...prev, vehicle_type: 'car' }));
+    }
   }, [formData.vehicle_type, formData.ride_category, maxSeats]);
 
   useEffect(() => {
@@ -115,7 +118,9 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
               onChange={(e) => setFormData({...formData, vehicle_type: e.target.value})}
               className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
             >
-              <option value="auto">Auto</option>
+              {formData.ride_category === 'auto_split' && (
+                <option value="auto">Auto</option>
+              )}
               <option value="car">Car</option>
               {formData.ride_category === 'personal_vehicle' && (
                 <option value="bike">Bike</option>
