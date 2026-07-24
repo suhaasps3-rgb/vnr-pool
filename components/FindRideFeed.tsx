@@ -65,13 +65,22 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         const { data: bookingData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
         const rideIds = bookingData?.map((b: any) => b.ride_id) || [];
         
-        const { data, error } = await supabase.from('rides')
-          .select(queryStr)
-          .eq('status', 'in_progress')
-          .or(`id.in.(${rideIds.length > 0 ? rideIds.join(',') : '00000000-0000-0000-0000-000000000000'}),driver_id.eq.${userId}`);
-          
-        if (error) throw error;
-        return data;
+        let allRides: any[] = [];
+        
+        if (rideIds.length > 0) {
+          const { data: pRides } = await supabase.from('rides').select(queryStr).eq('status', 'in_progress').in('id', rideIds);
+          if (pRides) allRides = [...allRides, ...pRides];
+        }
+        
+        const { data: dRides } = await supabase.from('rides').select(queryStr).eq('status', 'in_progress').eq('driver_id', userId);
+        if (dRides) allRides = [...allRides, ...dRides];
+        
+        const uniqueIds = new Set();
+        return allRides.filter(r => {
+          if (uniqueIds.has(r.id)) return false;
+          uniqueIds.add(r.id);
+          return true;
+        });
       }
     }
   });
@@ -82,13 +91,18 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       const { data: bookingData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
       const rideIds = bookingData?.map((b: any) => b.ride_id) || [];
       
-      const { data: rideData, error } = await supabase.from('rides')
-        .select('id')
-        .eq('status', 'in_progress')
-        .or(`id.in.(${rideIds.length > 0 ? rideIds.join(',') : '00000000-0000-0000-0000-000000000000'}),driver_id.eq.${userId}`);
+      let passengerActive = false;
+      if (rideIds.length > 0) {
+        const { data: passengerRides } = await supabase.from('rides').select('id').eq('status', 'in_progress').in('id', rideIds);
+        if (passengerRides && passengerRides.length > 0) {
+           passengerActive = true;
+        }
+      }
 
-      if (error) return false;
-      return rideData && rideData.length > 0;
+      const { data: driverRides } = await supabase.from('rides').select('id').eq('status', 'in_progress').eq('driver_id', userId);
+      const driverActive = (driverRides && driverRides.length > 0) || false;
+
+      return passengerActive || driverActive;
     }
   });
 
