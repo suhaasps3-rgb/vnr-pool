@@ -38,8 +38,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
     queryFn: async () => {
       const queryStr = `
         *,
-        driver:users!driver_id(full_name, mobile_number, gender, branch, roll_no),
-        bookings(id, passenger_id, status, passenger:users!passenger_id(full_name, gender, roll_no))
+        driver:users!driver_id(full_name, mobile_number, gender, branch, roll_no, avatar_url),
+        bookings(id, passenger_id, status, passenger:users!passenger_id(full_name, gender, roll_no, avatar_url))
       `;
 
       if (mode === "feed") {
@@ -586,7 +586,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xl overflow-hidden shadow-sm">
-                      {ride.driver?.full_name?.charAt(0).toUpperCase()}
+                      {ride.driver?.avatar_url ? (
+                        <img src={ride.driver.avatar_url} alt={ride.driver.full_name || "Driver"} className="w-full h-full object-cover" />
+                      ) : (
+                        ride.driver?.full_name?.charAt(0).toUpperCase()
+                      )}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -646,8 +650,12 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                     <div className="flex flex-wrap gap-3">
                       {approvedPassengers.map((b: any) => (
                         <div key={b.id} className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-100 dark:border-emerald-500/20">
-                          <div className="w-6 h-6 rounded-full bg-[#3B82F6] text-white flex items-center justify-center text-xs font-bold shadow-sm">
-                            {b.passenger?.full_name?.charAt(0).toUpperCase()}
+                          <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xs shadow-sm overflow-hidden border border-white dark:border-slate-800">
+                            {b.passenger?.avatar_url ? (
+                              <img src={b.passenger.avatar_url} alt={b.passenger.full_name || "Passenger"} className="w-full h-full object-cover" />
+                            ) : (
+                              b.passenger?.full_name?.charAt(0).toUpperCase()
+                            )}
                           </div>
                           <span className="text-sm font-semibold text-[#0F172A] dark:text-slate-200">
                             {b.passenger?.full_name?.split(' ')[0]}

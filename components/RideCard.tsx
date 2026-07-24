@@ -74,8 +74,12 @@ export default function RideCard({
       <div className="flex justify-between items-start mb-6">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-full flex items-center justify-center text-lg font-black text-slate-700 dark:text-white border-2 border-white dark:border-slate-600 shadow-sm">
-              {ride.driver?.full_name?.charAt(0).toUpperCase()}
+            <div className="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-full flex items-center justify-center text-lg font-black text-slate-700 dark:text-white border-2 border-white dark:border-slate-600 shadow-sm overflow-hidden">
+              {ride.driver?.avatar_url ? (
+                <img src={ride.driver.avatar_url} alt={ride.driver.full_name || "Driver"} className="w-full h-full object-cover" />
+              ) : (
+                ride.driver?.full_name?.charAt(0).toUpperCase()
+              )}
             </div>
             {ride.driver?.rating_count > 0 && (
               <div className="absolute -bottom-2 -right-2 bg-yellow-400 text-yellow-900 text-[10px] font-black px-1.5 py-0.5 rounded-full border-2 border-white dark:border-[#0F172A]">
