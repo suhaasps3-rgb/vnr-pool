@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import AuthScreen from "./AuthScreen";
+import LandingPage from "./LandingPage";
 import OnboardingForm from "./OnboardingForm";
 import Dashboard from "./Dashboard";
 import { createClient } from "@/lib/supabase/client";
@@ -33,7 +34,7 @@ export default function MainCoordinator({ initialUserId, initialProfileCompleted
   };
 
   if (!userId) {
-    return <AuthScreen onAuthSuccess={handleAuthSuccess} />;
+    return <LandingPage onLogin={handleAuthSuccess} />;
   }
 
   if (!profileCompleted) {

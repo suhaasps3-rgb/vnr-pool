@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "./ThemeToggle";
 
-export default function AuthScreen({ onAuthSuccess }: { onAuthSuccess: () => void }) {
+export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthSuccess: () => void, isModal?: boolean }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -52,15 +52,17 @@ export default function AuthScreen({ onAuthSuccess }: { onAuthSuccess: () => voi
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
+    <div className={cn("flex flex-col items-center justify-center p-4 relative", isModal ? "w-full" : "min-h-screen")}>
+      {!isModal && (
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+      )}
       
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="ui-card w-full max-w-md p-8"
+        initial={isModal ? {} : { opacity: 0, y: 20 }}
+        animate={isModal ? {} : { opacity: 1, y: 0 }}
+        className={cn("w-full max-w-md p-8", isModal ? "" : "ui-card")}
       >
         <div className="text-center mb-8">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
