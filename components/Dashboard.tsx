@@ -122,13 +122,53 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
         </div>
 
         {/* Action Button for Mobile Blocked Users */}
-        <div className="w-full max-w-4xl flex justify-end mb-4">
+        <div className="w-full max-w-4xl flex justify-between items-center mb-4">
           <button 
             onClick={() => setShowBlockedModal(true)} 
             className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors"
           >
             <UserX className="w-4 h-4" /> Manage Blocked
           </button>
+          
+          <div className="flex gap-2">
+            {hasActiveTrip ? (
+              <button
+                onClick={() => setActiveTab("active")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-100/50 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400`}
+              >
+                🚗 Ride Reserved / In Progress
+              </button>
+            ) : (
+              <>
+                <button className="text-sm px-2" onClick={() => setActiveTab("find")}>Find a Ride</button>
+                <button className="text-sm px-2" onClick={() => setActiveTab("offer")}>Offer a Seat</button>
+              </>
+            )}
+            <button 
+              onClick={async () => {
+                try {
+                  let debugInfo: any = { userId };
+                  const { data: dRides } = await supabase.from('rides').select('id, status').eq('driver_id', userId);
+                  debugInfo.dRides = dRides;
+                  const { data: pBookings } = await supabase.from('bookings').select('id, status, rides(id, status)').eq('passenger_id', userId).in('status', ['approved', 'pending']);
+                  debugInfo.pBookings = pBookings;
+                  const { data: rawBookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
+                  debugInfo.rawBookings = rawBookings;
+                  const activeRaw = rawBookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+                  const rIds = activeRaw.map(b => b.ride_id);
+                  const { data: allRidesRaw } = await supabase.from('rides').select('id, status');
+                  debugInfo.allRidesRaw = allRidesRaw?.filter(r => rIds.includes(r.id));
+                  
+                  alert(JSON.stringify(debugInfo, null, 2));
+                } catch (err: any) {
+                  alert("Error: " + err.message);
+                }
+              }}
+              className="bg-red-500 text-white font-black px-4 py-2 rounded-lg ml-auto"
+            >
+              DEBUG LOCKS
+            </button>
+          </div>
         </div>
 
         {/* Main Content Area */}
