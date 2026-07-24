@@ -93,7 +93,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
         return;
       }
 
-      const { data: bookings } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
+      const { data: bookings } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).in('status', ['approved', 'pending']);
       if (bookings && bookings.length > 0) {
         const rideIds = bookings.map(b => b.ride_id);
         const { data: passengerRides } = await supabase.from('rides').select('id').in('id', rideIds).in('status', ['active', 'in_progress']).limit(1);

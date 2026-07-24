@@ -58,7 +58,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
       const { data: bookings, error: bError } = await supabase.from('bookings')
         .select('ride_id')
         .eq('passenger_id', userId)
-        .eq('status', 'approved');
+        .in('status', ['approved', 'pending']);
       
       if (bookings && bookings.length > 0) {
         const rideIds = bookings.map(b => b.ride_id);

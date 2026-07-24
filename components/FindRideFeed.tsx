@@ -40,7 +40,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         const { data: dRides } = await supabase.from('rides').select('id').eq('driver_id', userId).in('status', ['active', 'in_progress']).limit(1);
         if (dRides && dRides.length > 0) return [];
         
-        const { data: bData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
+        const { data: bData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).in('status', ['approved', 'pending']);
         if (bData && bData.length > 0) {
            const rIds = bData.map(b => b.ride_id);
            const { data: pRides } = await supabase.from('rides').select('id').in('id', rIds).in('status', ['active', 'in_progress']).limit(1);
@@ -85,7 +85,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         const { data: bookings } = await supabase.from('bookings')
           .select('ride_id')
           .eq('passenger_id', userId)
-          .eq('status', 'approved');
+          .in('status', ['approved', 'pending']);
         
         if (bookings && bookings.length > 0) {
           const rideIds = bookings.map(b => b.ride_id);
@@ -124,7 +124,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       const { data: bookings } = await supabase.from('bookings')
         .select('ride_id')
         .eq('passenger_id', userId)
-        .eq('status', 'approved');
+        .in('status', ['approved', 'pending']);
       
       if (bookings && bookings.length > 0) {
         const rideIds = bookings.map(b => b.ride_id);
@@ -164,7 +164,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         return;
       }
 
-      const { data: bookings } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
+      const { data: bookings } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).in('status', ['approved', 'pending']);
       if (bookings && bookings.length > 0) {
         const rideIds = bookings.map(b => b.ride_id);
         const { data: passengerRides } = await supabase.from('rides').select('id').in('id', rideIds).in('status', ['active', 'in_progress']).limit(1);
@@ -375,7 +375,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
             </div>
             <h2 className="text-2xl font-black text-[#0F172A] dark:text-white mb-4">Ride Reserved / In Progress</h2>
             <p className="text-slate-600 dark:text-slate-400 font-medium mb-8">
-              You are strictly restricted to one active ride at a time. You cannot view other rides or book new seats until your current ride is completed or cancelled.
+              You are strictly restricted to one active ride or pending request at a time. You cannot view other rides or book new seats until your current ride is completed or cancelled.
             </p>
             <p className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
               Navigate to the "Ride in Progress" tab.
