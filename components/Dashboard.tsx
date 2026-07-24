@@ -135,13 +135,6 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           </div>
 
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => setActiveTab("offer")}
-              className="hidden sm:flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-lg transition-all shadow-md shadow-indigo-600/20"
-            >
-              <Car className="w-4 h-4" /> Offer Ride
-            </button>
-            <div className="h-6 w-px bg-slate-800 mx-1 hidden sm:block" />
             
             <NotificationBell userId={userId} />
 
