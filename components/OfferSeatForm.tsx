@@ -58,6 +58,16 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    const o = formData.origin.toLowerCase().replace(/[^a-z]/g, '');
+    const d = formData.destination.toLowerCase().replace(/[^a-z]/g, '');
+
+    if (!o.includes('vnr') && !d.includes('vnr')) {
+      toast.error("This app is exclusively for VNR VJIET students. Either your Origin or Destination must be VNR VJIET.");
+      setLoading(false);
+      return;
+    }
+
     const supabase = createClient();
 
     try {
