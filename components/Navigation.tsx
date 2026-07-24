@@ -209,8 +209,12 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                 onClick={() => { setShowProfileMenu(!showProfileMenu); setShowNotifications(false); }}
                 className="flex items-center gap-2 p-1 pl-2 pr-3 rounded-full bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2 dark:focus:ring-offset-[#0F172A]"
               >
-                <div className="w-8 h-8 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-bold text-sm shadow-inner">
-                  {userProfile?.full_name?.charAt(0).toUpperCase() || <User className="w-4 h-4" />}
+                <div className="w-8 h-8 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-bold text-sm shadow-inner overflow-hidden relative">
+                  {userProfile?.avatar_url ? (
+                    <img src={userProfile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    userProfile?.full_name?.charAt(0).toUpperCase() || <User className="w-4 h-4" />
+                  )}
                 </div>
                 <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />
               </button>
@@ -224,8 +228,12 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                     className="absolute top-12 right-0 w-64 bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden z-50"
                   >
                     <div className="p-4 border-b border-gray-100 dark:border-white/5 flex flex-col items-center text-center">
-                      <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black text-2xl shadow-inner mb-3">
-                        {userProfile?.full_name?.charAt(0).toUpperCase() || <User className="w-8 h-8" />}
+                      <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black text-2xl shadow-inner mb-3 overflow-hidden relative">
+                        {userProfile?.avatar_url ? (
+                          <img src={userProfile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                          userProfile?.full_name?.charAt(0).toUpperCase() || <User className="w-8 h-8" />
+                        )}
                       </div>
                       <h3 className="font-bold text-[#0F172A] dark:text-white truncate w-full px-2">{userProfile?.full_name || "Loading..."}</h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{userProfile?.roll_no}</p>
