@@ -6,14 +6,9 @@ import { Car, ShieldCheck, MapPin, Search, ArrowRight } from "lucide-react";
 
 export function VNRCarPoolWaveHero({ onAction }: { onAction?: () => void }) {
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-slate-950 font-sans flex flex-col justify-center">
+    <div className="relative w-full min-h-screen overflow-hidden bg-transparent font-sans flex flex-col justify-center">
       
-      {/* Interactive Warp Canvas Background */}
-      <IsoLevelWarp 
-        color="139, 92, 246" // Violet-500 palette matching VNR Carpool branding
-        density={45} 
-        speed={1.2}
-      />
+      {/* Global Interactive Warp Canvas Background is rendered in LandingPage */}
 
       {/* Hero Content Overlay */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-16 text-center flex flex-col items-center">

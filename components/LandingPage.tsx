@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ShieldCheck, MapPin, Zap, Users, Search, ArrowRight, Shield, Clock, X } from "lucide-react";
 import AuthScreen from "./AuthScreen";
 import { VNRCarPoolWaveHero } from "./carpool-hero-wave";
+import IsoLevelWarp from "@/components/ui/isometric-wave-grid-background";
 
 export default function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -19,9 +20,13 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
   return (
     <div className="min-h-screen bg-[#09090B] text-slate-50 relative overflow-hidden font-sans selection:bg-blue-500/30">
       
-      {/* Background Grid & Gradient Effects */}
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#09090B] via-transparent to-blue-900/10"></div>
+      {/* Background Interactive Wave */}
+      <div className="absolute top-0 left-0 w-full h-screen z-0">
+        <IsoLevelWarp 
+          color="139, 92, 246" // Violet-500
+          density={45} 
+          speed={1.2}
+        />
       </div>
       
       {/* Top Navigation */}
