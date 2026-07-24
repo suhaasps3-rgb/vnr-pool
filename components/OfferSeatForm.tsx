@@ -9,11 +9,17 @@ import { motion } from "framer-motion";
 export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void }) {
   const [loading, setLoading] = useState(false);
   const [userGender, setUserGender] = useState<string | null>(null);
+  const [userCarNumber, setUserCarNumber] = useState<string | null>(null);
+  const [userBikeNumber, setUserBikeNumber] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.from('users').select('gender').eq('id', userId).single().then(({ data }) => {
-      if (data) setUserGender(data.gender);
+    supabase.from('users').select('gender, car_number, bike_number').eq('id', userId).single().then(({ data }) => {
+      if (data) {
+        setUserGender(data.gender);
+        setUserCarNumber(data.car_number);
+        setUserBikeNumber(data.bike_number);
+      }
     });
   }, [userId]);
 
@@ -79,6 +85,16 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
     try {
       const departureTimeUTC = new Date(`${formData.departure_date}T${formData.departure_time}`).toISOString();
+      
+      let finalVehicleNumber = formData.vehicle_number;
+      if (formData.ride_category === 'personal_vehicle') {
+        if (formData.vehicle_type === 'car' && userCarNumber) {
+          finalVehicleNumber = userCarNumber;
+        } else if (formData.vehicle_type === 'bike' && userBikeNumber) {
+          finalVehicleNumber = userBikeNumber;
+        }
+      }
+
       const { error } = await supabase.from('rides').insert({
         driver_id: userId,
         ride_category: formData.ride_category,
@@ -86,7 +102,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
         destination: formData.destination,
         departure_time: departureTimeUTC,
         vehicle_type: formData.vehicle_type,
-        vehicle_number: formData.vehicle_number || null,
+        vehicle_number: finalVehicleNumber || null,
         total_seats: Number(formData.total_seats),
         available_seats: Number(formData.total_seats),
         price_per_seat: Math.ceil(Number(formData.total_cost) / (formData.ride_category === 'auto_split' ? Number(formData.total_seats) + 1 : Number(formData.total_seats))),
@@ -235,12 +251,20 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           {formData.ride_category === "personal_vehicle" && (
             <div>
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Vehicle Number</label>
-              <input 
-                placeholder="TS 08 AB 1234"
-                value={formData.vehicle_number}
-                onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
-                className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
-              />
+              {((formData.vehicle_type === 'car' && userCarNumber) || (formData.vehicle_type === 'bike' && userBikeNumber)) ? (
+                <div className="w-full p-4 bg-slate-100 dark:bg-[#1E293B] text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-white/10 rounded-xl uppercase font-bold flex items-center justify-between shadow-inner">
+                  <span>{formData.vehicle_type === 'car' ? userCarNumber : userBikeNumber}</span>
+                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-md border border-emerald-200 dark:border-emerald-500/20">From Profile</span>
+                </div>
+              ) : (
+                <input 
+                  required
+                  placeholder="TS 08 AB 1234"
+                  value={formData.vehicle_number}
+                  onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
+                  className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
+                />
+              )}
             </div>
           )}
         </div>
