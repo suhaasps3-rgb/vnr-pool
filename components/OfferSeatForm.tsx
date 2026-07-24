@@ -93,16 +93,12 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
         return;
       }
 
-      const { data: bookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
-      const activeBookings = bookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
-      if (activeBookings.length > 0) {
-        const rideIds = activeBookings.map(b => b.ride_id);
-        const { data: passengerRides } = await supabase.from('rides').select('id, status').in('id', rideIds);
-        if (passengerRides && passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) {
-          toast.error("Action Blocked: You cannot offer a new ride while you are currently in an active trip.");
-          setLoading(false);
-          return;
-        }
+      // 2. Cannot offer if passenger in active ride
+      const { data: pBookings } = await supabase.from('bookings').select('id, rides(id, status)').eq('passenger_id', userId).in('status', ['approved', 'pending']);
+      if (pBookings && pBookings.some((b: any) => b.rides && (b.rides.status === 'active' || b.rides.status === 'in_progress'))) {
+        toast.error("Action Blocked: You cannot offer a new ride while you are currently in an active trip.");
+        setLoading(false);
+        return;
       }
 
       const departureTimeUTC = new Date(`${formData.departure_date}T${formData.departure_time}`).toISOString();
