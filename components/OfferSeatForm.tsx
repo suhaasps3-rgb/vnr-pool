@@ -94,17 +94,20 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   };
 
   return (
-    <div className="ui-card p-6 md:p-8">
-      <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Post a New Ride</h2>
+    <div className="ui-card p-6 md:p-10 mb-8 border-t-4 border-t-[#2563EB] dark:border-t-[#3B82F6]">
+      <div className="mb-8">
+        <h2 className="text-2xl font-extrabold text-[#0F172A] dark:text-white">Offer a Ride</h2>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Fill in the details to share your journey with campus peers.</p>
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Ride Category</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Ride Category</label>
             <select 
               value={formData.ride_category}
               onChange={(e) => setFormData({...formData, ride_category: e.target.value})}
-              className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             >
               <option value="auto_split">Auto/Cab Fare Split</option>
               <option value="personal_vehicle">Student Vehicle Pool</option>
@@ -112,11 +115,11 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Vehicle Type</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Vehicle Type</label>
             <select 
               value={formData.vehicle_type}
               onChange={(e) => setFormData({...formData, vehicle_type: e.target.value})}
-              className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             >
               {formData.ride_category === 'auto_split' && (
                 <option value="auto">Auto</option>
@@ -129,51 +132,51 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Origin</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Origin</label>
             <input 
               required
               placeholder="e.g. JNTU Metro"
               value={formData.origin}
               onChange={(e) => setFormData({...formData, origin: e.target.value})}
-              className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Destination</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Destination</label>
             <input 
               required
               value={formData.destination}
               onChange={(e) => setFormData({...formData, destination: e.target.value})}
-              className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Departure Date</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Departure Date</label>
               <input 
                 required
                 type="date"
                 value={formData.departure_date}
                 onChange={(e) => setFormData({...formData, departure_date: e.target.value})}
-                className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Time</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Time</label>
               <input 
                 required
                 type="time"
                 value={formData.departure_time}
                 onChange={(e) => setFormData({...formData, departure_time: e.target.value})}
-                className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Total Seats (Max: {maxSeats})</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Total Seats (Max: {maxSeats})</label>
             <input 
               required
               type="number"
@@ -185,27 +188,27 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 if (val > maxSeats) return;
                 setFormData({...formData, total_seats: val});
               }}
-              className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Total Trip Cost (₹)</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Total Trip Cost (₹)</label>
             <input 
               required
               type="number"
               min="0"
               value={formData.total_cost}
               onChange={(e) => setFormData({...formData, total_cost: Number(e.target.value)})}
-              className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Price Per Seat (Calculated)</label>
-            <div className="w-full p-3 bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-400 font-bold border border-green-200 dark:border-green-500/20 rounded-xl flex items-center justify-between">
-              <span>₹{Math.ceil(formData.total_cost / (formData.ride_category === 'auto_split' ? formData.total_seats + 1 : formData.total_seats))}</span>
-              <span className="text-xs text-green-600/70 dark:text-green-400/70 font-normal">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Price Per Seat (Calculated)</label>
+            <div className="w-full p-4 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-500/20 rounded-xl flex items-center justify-between shadow-sm">
+              <span className="text-xl">₹{Math.ceil(formData.total_cost / (formData.ride_category === 'auto_split' ? formData.total_seats + 1 : formData.total_seats))}</span>
+              <span className="text-xs text-emerald-600/70 dark:text-emerald-400/70 font-medium">
                 ({formData.total_seats} seats{formData.ride_category === 'auto_split' ? " + 1 driver" : ""})
               </span>
             </div>
@@ -213,12 +216,12 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
           {formData.ride_category === "personal_vehicle" && (
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">Vehicle Number</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Vehicle Number</label>
               <input 
                 placeholder="TS 08 AB 1234"
                 value={formData.vehicle_number}
                 onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
-                className="w-full p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all uppercase"
+                className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
               />
             </div>
           )}

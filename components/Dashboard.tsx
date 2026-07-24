@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { LogOut } from "lucide-react";
+import { ShieldCheck, MapPin, Calendar, Users, Search, UserX } from "lucide-react";
 import FindRideFeed from "./FindRideFeed";
 import OfferSeatForm from "./OfferSeatForm";
-import ThemeToggle from "./ThemeToggle";
+import Navigation from "./Navigation";
 import BlockedUsersModal from "./BlockedUsersModal";
-import { UserX } from "lucide-react";
 
 type TabType = "find" | "offer";
 
@@ -17,91 +16,88 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const [showBlockedModal, setShowBlockedModal] = useState(false);
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen">
-      {/* Left Sidebar - Fixed on Desktop */}
-      <div className="lg:w-1/3 xl:w-2/5 p-6 md:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#201E2B] lg:sticky lg:top-0 lg:h-screen">
-        <header className="flex justify-between items-start mb-8">
-          <div>
-            <img src="/vnr_logo.png" alt="VNR VJIET Logo" className="w-14 h-14 rounded-xl mb-4 shadow-sm" />
-            <h1 className="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tighter uppercase mb-2">
-              YOUR CAMPUS <br /> COMMUTE
-            </h1>
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400 max-w-sm">
-              Exclusive ride-pooling for VNR VJIET. Find your perfect ride or offer an empty seat to a peer.
-            </p>
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex flex-col">
+      <Navigation 
+        userId={userId} 
+        onSignOut={onSignOut} 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+      />
+
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex flex-col items-center">
+        
+        {/* Trust & Safety Badges */}
+        <div className="w-full flex justify-center mb-8">
+          <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 px-4 py-2 rounded-full text-sm font-semibold border border-emerald-200 dark:border-emerald-500/20 shadow-sm">
+            <ShieldCheck className="w-5 h-5" />
+            Verified College Platform
           </div>
-        </header>
-
-        {/* Dynamic 3D Image */}
-        <div className="relative flex-1 flex flex-col justify-center items-center min-h-[300px]">
-          <motion.img 
-            key={selectedVehicle}
-            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ type: "spring", bounce: 0.4 }}
-            src={`/3d_${selectedVehicle === 'auto' ? 'car' : selectedVehicle}.png`} 
-            alt={`3D ${selectedVehicle}`}
-            className="w-full max-w-[400px] object-contain drop-shadow-2xl"
-          />
         </div>
 
-        {/* User Controls */}
-        <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-white/5">
-          <ThemeToggle />
-          <button onClick={() => setShowBlockedModal(true)} className="ui-button px-4 py-2 text-sm font-medium flex-1 justify-center flex items-center gap-2" title="Manage Blocked Users">
-            <UserX className="w-4 h-4" /> Blocked
-          </button>
-          <button onClick={onSignOut} className="ui-button px-4 py-2 text-sm font-medium flex-1 justify-center flex items-center gap-2">
-            <LogOut className="w-4 h-4" /> Sign Out
-          </button>
+        {/* Hero Section */}
+        <div className="w-full text-center mb-12">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-[#0F172A] dark:text-white tracking-tight mb-4">
+            Commute <span className="text-[#2563EB] dark:text-[#3B82F6]">Smarter,</span><br/>Together.
+          </h1>
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto font-medium">
+            Safe, affordable, and eco-friendly ride-pooling exclusively for VNR VJIET students and faculty.
+          </p>
         </div>
-            <LogOut className="w-4 h-4" /> Sign Out
-          </button>
-        </div>
-      </div>
 
-      {/* Right Content Area */}
-      <div className="flex-1 p-4 md:p-8 lg:p-12 max-w-4xl mx-auto w-full">
-        {/* Tabs */}
-        <div className="flex bg-gray-200/50 dark:bg-black/20 p-1.5 rounded-2xl border border-gray-200 dark:border-white/5 mb-8 relative w-full flex-wrap">
-
-        {(["find", "offer"] as TabType[]).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`relative px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-              activeTab === tab ? "text-white dark:text-gray-900" : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-            }`}
+        {/* Action Button for Mobile Blocked Users */}
+        <div className="w-full max-w-4xl flex justify-end mb-4">
+          <button 
+            onClick={() => setShowBlockedModal(true)} 
+            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors"
           >
-            {activeTab === tab && (
-              <motion.div
-                layoutId="tab-slider"
-                className="absolute inset-0 bg-gray-900 dark:bg-white rounded-full shadow-sm"
-                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-              />
-            )}
-            <span className="relative z-10 font-bold tracking-wide">
-              {tab === "find" ? "Find a Ride" : "Offer a Seat"}
-            </span>
+            <UserX className="w-4 h-4" /> Manage Blocked
           </button>
-        ))}
-      </div>
+        </div>
 
-      {/* Content */}
-      <motion.div
-        key={activeTab}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {activeTab === "find" ? (
-          <FindRideFeed userId={userId} onVehicleSelect={setSelectedVehicle} />
-        ) : (
-          <OfferSeatForm userId={userId} onVehicleSelect={setSelectedVehicle} />
-        )}
-      </motion.div>
-      </div>
-      
+        {/* Main Content Area */}
+        <div className="w-full max-w-4xl bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/5 rounded-3xl shadow-xl overflow-hidden">
+          <div className="p-4 md:p-8">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {activeTab === "find" ? (
+                <div className="space-y-6">
+                  {/* Hero Search Card Look (Fake UI just for visual search impact before the feed) */}
+                  <div className="hidden md:flex flex-wrap gap-2 p-3 bg-slate-50 dark:bg-[#0F172A] rounded-2xl border border-gray-200 dark:border-white/10 mb-8 items-center">
+                    <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
+                      <MapPin className="w-5 h-5 text-slate-400" />
+                      <input type="text" placeholder="Leaving from..." className="bg-transparent outline-none w-full text-sm dark:text-white" />
+                    </div>
+                    <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
+                      <MapPin className="w-5 h-5 text-slate-400" />
+                      <input type="text" placeholder="Going to (VNR VJIET)" defaultValue="VNR VJIET" className="bg-transparent outline-none w-full text-sm dark:text-white" />
+                    </div>
+                    <div className="w-[140px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
+                      <Calendar className="w-5 h-5 text-slate-400" />
+                      <span className="text-sm text-slate-500">Today</span>
+                    </div>
+                    <div className="w-[100px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
+                      <Users className="w-5 h-5 text-slate-400" />
+                      <span className="text-sm text-slate-500">1</span>
+                    </div>
+                    <button className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white p-3 rounded-xl shadow-md transition-colors px-6 font-bold">
+                      Search
+                    </button>
+                  </div>
+
+                  <FindRideFeed userId={userId} onVehicleSelect={setSelectedVehicle} />
+                </div>
+              ) : (
+                <OfferSeatForm userId={userId} onVehicleSelect={setSelectedVehicle} />
+              )}
+            </motion.div>
+          </div>
+        </div>
+      </main>
+
       {showBlockedModal && (
         <BlockedUsersModal userId={userId} onClose={() => setShowBlockedModal(false)} />
       )}

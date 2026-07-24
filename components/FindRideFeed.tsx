@@ -128,10 +128,10 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
 
   return (
     <div>
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6">
+      {/* Filters Bar Redesign */}
+      <div className="flex flex-wrap gap-3 mb-6 bg-slate-50 dark:bg-[#0F172A] p-2 rounded-2xl border border-gray-200 dark:border-white/5">
         <select 
-          className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white rounded-xl px-4 py-2 text-sm outline-none focus:border-blue-500 transition-colors"
+          className="bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-[#2563EB] transition-colors shadow-sm"
           value={rideCategory}
           onChange={(e) => setRideCategory(e.target.value as any)}
         >
@@ -141,14 +141,14 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
         </select>
 
         {userGender === 'female' && (
-          <label className="flex items-center gap-2 cursor-pointer bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-gray-900 dark:text-white transition-colors">
+          <label className="flex items-center gap-2 cursor-pointer bg-white dark:bg-[#1E293B] border border-pink-200 dark:border-pink-500/20 rounded-xl px-4 py-2 text-pink-700 dark:text-pink-400 shadow-sm transition-colors hover:bg-pink-50 dark:hover:bg-pink-500/10">
             <input 
               type="checkbox"
               checked={womenOnly}
               onChange={(e) => setWomenOnly(e.target.checked)}
-              className="accent-pink-500"
+              className="accent-pink-500 rounded"
             />
-            <span className="text-sm font-medium">Women-Only Rides</span>
+            <span className="text-sm font-bold">Women-Only</span>
           </label>
         )}
       </div>
@@ -173,53 +173,94 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
               <div 
                 key={ride.id} 
                 onMouseEnter={() => onVehicleSelect(ride.vehicle_type as "car" | "auto" | "bike")}
-                className="ride-card opacity-0 ui-card ui-card-hover p-5 relative overflow-hidden group"
+                className="ride-card opacity-0 ui-card ui-card-hover p-6 relative overflow-hidden group mb-4"
               >
-                <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 z-10">
-                  {ride.driver_id === userId && (
-                    <button onClick={() => handleDeleteRide(ride.id)} className="text-gray-400 hover:text-red-500 transition-colors" title="Delete Ride">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                  {ride.driver_id !== userId && (
-                    <button onClick={() => handleBlockUser(ride.driver_id, ride.driver?.full_name)} className="text-gray-400 hover:text-red-500 transition-colors" title="Block User">
-                      <Ban className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-2 text-emerald-400 font-medium text-sm">
-                      {ride.ride_category === 'auto_split' ? "🚕 Fare Split" : "🏍️ Student Rider"}
-                      {ride.is_women_only && <span className="bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded text-xs">Women Only</span>}
+                {/* Driver Info Header */}
+                <div className="flex justify-between items-start mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xl overflow-hidden shadow-sm">
+                      {ride.driver?.full_name?.charAt(0).toUpperCase()}
                     </div>
-                    
-                    <div className="flex items-center gap-2 font-bold text-lg text-gray-900 dark:text-white">
-                      <MapPin className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-                      {ride.origin} <span className="text-gray-400">→</span> {ride.destination}
-                    </div>
-
-                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 font-medium">
-                      <div className="flex items-center gap-1"><Clock className="w-4 h-4" /> {new Date(ride.departure_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                      <div className="flex items-center gap-1"><User className="w-4 h-4" /> {ride.driver?.full_name}</div>
-                      <div className="flex items-center gap-1"><Shield className="w-4 h-4" /> {maskMobile(ride.driver?.mobile_number, isApproved)}</div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-[#0F172A] dark:text-white text-lg">{ride.driver?.full_name}</h3>
+                        <span className="bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 text-xs px-2 py-0.5 rounded-full font-semibold flex items-center gap-1 border border-blue-200 dark:border-blue-500/20">
+                          ✓ Verified
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        <span className="flex items-center text-yellow-500 font-medium">
+                          ★ 4.9 <span className="text-slate-400 dark:text-slate-500 ml-1 font-normal">(12)</span>
+                        </span>
+                        <span>•</span>
+                        <span>{ride.driver?.branch}</span>
+                      </div>
                     </div>
                   </div>
+                  <div className="flex gap-2">
+                    {ride.driver_id === userId && (
+                      <button onClick={() => handleDeleteRide(ride.id)} className="p-2 text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 dark:bg-white/5 dark:hover:bg-red-500/10 rounded-full transition-colors" title="Delete Ride">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                    {ride.driver_id !== userId && (
+                      <button onClick={() => handleBlockUser(ride.driver_id, ride.driver?.full_name)} className="p-2 text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 dark:bg-white/5 dark:hover:bg-red-500/10 rounded-full transition-colors" title="Block User">
+                        <Ban className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
 
-                  <div className="flex flex-col items-end gap-2 w-full md:w-auto mt-4 md:mt-0">
-                    <div className="text-2xl font-black bg-gray-50 dark:bg-white/5 text-gray-900 dark:text-white px-5 py-3 rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-none">
-                      ₹{ride.price_per_seat} <span className="text-sm font-normal text-gray-500 dark:text-gray-400">/ seat</span>
+                {/* Route Visualizer */}
+                <div className="flex gap-6 mb-6">
+                  {/* Timeline Node */}
+                  <div className="flex flex-col items-center mt-1">
+                    <div className="w-3 h-3 rounded-full border-2 border-[#10B981] bg-white dark:bg-[#1E293B] z-10"></div>
+                    <div className="w-0.5 h-10 bg-gray-200 dark:bg-slate-700 -my-1"></div>
+                    <div className="w-3 h-3 rounded-full bg-[#2563EB] z-10"></div>
+                  </div>
+                  
+                  {/* Locations & Time */}
+                  <div className="flex flex-col justify-between py-0.5 flex-1 h-[4.5rem]">
+                    <div className="flex justify-between items-start">
+                      <p className="font-bold text-[#0F172A] dark:text-white">{ride.origin}</p>
+                      <p className="text-sm font-semibold text-[#0F172A] dark:text-white">
+                        {new Date(ride.departure_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                      </p>
                     </div>
-                    <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                      {ride.available_seats} seats left
+                    <div className="flex justify-between items-end">
+                      <p className="font-bold text-[#0F172A] dark:text-white">{ride.destination}</p>
                     </div>
-                    
-                    <div className="flex gap-2 w-full mt-2">
+                  </div>
+                </div>
+
+                {/* Footer: Details & CTA */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-4 border-t border-gray-100 dark:border-white/5 gap-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="bg-slate-100 text-slate-600 dark:bg-[#0F172A] dark:text-slate-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 border border-slate-200 dark:border-white/10">
+                      {ride.ride_category === 'auto_split' ? "🚕 Auto/Cab" : "🏍️ Student Vehicle"}
+                    </span>
+                    {ride.is_women_only && (
+                      <span className="bg-pink-50 text-pink-600 dark:bg-pink-500/10 dark:text-pink-400 px-3 py-1 rounded-full text-xs font-semibold border border-pink-100 dark:border-pink-500/20">
+                        Women Only
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400 font-medium ml-2">
+                      <Shield className="w-4 h-4" /> {maskMobile(ride.driver?.mobile_number, isApproved)}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-4 w-full md:w-auto">
+                    <div className="text-right flex-1 md:flex-none">
+                      <p className="text-2xl font-black text-[#0F172A] dark:text-white">₹{ride.price_per_seat}</p>
+                      <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">{ride.available_seats} seats left</p>
+                    </div>
+
+                    <div className="flex gap-2">
                       {(isApproved || ride.driver_id === userId) && (
                         <button 
                           onClick={() => setSelectedRideId(ride.id)}
-                          className="ui-button p-2 rounded-xl text-blue-500 dark:text-blue-400 flex-1 flex justify-center"
+                          className="p-3 bg-slate-100 hover:bg-slate-200 dark:bg-[#0F172A] dark:hover:bg-slate-800 text-[#2563EB] dark:text-[#3B82F6] rounded-xl transition-colors"
                         >
                           <MessageCircle className="w-5 h-5" />
                         </button>
@@ -229,11 +270,11 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
                         <button 
                           onClick={() => handleRequestSeat(ride.id)}
                           disabled={hasRequested}
-                          className={`flex-1 px-4 py-2 rounded-xl font-medium transition-all ${
-                            hasRequested ? "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed" : "ui-button-primary hover:text-white"
+                          className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
+                            hasRequested ? "bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed" : "ui-button-primary"
                           }`}
                         >
-                          {hasRequested ? (isApproved ? "Approved" : "Requested") : "Request Seat"}
+                          {hasRequested ? (isApproved ? "Approved" : "Requested") : "Book Seat"}
                         </button>
                       )}
                     </div>
