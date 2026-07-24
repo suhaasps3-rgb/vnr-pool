@@ -503,9 +503,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
           [...Array(3)].map((_, i) => (
             <div key={i} className="glass-card h-32 animate-pulse" />
           ))
-        ) : rides?.length === 0 || hasActiveTrip ? (
+        ) : rides?.length === 0 || (mode === "feed" && hasActiveTrip) ? (
           <div className="text-center py-12 text-neutral-500">
-            No rides available. You are currently restricted to your active trip.
+            {mode === "active_trip" ? "No active trips found." : "No rides available. You are currently restricted to your active trip."}
           </div>
         ) : (
           rides?.filter((ride) => {

@@ -83,14 +83,6 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
     refetchInterval: 5000
   });
 
-  useEffect(() => {
-    if (hasActiveTrip) {
-      setActiveTab("active");
-    } else if (activeTab === "active") {
-      setActiveTab("find");
-    }
-  }, [hasActiveTrip, activeTab]);
-
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex flex-col">
       <Navigation 
