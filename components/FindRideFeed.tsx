@@ -94,8 +94,11 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
     try {
       // Perform a soft-delete by updating status to 'cancelled' 
       // since RLS policies don't permit hard deletes by default.
-      const { error } = await supabase.from('rides').update({ status: 'cancelled' }).eq('id', rideId);
+      const { data, error } = await supabase.from('rides').update({ status: 'cancelled' }).eq('id', rideId).select();
       if (error) throw error;
+      if (!data || data.length === 0) {
+        throw new Error("Could not cancel the ride. It may have already been removed or you don't have permission.");
+      }
       toast.success("Ride removed successfully.");
       refetch();
     } catch (err: any) {
