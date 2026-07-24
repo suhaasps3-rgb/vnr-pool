@@ -83,6 +83,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
     refetchInterval: 5000
   });
 
+  useEffect(() => {
+    setActiveTab(prev => {
+      if (hasActiveTrip && prev !== "active") return "active";
+      if (!hasActiveTrip && prev === "active") return "find";
+      return prev;
+    });
+  }, [hasActiveTrip]);
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex flex-col">
       <Navigation 
@@ -132,13 +139,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              {activeTab === "find" && !hasActiveTrip ? (
+              {activeTab === "find" ? (
                 <div className="space-y-6">
                   <FindRideFeed userId={userId} onVehicleSelect={setSelectedVehicle} />
                 </div>
               ) : activeTab === "active" ? (
                 <ActiveRideView userId={userId} onVehicleSelect={setSelectedVehicle} />
-              ) : activeTab === "offer" && !hasActiveTrip ? (
+              ) : activeTab === "offer" ? (
                 <OfferSeatForm userId={userId} onVehicleSelect={setSelectedVehicle} />
               ) : activeTab === "my-rides" ? (
                 <MyRides userId={userId} onVehicleSelect={setSelectedVehicle} />
