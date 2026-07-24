@@ -9,7 +9,7 @@ import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2
 import ChatModal from "./ChatModal";
 import RateDriver from "./RateDriver";
 
-export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" }) {
+export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip" }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
   const [womenOnly, setWomenOnly] = useState(false);
   const [searchOrigin, setSearchOrigin] = useState("");
@@ -59,6 +59,17 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         if (rideIds.length === 0) return [];
 
         const { data, error } = await supabase.from('rides').select(queryStr).in('id', rideIds).order('created_at', { ascending: false });
+        if (error) throw error;
+        return data;
+      } else if (mode === "active_trip") {
+        const { data: bookingData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
+        const rideIds = bookingData?.map((b: any) => b.ride_id) || [];
+        
+        const { data, error } = await supabase.from('rides')
+          .select(queryStr)
+          .eq('status', 'in_progress')
+          .or(`id.in.(${rideIds.length > 0 ? rideIds.join(',') : '00000000-0000-0000-0000-000000000000'}),driver_id.eq.${userId}`);
+          
         if (error) throw error;
         return data;
       }

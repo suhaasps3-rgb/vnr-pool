@@ -11,11 +11,12 @@ import { createClient } from "@/lib/supabase/client";
 interface NavigationProps {
   userId: string;
   onSignOut: () => void;
-  activeTab: "find" | "offer" | "my-rides" | "profile";
-  setActiveTab: (tab: "find" | "offer" | "my-rides" | "profile") => void;
+  activeTab: "find" | "offer" | "my-rides" | "profile" | "active";
+  setActiveTab: (tab: "find" | "offer" | "my-rides" | "profile" | "active") => void;
+  hasActiveTrip?: boolean;
 }
 
-export default function Navigation({ userId, onSignOut, activeTab, setActiveTab }: NavigationProps) {
+export default function Navigation({ userId, onSignOut, activeTab, setActiveTab, hasActiveTrip }: NavigationProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const supabase = createClient();
   const queryClient = useQueryClient();
@@ -89,26 +90,37 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab 
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex space-x-1">
-            <button
-              onClick={() => setActiveTab("find")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === "find"
-                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
-                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
-              }`}
-            >
-              <Search className="w-4 h-4" /> Find a Ride
-            </button>
-            <button
-              onClick={() => setActiveTab("offer")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === "offer"
-                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
-                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
-              }`}
-            >
-              <PlusCircle className="w-4 h-4" /> Offer a Ride
-            </button>
+            {hasActiveTrip ? (
+              <button
+                onClick={() => setActiveTab("active")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-100/50 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400`}
+              >
+                🚗 Ride in Progress
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => setActiveTab("find")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === "find"
+                      ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                  }`}
+                >
+                  <Search className="w-4 h-4" /> Find a Ride
+                </button>
+                <button
+                  onClick={() => setActiveTab("offer")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === "offer"
+                      ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                  }`}
+                >
+                  <PlusCircle className="w-4 h-4" /> Offer a Ride
+                </button>
+              </>
+            )}
             <button
               onClick={() => setActiveTab("my-rides")}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -216,26 +228,37 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab 
 
       {/* Mobile Nav Links (Below Header) */}
       <div className="md:hidden flex border-t border-gray-200 dark:border-white/10 bg-white/50 dark:bg-[#0F172A]/50 backdrop-blur-md px-2 py-2 gap-2">
-        <button
-          onClick={() => setActiveTab("find")}
-          className={`flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeTab === "find"
-              ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
-              : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
-          }`}
-        >
-          <Search className="w-4 h-4" /> Find
-        </button>
-        <button
-          onClick={() => setActiveTab("offer")}
-          className={`flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeTab === "offer"
-              ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
-              : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
-          }`}
-        >
-          <PlusCircle className="w-4 h-4" /> Offer
-        </button>
+        {hasActiveTrip ? (
+          <button
+            onClick={() => setActiveTab("active")}
+            className={`flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-100/50 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400`}
+          >
+            🚗 Ride in Progress
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={() => setActiveTab("find")}
+              className={`flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === "find"
+                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+              }`}
+            >
+              <Search className="w-4 h-4" /> Find
+            </button>
+            <button
+              onClick={() => setActiveTab("offer")}
+              className={`flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === "offer"
+                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+              }`}
+            >
+              <PlusCircle className="w-4 h-4" /> Offer
+            </button>
+          </>
+        )}
         <button
           onClick={() => setActiveTab("my-rides")}
           className={`flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${

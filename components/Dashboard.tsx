@@ -9,13 +9,44 @@ import Navigation from "./Navigation";
 import BlockedUsersModal from "./BlockedUsersModal";
 import MyRides from "./MyRides";
 import Profile from "./Profile";
+import { useQuery } from "@tanstack/react-query";
+import { createClient } from "@/lib/supabase/client";
+import ActiveRideView from "./ActiveRideView";
 
-type TabType = "find" | "offer" | "my-rides" | "profile";
+type TabType = "find" | "offer" | "my-rides" | "profile" | "active";
 
 export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void, userId: string }) {
   const [activeTab, setActiveTab] = useState<TabType>("find");
   const [selectedVehicle, setSelectedVehicle] = useState<"car" | "auto" | "bike">("car");
   const [showBlockedModal, setShowBlockedModal] = useState(false);
+  const supabase = createClient();
+
+  const { data: hasActiveTrip } = useQuery({
+    queryKey: ["activeTripGlobal", userId],
+    queryFn: async () => {
+      const { data: bookingData } = await supabase.from('bookings')
+         .select('id, rides!inner(status)')
+         .eq('passenger_id', userId)
+         .eq('status', 'approved')
+         .eq('rides.status', 'in_progress');
+         
+      const { data: rideData } = await supabase.from('rides')
+         .select('id')
+         .eq('driver_id', userId)
+         .eq('status', 'in_progress');
+
+      return (bookingData && bookingData.length > 0) || (rideData && rideData.length > 0);
+    },
+    refetchInterval: 5000
+  });
+
+  useEffect(() => {
+    if (hasActiveTrip) {
+      setActiveTab("active");
+    } else if (activeTab === "active") {
+      setActiveTab("find");
+    }
+  }, [hasActiveTrip, activeTab]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex flex-col">
@@ -23,7 +54,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
         userId={userId} 
         onSignOut={onSignOut} 
         activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
+        setActiveTab={setActiveTab}
+        hasActiveTrip={hasActiveTrip}
       />
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex flex-col items-center">
@@ -65,11 +97,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              {activeTab === "find" ? (
+              {activeTab === "find" && !hasActiveTrip ? (
                 <div className="space-y-6">
                   <FindRideFeed userId={userId} onVehicleSelect={setSelectedVehicle} />
                 </div>
-              ) : activeTab === "offer" ? (
+              ) : activeTab === "active" ? (
+                <ActiveRideView userId={userId} onVehicleSelect={setSelectedVehicle} />
+              ) : activeTab === "offer" && !hasActiveTrip ? (
                 <OfferSeatForm userId={userId} onVehicleSelect={setSelectedVehicle} />
               ) : activeTab === "my-rides" ? (
                 <MyRides userId={userId} onVehicleSelect={setSelectedVehicle} />
