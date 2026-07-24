@@ -58,14 +58,21 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
     }
   }, [rides, isLoading]);
 
-  const handleRequestSeat = async (rideId: string) => {
+  const handleRequestSeat = async (ride: any) => {
     try {
       const { error } = await supabase.from('bookings').insert({
-        ride_id: rideId,
+        ride_id: ride.id,
         passenger_id: userId,
         status: 'pending'
       });
       if (error) throw error;
+
+      // Send Notification to Driver
+      await supabase.from('notifications').insert({
+        user_id: ride.driver_id,
+        message: `Someone requested to join your ride from ${ride.origin} to ${ride.destination}!`
+      });
+
       toast.success("Seat requested! Waiting for driver approval.");
       refetch();
     } catch (err: any) {
@@ -275,7 +282,7 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
                       
                       {ride.driver_id !== userId && (
                         <button 
-                          onClick={() => handleRequestSeat(ride.id)}
+                          onClick={() => handleRequestSeat(ride)}
                           disabled={hasRequested}
                           className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
                             hasRequested ? "bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed" : "ui-button-primary"
