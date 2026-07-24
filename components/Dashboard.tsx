@@ -11,6 +11,7 @@ import OfferSeatForm from "./OfferSeatForm";
 import BlockedUsersModal from "./BlockedUsersModal";
 import MyRides from "./MyRides";
 import Profile from "./Profile";
+import NotificationBell from "./NotificationBell";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import ActiveRideView from "./ActiveRideView";
@@ -140,6 +141,9 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               <Car className="w-4 h-4" /> Offer Ride
             </button>
             <div className="h-6 w-px bg-slate-800 mx-1 hidden sm:block" />
+            
+            <NotificationBell userId={userId} />
+
             <button onClick={onSignOut} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group">
               <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             </button>
