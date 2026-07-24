@@ -334,6 +334,24 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
             const hasRequested = !!myBooking;
             const approvedPassengers = ride.bookings.filter((b: any) => b.status === 'approved');
 
+            const impliedTotalCost = ride.price_per_seat * (ride.ride_category === 'auto_split' ? ride.total_seats + 1 : ride.total_seats);
+            let displayPrice = ride.price_per_seat;
+            let dynamicPriceNote = "";
+
+            if (ride.ride_category === 'auto_split') {
+              const currentPeople = 1 + approvedPassengers.length;
+              if (isApproved || ride.driver_id === userId) {
+                displayPrice = Math.ceil(impliedTotalCost / currentPeople);
+                dynamicPriceNote = "Current split";
+              } else if (ride.available_seats > 0) {
+                displayPrice = Math.ceil(impliedTotalCost / (currentPeople + 1));
+                dynamicPriceNote = "If you join";
+              } else {
+                displayPrice = Math.ceil(impliedTotalCost / currentPeople);
+                dynamicPriceNote = "Final split";
+              }
+            }
+
             return (
               <div 
                 key={ride.id} 
@@ -455,8 +473,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
                   <div className="flex items-center gap-4 w-full md:w-auto">
                     <div className="text-right flex-1 md:flex-none">
-                      <p className="text-2xl font-black text-[#0F172A] dark:text-white">₹{ride.price_per_seat}</p>
+                      <p className="text-2xl font-black text-[#0F172A] dark:text-white">₹{displayPrice}</p>
                       <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">{ride.available_seats} seats left</p>
+                      {dynamicPriceNote && (
+                        <p className="text-[10px] text-slate-400 font-bold uppercase mt-0.5 tracking-wider">{dynamicPriceNote}</p>
+                      )}
                     </div>
 
                     <div className="flex gap-2">
