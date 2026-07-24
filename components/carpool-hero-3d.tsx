@@ -59,7 +59,7 @@ export function VNRCarPool3DHero({ onAction }: { onAction?: () => void }) {
         {/* Right Section: Interactive 3D Spline Canvas */}
         <div className="flex-1 relative min-h-[350px] md:min-h-full">
           <SplineScene 
-            scene="https://prod.spline.design/9951u9cumiw2Ehj8/scene.splinecode"
+            scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
             className="w-full h-full"
           />
         </div>
