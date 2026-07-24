@@ -386,7 +386,12 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
       {/* Feed */}
       <div ref={containerRef} className="space-y-4">
-        {isLoading ? (
+        {mode === "feed" && hasActiveTrip ? (
+          <div className="text-center py-16 bg-blue-50 dark:bg-blue-500/10 rounded-2xl border border-blue-100 dark:border-blue-500/20">
+            <h3 className="text-xl font-bold text-blue-900 dark:text-blue-100 mb-2">🚗 Ride in Progress</h3>
+            <p className="text-blue-700 dark:text-blue-300">You must complete your current ride before finding a new one.</p>
+          </div>
+        ) : isLoading ? (
           // Skeleton Loaders
           [...Array(3)].map((_, i) => (
             <div key={i} className="glass-card h-32 animate-pulse" />

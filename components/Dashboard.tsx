@@ -9,7 +9,7 @@ import Navigation from "./Navigation";
 import BlockedUsersModal from "./BlockedUsersModal";
 import MyRides from "./MyRides";
 import Profile from "./Profile";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import ActiveRideView from "./ActiveRideView";
 
@@ -20,6 +20,27 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const [selectedVehicle, setSelectedVehicle] = useState<"car" | "auto" | "bike">("car");
   const [showBlockedModal, setShowBlockedModal] = useState(false);
   const supabase = createClient();
+  const queryClient = useQueryClient();
+
+  // Instant real-time listener to force UI updates immediately
+  useEffect(() => {
+    const channel = supabase.channel('dashboard-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rides' }, () => {
+        queryClient.invalidateQueries({ queryKey: ["activeTripGlobal"] });
+        queryClient.invalidateQueries({ queryKey: ["activeTrip"] });
+        queryClient.invalidateQueries({ queryKey: ["rides"] });
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings', filter: `passenger_id=eq.${userId}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ["activeTripGlobal"] });
+        queryClient.invalidateQueries({ queryKey: ["activeTrip"] });
+        queryClient.invalidateQueries({ queryKey: ["rides"] });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, queryClient, userId]);
 
   const { data: hasActiveTrip } = useQuery({
     queryKey: ["activeTripGlobal", userId],
