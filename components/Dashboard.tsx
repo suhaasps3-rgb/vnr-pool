@@ -8,8 +8,9 @@ import OfferSeatForm from "./OfferSeatForm";
 import Navigation from "./Navigation";
 import BlockedUsersModal from "./BlockedUsersModal";
 import MyRides from "./MyRides";
+import Profile from "./Profile";
 
-type TabType = "find" | "offer" | "my-rides";
+type TabType = "find" | "offer" | "my-rides" | "profile";
 
 export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void, userId: string }) {
   const [activeTab, setActiveTab] = useState<TabType>("find");
@@ -70,8 +71,10 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                 </div>
               ) : activeTab === "offer" ? (
                 <OfferSeatForm userId={userId} onVehicleSelect={setSelectedVehicle} />
-              ) : (
+              ) : activeTab === "my-rides" ? (
                 <MyRides userId={userId} onVehicleSelect={setSelectedVehicle} />
+              ) : (
+                <Profile userId={userId} />
               )}
             </motion.div>
           </div>

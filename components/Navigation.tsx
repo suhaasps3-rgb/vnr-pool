@@ -11,8 +11,8 @@ import { createClient } from "@/lib/supabase/client";
 interface NavigationProps {
   userId: string;
   onSignOut: () => void;
-  activeTab: "find" | "offer" | "my-rides";
-  setActiveTab: (tab: "find" | "offer" | "my-rides") => void;
+  activeTab: "find" | "offer" | "my-rides" | "profile";
+  setActiveTab: (tab: "find" | "offer" | "my-rides" | "profile") => void;
 }
 
 export default function Navigation({ userId, onSignOut, activeTab, setActiveTab }: NavigationProps) {
@@ -119,6 +119,16 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab 
             >
               <Bookmark className="w-4 h-4" /> My Rides
             </button>
+            <button
+              onClick={() => setActiveTab("profile")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === "profile"
+                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+              }`}
+            >
+              <User className="w-4 h-4" /> Profile
+            </button>
           </nav>
 
           {/* Right Actions */}
@@ -190,7 +200,14 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab 
             </button>
             
             {/* Mobile Profile Avatar */}
-            <button className="sm:hidden p-2 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300">
+            <button 
+              onClick={() => setActiveTab("profile")}
+              className={`sm:hidden p-2 rounded-full transition-colors ${
+                activeTab === "profile" 
+                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]" 
+                  : "bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300"
+              }`}
+            >
               <User className="w-5 h-5" />
             </button>
           </div>

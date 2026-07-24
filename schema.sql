@@ -15,6 +15,10 @@ CREATE TABLE public.users (
     gender TEXT CHECK (gender IN ('male', 'female', 'other')),
     verified_status BOOLEAN DEFAULT false,
     profile_completed BOOLEAN DEFAULT false,
+    car_number TEXT,
+    bike_number TEXT,
+    rating_sum INT DEFAULT 0,
+    rating_count INT DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
@@ -205,7 +209,40 @@ FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY ""Users can insert notifications"" ON public.notifications
 FOR INSERT WITH CHECK (true); -- Allow triggering notifications by anyone, or we can restrict it. Actually, letting authenticated users insert is fine for peer-to-peer.
 
-CREATE POLICY ""Users can update own notifications"" ON public.notifications
+CREATE POLICY "Users can update own notifications" ON public.notifications
 FOR UPDATE USING (auth.uid() = user_id);
 
 alter publication supabase_realtime add table public.notifications;
+
+-- 9. Create Ratings Table
+CREATE TABLE public.ratings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    ride_id UUID NOT NULL REFERENCES public.rides(id) ON DELETE CASCADE,
+    rater_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+    rated_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+    score INT NOT NULL CHECK (score >= 1 AND score <= 5),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+    UNIQUE(ride_id, rater_id, rated_id)
+);
+
+ALTER TABLE public.ratings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read ratings" ON public.ratings
+FOR SELECT USING (true);
+
+CREATE POLICY "Users can rate if they are in the ride" ON public.ratings
+FOR INSERT WITH CHECK (
+    auth.uid() = rater_id
+    AND
+    (
+        EXISTS (
+            SELECT 1 FROM public.rides 
+            WHERE id = ride_id AND (driver_id = auth.uid() OR driver_id = rated_id)
+        )
+        OR
+        EXISTS (
+            SELECT 1 FROM public.bookings 
+            WHERE ride_id = ratings.ride_id AND passenger_id = auth.uid() AND status = 'approved'
+        )
+    )
+);

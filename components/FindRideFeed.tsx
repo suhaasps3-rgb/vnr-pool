@@ -7,6 +7,7 @@ import anime from "animejs";
 import { toast } from "sonner";
 import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2 } from "lucide-react";
 import ChatModal from "./ChatModal";
+import RateDriver from "./RateDriver";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
@@ -129,6 +130,17 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       refetch();
     } catch (err: any) {
       toast.error(err.message || "Failed to manage request.");
+    }
+  };
+
+  const handleCompleteRide = async (ride: any) => {
+    try {
+      const { error } = await supabase.from('rides').update({ status: 'completed' }).eq('id', ride.id);
+      if (error) throw error;
+      toast.success("Ride marked as completed!");
+      queryClient.invalidateQueries({ queryKey: ["rides"] });
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
@@ -292,11 +304,16 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
               <div 
                 key={ride.id} 
                 onMouseEnter={() => onVehicleSelect(ride.vehicle_type as "car" | "auto" | "bike")}
-                className={`ride-card opacity-0 ui-card ui-card-hover p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''}`}
+                className={`ride-card opacity-0 ui-card ui-card-hover p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''} ${ride.status === 'completed' ? 'border-emerald-200 dark:border-emerald-500/30' : ''}`}
               >
                 {ride.status === 'cancelled' && (
-                  <div className="absolute top-4 right-4 bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-200 dark:border-red-500/30">
+                  <div className="absolute top-4 right-4 bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-200 dark:border-red-500/30 z-10">
                     CANCELLED
+                  </div>
+                )}
+                {ride.status === 'completed' && (
+                  <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 dark:border-emerald-500/30 z-10">
+                    COMPLETED
                   </div>
                 )}
                 
@@ -408,7 +425,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                         </button>
                       )}
                       
-                      {ride.driver_id !== userId && !hasRequested && ride.status !== 'cancelled' && (
+                      {ride.driver_id !== userId && !hasRequested && ride.status !== 'cancelled' && ride.status !== 'completed' && (
                         <button 
                           onClick={() => handleRequestSeat(ride)}
                           className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ui-button-primary"
@@ -417,7 +434,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                         </button>
                       )}
 
-                      {ride.driver_id !== userId && hasRequested && ride.status !== 'cancelled' && (
+                      {ride.driver_id !== userId && hasRequested && ride.status !== 'cancelled' && ride.status !== 'completed' && (
                         <button 
                           onClick={() => handleCancelBooking(ride, myBooking)}
                           className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20"
@@ -426,17 +443,34 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                         </button>
                       )}
 
-                      {ride.driver_id === userId && ride.status !== 'cancelled' && (
-                        <button 
-                          onClick={() => handleDeleteRide(ride)}
-                          className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20"
-                        >
-                          Delete Ride
-                        </button>
-                      )}
                     </div>
                   </div>
                 </div>
+
+                {/* Driver Controls */}
+                {ride.driver_id === userId && ride.status !== 'cancelled' && (
+                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 flex gap-2 justify-end">
+                    {ride.status !== 'completed' && (
+                      <button 
+                        onClick={() => handleCompleteRide(ride)}
+                        className="px-4 py-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500/20 rounded-lg text-sm font-bold transition-colors"
+                      >
+                        Complete Ride
+                      </button>
+                    )}
+                    <button 
+                      onClick={() => handleDeleteRide(ride)}
+                      className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 rounded-lg text-sm font-bold transition-colors flex items-center gap-2"
+                    >
+                      <Trash2 className="w-4 h-4" /> Delete Ride
+                    </button>
+                  </div>
+                )}
+
+                {/* Rate Driver Section for Passengers */}
+                {ride.status === 'completed' && ride.driver_id !== userId && isApproved && (
+                  <RateDriver rideId={ride.id} driverId={ride.driver_id} userId={userId} />
+                )}
 
                 {ride.driver_id === userId && ride.bookings.length > 0 && ride.status !== 'cancelled' && (
                   <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 space-y-2">
