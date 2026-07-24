@@ -79,20 +79,16 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
   const { data: hasActiveTrip } = useQuery({
     queryKey: ["activeTrip", userId],
     queryFn: async () => {
-      // Check if user is passenger in an in-progress ride
-      const { data: bookingData } = await supabase.from('bookings')
-         .select('id, rides!inner(status)')
-         .eq('passenger_id', userId)
-         .eq('status', 'approved')
-         .eq('rides.status', 'in_progress');
-         
-      // Check if user is driver in an in-progress ride
-      const { data: rideData } = await supabase.from('rides')
-         .select('id')
-         .eq('driver_id', userId)
-         .eq('status', 'in_progress');
+      const { data: bookingData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
+      const rideIds = bookingData?.map((b: any) => b.ride_id) || [];
+      
+      const { data: rideData, error } = await supabase.from('rides')
+        .select('id')
+        .eq('status', 'in_progress')
+        .or(`id.in.(${rideIds.length > 0 ? rideIds.join(',') : '00000000-0000-0000-0000-000000000000'}),driver_id.eq.${userId}`);
 
-      return (bookingData && bookingData.length > 0) || (rideData && rideData.length > 0);
+      if (error) return false;
+      return rideData && rideData.length > 0;
     }
   });
 
