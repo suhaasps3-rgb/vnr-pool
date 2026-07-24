@@ -4,7 +4,7 @@ import React from "react";
 import IsoLevelWarp from "@/components/ui/isometric-wave-grid-background";
 import { Car, ShieldCheck, MapPin, Search, ArrowRight } from "lucide-react";
 
-export function VNRCarPoolWaveHero() {
+export function VNRCarPoolWaveHero({ onAction }: { onAction?: () => void }) {
   return (
     <div className="relative w-full min-h-screen overflow-hidden bg-slate-950 font-sans flex flex-col justify-center">
       
@@ -26,7 +26,7 @@ export function VNRCarPoolWaveHero() {
         {/* Dynamic Title */}
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight drop-shadow-xl">
           Smart Carpooling for <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-sky-400 to-indigo-400">
+          <span className="text-white">
             VNR VJIET Campus.
           </span>
         </h1>
@@ -49,19 +49,19 @@ export function VNRCarPoolWaveHero() {
             <MapPin className="w-4 h-4 text-indigo-400 shrink-0" />
             <span className="text-sm text-slate-300 font-medium">Destination: VNR VJIET</span>
           </div>
-          <button className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm flex items-center justify-center gap-2 transition-all shrink-0">
+          <button onClick={onAction} className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm flex items-center justify-center gap-2 transition-all shrink-0">
             <Search className="w-4 h-4" /> Find Rides
           </button>
         </div>
 
         {/* Primary Action Buttons */}
         <div className="flex items-center gap-4">
-          <button className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/30">
+          <button onClick={onAction} className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/30">
             <Car className="w-4 h-4" /> Offer a Ride
           </button>
-          <a href="#how-it-works" className="px-6 py-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 text-sm font-medium border border-slate-800 flex items-center gap-2 transition-all backdrop-blur-md">
+          <button onClick={onAction} className="px-6 py-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 text-sm font-medium border border-slate-800 flex items-center gap-2 transition-all backdrop-blur-md">
             How It Works <ArrowRight className="w-4 h-4" />
-          </a>
+          </button>
         </div>
 
       </div>

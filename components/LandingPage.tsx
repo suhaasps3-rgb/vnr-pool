@@ -50,7 +50,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-32">
         
         <div className="mb-24 mt-8">
-          <VNRCarPoolWaveHero />
+          <VNRCarPoolWaveHero onAction={() => setShowAuthModal(true)} />
         </div>
 
         {/* INTERACTIVE SEARCH BAR (MOCK) */}
