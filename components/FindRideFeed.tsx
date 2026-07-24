@@ -179,7 +179,12 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
             No rides found for the selected filters.
           </div>
         ) : (
-          rides?.map((ride) => {
+          rides?.filter((ride) => {
+            if (ride.available_seats > 0) return true;
+            if (ride.driver_id === userId) return true;
+            const isApproved = ride.bookings.some((b: any) => b.passenger_id === userId && b.status === 'approved');
+            return isApproved;
+          }).map((ride) => {
             const isApproved = ride.bookings.some((b: any) => b.passenger_id === userId && b.status === 'approved');
             const hasRequested = ride.bookings.some((b: any) => b.passenger_id === userId);
 
