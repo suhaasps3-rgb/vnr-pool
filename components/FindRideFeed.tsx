@@ -40,6 +40,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         if (searchOrigin) query = query.ilike('origin', `%${searchOrigin}%`);
         if (searchDestination) query = query.ilike('destination', `%${searchDestination}%`);
         
+        query = query.order('created_at', { ascending: false });
+        
         const { data, error } = await query;
         if (error) throw error;
         return data;
@@ -48,7 +50,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         if (error) throw error;
         return data;
       } else if (mode === "booked") {
-        const { data: bookingData, error: bError } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId);
+        const { data: bookingData, error: bError } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).in('status', ['pending', 'approved']);
         if (bError) throw bError;
         const rideIds = bookingData.map((b: any) => b.ride_id);
         
@@ -294,11 +296,6 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    {ride.driver_id === userId && (
-                      <button onClick={() => handleDeleteRide(ride.id)} className="p-2 text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 dark:bg-white/5 dark:hover:bg-red-500/10 rounded-full transition-colors" title="Delete Ride">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    )}
                     {ride.driver_id !== userId && (
                       <button onClick={() => handleBlockUser(ride.driver_id, ride.driver?.full_name)} className="p-2 text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 dark:bg-white/5 dark:hover:bg-red-500/10 rounded-full transition-colors" title="Block User">
                         <Ban className="w-4 h-4" />
@@ -399,6 +396,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                           className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20"
                         >
                           Cancel {isApproved ? 'Seat' : 'Request'}
+                        </button>
+                      )}
+
+                      {ride.driver_id === userId && ride.status !== 'cancelled' && (
+                        <button 
+                          onClick={() => handleDeleteRide(ride.id)}
+                          className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20"
+                        >
+                          Delete Ride
                         </button>
                       )}
                     </div>
