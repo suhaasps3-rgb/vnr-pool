@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import anime from "animejs";
 import { toast } from "sonner";
-import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Ban, Trash2 } from "lucide-react";
+import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2 } from "lucide-react";
 import ChatModal from "./ChatModal";
 
 export default function FindRideFeed({ userId, onVehicleSelect }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void }) {
@@ -215,6 +215,7 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
             const myBooking = ride.bookings.find((b: any) => b.passenger_id === userId && (b.status === 'approved' || b.status === 'pending'));
             const isApproved = myBooking?.status === 'approved';
             const hasRequested = !!myBooking;
+            const approvedPassengers = ride.bookings.filter((b: any) => b.status === 'approved');
 
             return (
               <div 
@@ -280,6 +281,28 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
                     </div>
                   </div>
                 </div>
+
+                {/* Co-Passengers List */}
+                {approvedPassengers.length > 0 && (
+                  <div className="mb-6 pt-4 border-t border-gray-100 dark:border-white/5">
+                    <div className="flex items-center gap-2 mb-3 text-slate-700 dark:text-slate-300 font-bold">
+                      <Users className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
+                      <span>Co-Passengers ({approvedPassengers.length})</span>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      {approvedPassengers.map((b: any) => (
+                        <div key={b.id} className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-100 dark:border-emerald-500/20">
+                          <div className="w-6 h-6 rounded-full bg-[#3B82F6] text-white flex items-center justify-center text-xs font-bold shadow-sm">
+                            {b.passenger?.full_name?.charAt(0).toUpperCase()}
+                          </div>
+                          <span className="text-sm font-semibold text-[#0F172A] dark:text-slate-200">
+                            {b.passenger?.full_name?.split(' ')[0]}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Footer: Details & CTA */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-4 border-t border-gray-100 dark:border-white/5 gap-4">
