@@ -11,6 +11,8 @@ import ChatModal from "./ChatModal";
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
   const [womenOnly, setWomenOnly] = useState(false);
+  const [searchOrigin, setSearchOrigin] = useState("");
+  const [searchDestination, setSearchDestination] = useState("");
   const [selectedRideId, setSelectedRideId] = useState<string | null>(null);
   const [userGender, setUserGender] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -23,7 +25,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
   }, [userId, supabase]);
 
   const { data: rides, isLoading, refetch } = useQuery({
-    queryKey: ["rides", rideCategory, womenOnly, mode],
+    queryKey: ["rides", rideCategory, womenOnly, mode, searchOrigin, searchDestination],
     queryFn: async () => {
       const queryStr = `
         *,
@@ -35,6 +37,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         let query = supabase.from('rides').select(queryStr).eq('status', 'active');
         if (rideCategory !== "all") query = query.eq('ride_category', rideCategory);
         if (womenOnly) query = query.eq('is_women_only', true);
+        if (searchOrigin) query = query.ilike('origin', `%${searchOrigin}%`);
+        if (searchDestination) query = query.ilike('destination', `%${searchDestination}%`);
         
         const { data, error } = await query;
         if (error) throw error;
@@ -182,9 +186,34 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
   return (
     <div>
-      {/* Filters Bar Redesign */}
       {mode === "feed" && (
-        <div className="flex flex-wrap gap-3 mb-6 bg-slate-50 dark:bg-[#0F172A] p-2 rounded-2xl border border-gray-200 dark:border-white/5">
+        <>
+          {/* Functional Search Bar */}
+          <div className="hidden md:flex flex-wrap gap-2 p-3 bg-slate-50 dark:bg-[#0F172A] rounded-2xl border border-gray-200 dark:border-white/10 mb-4 items-center">
+            <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm focus-within:border-[#2563EB] transition-colors">
+              <MapPin className="w-5 h-5 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Leaving from..." 
+                value={searchOrigin}
+                onChange={(e) => setSearchOrigin(e.target.value)}
+                className="bg-transparent outline-none w-full text-sm dark:text-white" 
+              />
+            </div>
+            <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm focus-within:border-[#2563EB] transition-colors">
+              <MapPin className="w-5 h-5 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Going to..." 
+                value={searchDestination}
+                onChange={(e) => setSearchDestination(e.target.value)}
+                className="bg-transparent outline-none w-full text-sm dark:text-white" 
+              />
+            </div>
+          </div>
+
+          {/* Filters Bar Redesign */}
+          <div className="flex flex-wrap gap-3 mb-6 bg-slate-50 dark:bg-[#0F172A] p-2 rounded-2xl border border-gray-200 dark:border-white/5">
         <select 
           className="bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-[#2563EB] transition-colors shadow-sm"
           value={rideCategory}
@@ -203,10 +232,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
               onChange={(e) => setWomenOnly(e.target.checked)}
               className="accent-pink-500 rounded"
             />
-            <span className="text-sm font-bold">Women-Only</span>
-          </label>
-        )}
-      </div>
+              <span className="text-sm font-bold">Women-Only</span>
+            </label>
+          )}
+        </div>
+        </>
       )}
 
       {/* Feed */}

@@ -66,29 +66,6 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
             >
               {activeTab === "find" ? (
                 <div className="space-y-6">
-                  {/* Hero Search Card Look (Fake UI just for visual search impact before the feed) */}
-                  <div className="hidden md:flex flex-wrap gap-2 p-3 bg-slate-50 dark:bg-[#0F172A] rounded-2xl border border-gray-200 dark:border-white/10 mb-8 items-center">
-                    <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
-                      <MapPin className="w-5 h-5 text-slate-400" />
-                      <input type="text" placeholder="Leaving from..." className="bg-transparent outline-none w-full text-sm dark:text-white" />
-                    </div>
-                    <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
-                      <MapPin className="w-5 h-5 text-slate-400" />
-                      <input type="text" placeholder="Going to (VNR VJIET)" defaultValue="VNR VJIET" className="bg-transparent outline-none w-full text-sm dark:text-white" />
-                    </div>
-                    <div className="w-[140px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
-                      <Calendar className="w-5 h-5 text-slate-400" />
-                      <span className="text-sm text-slate-500">Today</span>
-                    </div>
-                    <div className="w-[100px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
-                      <Users className="w-5 h-5 text-slate-400" />
-                      <span className="text-sm text-slate-500">1</span>
-                    </div>
-                    <button className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white p-3 rounded-xl shadow-md transition-colors px-6 font-bold">
-                      Search
-                    </button>
-                  </div>
-
                   <FindRideFeed userId={userId} onVehicleSelect={setSelectedVehicle} />
                 </div>
               ) : activeTab === "offer" ? (
