@@ -19,6 +19,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
       <div className="lg:w-1/3 xl:w-2/5 p-6 md:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#201E2B] lg:sticky lg:top-0 lg:h-screen">
         <header className="flex justify-between items-start mb-8">
           <div>
+            <img src="/vnr_logo.png" alt="VNR VJIET Logo" className="w-14 h-14 rounded-xl mb-4 shadow-sm" />
             <h1 className="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tighter uppercase mb-2">
               YOUR CAMPUS <br /> COMMUTE
             </h1>
