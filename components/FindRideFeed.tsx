@@ -65,6 +65,26 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
     }
   });
 
+  const { data: hasActiveTrip } = useQuery({
+    queryKey: ["activeTrip", userId],
+    queryFn: async () => {
+      // Check if user is passenger in an in-progress ride
+      const { data: bookingData } = await supabase.from('bookings')
+         .select('id, rides!inner(status)')
+         .eq('passenger_id', userId)
+         .eq('status', 'approved')
+         .eq('rides.status', 'in_progress');
+         
+      // Check if user is driver in an in-progress ride
+      const { data: rideData } = await supabase.from('rides')
+         .select('id')
+         .eq('driver_id', userId)
+         .eq('status', 'in_progress');
+
+      return (bookingData && bookingData.length > 0) || (rideData && rideData.length > 0);
+    }
+  });
+
   // Stagger animation on data load
   useEffect(() => {
     if (!isLoading && rides && rides.length > 0 && containerRef.current) {
@@ -257,6 +277,20 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
     <div>
       {mode === "feed" && (
         <>
+          {hasActiveTrip && (
+            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-2xl flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 text-xl">
+                  🚗
+                </div>
+                <div>
+                  <h3 className="font-bold text-blue-900 dark:text-blue-100">You have a ride in progress!</h3>
+                  <p className="text-sm text-blue-700 dark:text-blue-300">You cannot book new rides until your current trip is completed. Check the My Rides section.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Functional Search Bar */}
           <div className="hidden md:flex flex-wrap gap-2 p-3 bg-slate-50 dark:bg-[#0F172A] rounded-2xl border border-gray-200 dark:border-white/10 mb-4 items-center">
             <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm focus-within:border-[#2563EB] transition-colors">
@@ -492,8 +526,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                       
                       {ride.driver_id !== userId && !hasRequested && ride.status === 'active' && (
                         <button 
-                          onClick={() => handleRequestSeat(ride)}
-                          className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ui-button-primary"
+                          onClick={() => {
+                            if (hasActiveTrip) {
+                              toast.error("You cannot book a new ride while you are in an active trip.");
+                              return;
+                            }
+                            handleRequestSeat(ride);
+                          }}
+                          className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${hasActiveTrip ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-slate-800 dark:text-slate-500' : 'ui-button-primary'}`}
+                          disabled={hasActiveTrip}
                         >
                           Book Seat
                         </button>
