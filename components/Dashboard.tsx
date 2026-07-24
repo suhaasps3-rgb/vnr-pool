@@ -109,7 +109,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
 
   // Cost Calc Logic
   const fuelCost = (calcDistance / calcMileage) * calcFuelPrice;
-  const recommendedSplit = Math.ceil(fuelCost / 3);
+  // Adjusted for realism: added a 1.5x multiplier for AC/Maintenance, divided by 2 people (Driver + 1 Passenger), plus ₹15 base convenience fee
+  const recommendedSplit = Math.ceil((fuelCost * 1.5) / 2) + 15;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
