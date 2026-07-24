@@ -131,7 +131,10 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
       });
 
       if (error) throw error;
-      toast.success("Ride posted successfully!");
+      toast.success("Ride offered successfully!");
+      queryClient.invalidateQueries({ queryKey: ["rides"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTripGlobal"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTrip"] });
       // Reset form
       setFormData({
         ...formData,
@@ -140,7 +143,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
         departure_time: "",
       });
     } catch (err: any) {
-      toast.error(err.message || "Failed to post ride.");
+      toast.error(err.message || "Failed to offer ride.");
     } finally {
       setLoading(false);
     }

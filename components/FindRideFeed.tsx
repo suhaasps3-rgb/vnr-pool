@@ -16,6 +16,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
   const [searchDestination, setSearchDestination] = useState("");
   const [selectedRideId, setSelectedRideId] = useState<string | null>(null);
   const [userGender, setUserGender] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
   const queryClient = useQueryClient();
@@ -157,6 +158,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
   }, [rides, isLoading]);
 
   const handleRequestSeat = async (ride: any) => {
+    if (isProcessing) return;
+    setIsProcessing(true);
     try {
       // 1. FRESH DEEP CHECK: Guarantee user has no active trips before allowing request
       const { data: driverRides } = await supabase.from('rides').select('id, status').eq('driver_id', userId);
@@ -220,6 +223,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       refetch();
     } catch (err: any) {
       toast.error(err.message || "Failed to request seat.");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -647,8 +652,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                             }
                             handleRequestSeat(ride);
                           }}
-                          className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${hasActiveTrip ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-slate-800 dark:text-slate-500' : 'ui-button-primary'}`}
-                          disabled={hasActiveTrip}
+                          className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${hasActiveTrip || isProcessing ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-slate-800 dark:text-slate-500' : 'ui-button-primary'}`}
+                          disabled={hasActiveTrip || isProcessing}
                         >
                           Book Seat
                         </button>
@@ -657,7 +662,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                       {ride.driver_id !== userId && hasRequested && ride.status === 'active' && (
                         <button 
                           onClick={() => handleCancelBooking(ride, myBooking)}
-                          className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20"
+                          disabled={isProcessing}
+                          className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''} bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20`}
                         >
                           Cancel {isApproved ? 'Seat' : 'Request'}
                         </button>
