@@ -50,7 +50,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         if (error) throw error;
         return data;
       } else if (mode === "booked") {
-        const { data: bookingData, error: bError } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).in('status', ['pending', 'approved']);
+        const { data: bookingData, error: bError } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId);
         if (bError) throw bError;
         const rideIds = bookingData.map((b: any) => b.ride_id);
         
