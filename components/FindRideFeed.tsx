@@ -149,16 +149,27 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
     }
   };
 
-  const handleDeleteRide = async (rideId: string) => {
+  const handleDeleteRide = async (ride: any) => {
     if (!confirm("Are you sure you want to cancel and remove this ride?")) return;
     try {
       // Perform a soft-delete by updating status to 'cancelled' 
       // since RLS policies don't permit hard deletes by default.
-      const { data, error } = await supabase.from('rides').update({ status: 'cancelled' }).eq('id', rideId).select();
+      const { data, error } = await supabase.from('rides').update({ status: 'cancelled' }).eq('id', ride.id).select();
       if (error) throw error;
       if (!data || data.length === 0) {
         throw new Error("Could not cancel the ride. It may have already been removed or you don't have permission.");
       }
+
+      // Notify approved passengers
+      const approvedPassengers = ride.bookings?.filter((b: any) => b.status === 'approved') || [];
+      if (approvedPassengers.length > 0) {
+        const notifications = approvedPassengers.map((b: any) => ({
+          user_id: b.passenger_id,
+          message: `The ride from ${ride.origin} to ${ride.destination} has been cancelled by the driver.`
+        }));
+        await supabase.from('notifications').insert(notifications);
+      }
+
       toast.success("Ride removed successfully.");
       refetch();
     } catch (err: any) {
@@ -401,7 +412,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
                       {ride.driver_id === userId && ride.status !== 'cancelled' && (
                         <button 
-                          onClick={() => handleDeleteRide(ride.id)}
+                          onClick={() => handleDeleteRide(ride)}
                           className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20"
                         >
                           Delete Ride
