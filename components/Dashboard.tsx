@@ -1,17 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ShieldCheck, MapPin, Calendar, Users, Search, UserX } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  ShieldCheck, MapPin, Users, Search, UserX, Car, 
+  Wallet, ChevronRight, CheckCircle2, TrendingUp, AlertTriangle, Route, Activity, LogOut
+} from "lucide-react";
 import FindRideFeed from "./FindRideFeed";
 import OfferSeatForm from "./OfferSeatForm";
-import Navigation from "./Navigation";
 import BlockedUsersModal from "./BlockedUsersModal";
 import MyRides from "./MyRides";
 import Profile from "./Profile";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import ActiveRideView from "./ActiveRideView";
+import { cn } from "@/lib/utils";
 
 type TabType = "find" | "offer" | "my-rides" | "profile" | "active";
 
@@ -22,7 +25,12 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const supabase = createClient();
   const queryClient = useQueryClient();
 
-  // Instant real-time listener to force UI updates immediately
+  // Widget States
+  const [calcDistance, setCalcDistance] = useState<number>(15);
+  const [calcMileage, setCalcMileage] = useState<number>(18);
+  const [calcFuelPrice, setCalcFuelPrice] = useState<number>(109);
+
+  // Real-time listener
   useEffect(() => {
     const channel = supabase.channel('dashboard-realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'rides' }, () => {
@@ -42,26 +50,22 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
     };
   }, [supabase, queryClient, userId]);
 
+  // Active Trip Checker Hook
   const { data: hasActiveTrip } = useQuery({
     queryKey: ["activeTripGlobal", userId],
     queryFn: async () => {
-      // 1. Check if user is driver
       const { data: driverRides } = await supabase.from('rides')
         .select('id, status')
         .eq('driver_id', userId);
       
       if (driverRides && driverRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
 
-      // 2. Check if user is passenger
       let isActivePassenger = false;
-      
-      // Try joined query first
       const { data: pBookings } = await supabase.from('bookings').select('id, rides(id, status)').eq('passenger_id', userId).in('status', ['approved', 'pending']);
       if (pBookings && pBookings.some((b: any) => b.rides && (b.rides.status === 'active' || b.rides.status === 'in_progress'))) {
         isActivePassenger = true;
       }
 
-      // FALLBACK: Raw JS cross-reference just in case joined query fails on this specific Supabase instance
       if (!isActivePassenger) {
         const { data: rawBookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
         const activeRaw = rawBookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
@@ -76,9 +80,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           }
         }
       }
-
-      if (isActivePassenger) return true;
-      return false;
+      return isActivePassenger;
     },
     refetchInterval: 5000
   });
@@ -90,71 +92,259 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
       return prev;
     });
   }, [hasActiveTrip]);
+
+
+  // Tab Configuration
+  const TABS = [
+    { id: "find", label: "Find a Ride", icon: Search },
+    { id: "offer", label: "Offer a Ride", icon: Car },
+    { id: "my-rides", label: "My Bookings", icon: Route },
+    { id: "profile", label: "Profile", icon: Users },
+  ] as const;
+
+  if (hasActiveTrip && !TABS.find(t => t.id === "active")) {
+    (TABS as any).push({ id: "active", label: "Active Trip", icon: Activity });
+  }
+
+  // Cost Calc Logic
+  const fuelCost = (calcDistance / calcMileage) * calcFuelPrice;
+  const recommendedSplit = Math.ceil(fuelCost / 3);
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex flex-col">
-      <Navigation 
-        userId={userId} 
-        onSignOut={onSignOut} 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab}
-        hasActiveTrip={hasActiveTrip}
-      />
+    <div className="min-h-screen bg-slate-950 text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
+      
+      {/* Ambient Lighting */}
+      <div className="absolute top-0 left-[20%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
+      <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex flex-col items-center">
-        
-        {/* Trust & Safety Badges */}
-        <div className="w-full flex justify-center mb-8">
-          <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 px-4 py-2 rounded-full text-sm font-semibold border border-emerald-200 dark:border-emerald-500/20 shadow-sm">
-            <ShieldCheck className="w-5 h-5" />
-            Verified College Platform
+      {/* Modern Top Bar */}
+      <header className="sticky top-0 z-50 w-full backdrop-blur-2xl bg-slate-950/60 border-b border-slate-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-9 h-9 bg-gradient-to-tr from-indigo-600 to-indigo-400 rounded-xl flex items-center justify-center font-black text-lg text-white shadow-lg shadow-indigo-600/20">
+              V
+            </div>
+            <div>
+              <h1 className="text-sm font-bold tracking-tight text-white leading-none">VNR Pool Dashboard</h1>
+              <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-400 mt-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Campus Network
+              </span>
+            </div>
           </div>
-        </div>
 
-        {/* Hero Section */}
-        <div className="w-full text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-[#0F172A] dark:text-white tracking-tight mb-4">
-            Commute <span className="text-[#2563EB] dark:text-[#3B82F6]">Smarter,</span><br/>Together.
-          </h1>
-          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto font-medium">
-            Safe, affordable, and eco-friendly ride-pooling exclusively for VNR VJIET students and faculty.
-          </p>
-        </div>
-
-        {/* Action Button for Mobile Blocked Users */}
-        <div className="w-full max-w-4xl flex justify-end mb-4">
-          <button 
-            onClick={() => setShowBlockedModal(true)} 
-            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors"
-          >
-            <UserX className="w-4 h-4" /> Manage Blocked
-          </button>
-        </div>
-
-        {/* Main Content Area */}
-        <div className="w-full max-w-4xl bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/5 rounded-3xl shadow-xl">
-          <div className="p-4 md:p-8">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setActiveTab("offer")}
+              className="hidden sm:flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-lg transition-all shadow-md shadow-indigo-600/20"
             >
-              {activeTab === "find" ? (
-                <div className="space-y-6">
-                  <FindRideFeed userId={userId} onVehicleSelect={setSelectedVehicle} />
-                </div>
-              ) : activeTab === "active" ? (
-                <ActiveRideView userId={userId} onVehicleSelect={setSelectedVehicle} />
-              ) : activeTab === "offer" ? (
-                <OfferSeatForm userId={userId} onVehicleSelect={setSelectedVehicle} />
-              ) : activeTab === "my-rides" ? (
-                <MyRides userId={userId} onVehicleSelect={setSelectedVehicle} />
-              ) : (
-                <Profile userId={userId} />
-              )}
-            </motion.div>
+              <Car className="w-4 h-4" /> Offer Ride
+            </button>
+            <div className="h-6 w-px bg-slate-800 mx-1 hidden sm:block" />
+            <button onClick={onSignOut} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group">
+              <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+            </button>
           </div>
         </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 flex flex-col gap-8">
+        
+        {/* Animated Staggered Container */}
+        <motion.div 
+          initial="hidden" animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+          }}
+          className="flex flex-col gap-8"
+        >
+
+          {/* Metrics Bento Grid */}
+          <motion.section 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+          >
+            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 flex flex-col gap-2">
+              <div className="flex items-center justify-between text-slate-400 mb-1">
+                <span className="text-xs font-semibold uppercase tracking-wider">Total Rides Shared</span>
+                <TrendingUp className="w-4 h-4 text-indigo-400" />
+              </div>
+              <div className="text-3xl font-black text-white">4,208</div>
+              <div className="text-xs text-indigo-400 font-medium">+12% this week</div>
+            </div>
+
+            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 flex flex-col gap-2">
+              <div className="flex items-center justify-between text-slate-400 mb-1">
+                <span className="text-xs font-semibold uppercase tracking-wider">Fuel Saved</span>
+                <Wallet className="w-4 h-4 text-teal-400" />
+              </div>
+              <div className="text-3xl font-black text-white">₹85.4K</div>
+              <div className="text-xs text-teal-400 font-medium">Est. across all users</div>
+            </div>
+
+            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-center items-center text-center gap-3 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent" />
+              <ShieldCheck className="w-8 h-8 text-indigo-400 relative z-10" />
+              <div className="relative z-10">
+                <div className="text-sm font-bold text-white">Verified Student</div>
+                <div className="text-xs text-slate-400">VNR VJIET ID Authenticated</div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* 2-Column Workspace Grid */}
+          <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* LEFT COLUMN: Main App Area */}
+            <motion.div 
+              variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
+              className="lg:col-span-8 flex flex-col gap-6"
+            >
+              
+              {/* Tab Navigation */}
+              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-xl p-1.5 flex overflow-x-auto no-scrollbar shadow-sm">
+                {TABS.map((tab) => {
+                  const isActive = activeTab === tab.id;
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id as TabType)}
+                      className={cn(
+                        "relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex-shrink-0",
+                        isActive ? "text-white" : "text-slate-400 hover:text-slate-200"
+                      )}
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeTabIndicator"
+                          className="absolute inset-0 bg-slate-800 rounded-lg shadow-sm border border-slate-700/50"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
+                      <span className="relative z-10 flex items-center gap-2">
+                        <Icon className={cn("w-4 h-4", isActive ? "text-indigo-400" : "")} />
+                        {tab.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Dynamic Workspace Container */}
+              <div className="bg-slate-900/40 backdrop-blur-2xl border border-slate-800/80 rounded-2xl p-1 shadow-2xl relative overflow-hidden group">
+                {/* Subtle border glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/0 via-indigo-500/0 to-indigo-500/0 group-hover:from-indigo-500/10 group-hover:via-transparent transition-all duration-500 pointer-events-none" />
+                
+                <div className="bg-slate-950 rounded-xl p-4 sm:p-6 lg:p-8 min-h-[500px]">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeTab}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="h-full"
+                    >
+                      {activeTab === "find" && <FindRideFeed userId={userId} onVehicleSelect={setSelectedVehicle} />}
+                      {activeTab === "offer" && <OfferSeatForm userId={userId} onVehicleSelect={setSelectedVehicle} />}
+                      {activeTab === "my-rides" && <MyRides userId={userId} onVehicleSelect={setSelectedVehicle} />}
+                      {activeTab === "profile" && <Profile userId={userId} />}
+                      {activeTab === "active" && <ActiveRideView userId={userId} onVehicleSelect={setSelectedVehicle} />}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+
+            </motion.div>
+
+            {/* RIGHT COLUMN: Sidebar Widgets */}
+            <motion.div 
+              variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
+              className="lg:col-span-4 flex flex-col gap-6 sticky top-24"
+            >
+              
+              {/* Pickup Map Placeholder */}
+              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl overflow-hidden shadow-sm group">
+                <div className="h-32 bg-slate-800 relative flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1)_0%,transparent_100%)]" />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:16px_16px]" />
+                  <MapPin className="w-8 h-8 text-indigo-400 relative z-10 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]" />
+                  
+                  {/* Decorative map nodes */}
+                  <div className="absolute top-8 left-8 w-2 h-2 bg-slate-600 rounded-full" />
+                  <div className="absolute top-20 right-12 w-2 h-2 bg-slate-600 rounded-full" />
+                  <div className="absolute bottom-6 left-24 w-3 h-3 bg-teal-500 rounded-full shadow-[0_0_10px_rgba(20,184,166,0.5)]" />
+                  
+                  <svg className="absolute inset-0 w-full h-full stroke-slate-700/50 fill-none" strokeWidth="2" strokeDasharray="4 4">
+                    <path d="M 40,40 L 100,100 L 150,80" />
+                  </svg>
+                </div>
+                <div className="p-4 border-t border-slate-800/80">
+                  <h3 className="text-sm font-bold text-white mb-1">Campus Hotspots</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    High demand pickups at Kukatpally (JNTU), Pragathi Nagar, and Miyapur X Roads.
+                  </p>
+                </div>
+              </div>
+
+              {/* Fuel Split Calculator */}
+              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+                <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                  <Wallet className="w-4 h-4 text-teal-400" />
+                  Quick Fare Splitter
+                </h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 block">Distance (km)</label>
+                    <input 
+                      type="range" min="1" max="40" 
+                      value={calcDistance} onChange={(e) => setCalcDistance(Number(e.target.value))}
+                      className="w-full h-1.5 bg-slate-800 rounded-full appearance-none accent-teal-400"
+                    />
+                    <div className="text-right text-xs text-slate-300 mt-1 font-medium">{calcDistance} km</div>
+                  </div>
+                  
+                  <div className="pt-2 border-t border-slate-800/50 flex justify-between items-end">
+                    <div>
+                      <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Recommended per seat</div>
+                      <div className="text-2xl font-black text-white flex items-start gap-1">
+                        <span className="text-sm text-slate-400 mt-1">₹</span>{recommendedSplit}
+                      </div>
+                    </div>
+                    <button className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white transition-colors">
+                      Copy
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Safety Guidelines */}
+              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+                <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+                  Safety Guidelines
+                </h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-2 text-xs text-slate-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    Verify the driver's college ID before boarding.
+                  </li>
+                  <li className="flex items-start gap-2 text-xs text-slate-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    Share your live location with a friend via WhatsApp.
+                  </li>
+                  <li className="flex items-start gap-2 text-xs text-slate-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    Payments should only be made directly to the driver via UPI.
+                  </li>
+                </ul>
+              </div>
+
+            </motion.div>
+          </section>
+        </motion.div>
       </main>
 
       {showBlockedModal && (
