@@ -11,6 +11,7 @@ import ChatModal from "./ChatModal";
 import RateUser from "./RateUser";
 import RideCard from "./RideCard";
 import BookSeatModal from "./BookSeatModal";
+import DriverProfileModal from "./DriverProfileModal";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip" }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
@@ -21,6 +22,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
   const [minSeats, setMinSeats] = useState<number>(1);
   const [selectedRideId, setSelectedRideId] = useState<string | null>(null);
   const [selectedRideForBooking, setSelectedRideForBooking] = useState<{ride: any, price: number} | null>(null);
+  const [selectedDriverForModal, setSelectedDriverForModal] = useState<{driver: any, vehicleNumber: string} | null>(null);
   const [userGender, setUserGender] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,7 +40,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
     queryFn: async () => {
       const queryStr = `
         *,
-        driver:users!driver_id(full_name, mobile_number, gender, branch, roll_no, avatar_url),
+        driver:users!driver_id(full_name, mobile_number, gender, branch, roll_no, avatar_url, rating_sum, rating_count),
         bookings(id, passenger_id, status, passenger:users!passenger_id(full_name, gender, roll_no, avatar_url))
       `;
 
@@ -585,7 +587,10 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                 {/* Driver Info Header */}
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xl overflow-hidden shadow-sm">
+                    <div 
+                      onClick={() => setSelectedDriverForModal({ driver: ride.driver, vehicleNumber: ride.vehicle_number })}
+                      className="cursor-pointer w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xl overflow-hidden shadow-sm hover:scale-105 transition-transform border-2 border-transparent hover:border-indigo-400"
+                    >
                       {ride.driver?.avatar_url ? (
                         <img src={ride.driver.avatar_url} alt={ride.driver.full_name || "Driver"} className="w-full h-full object-cover" />
                       ) : (
@@ -601,7 +606,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                       </div>
                       <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400 mt-0.5">
                         <span className="flex items-center text-yellow-500 font-medium">
-                          ★ 4.9 <span className="text-slate-400 dark:text-slate-500 ml-1 font-normal">(12)</span>
+                          ★ {ride.driver?.rating_count > 0 ? (ride.driver.rating_sum / ride.driver.rating_count).toFixed(1) : "New"} 
+                          <span className="text-slate-400 dark:text-slate-500 ml-1 font-normal">({ride.driver?.rating_count || 0})</span>
                         </span>
                         <span>•</span>
                         <span>{ride.driver?.branch}</span>
@@ -838,6 +844,13 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
       {selectedRideId && (
         <ChatModal rideId={selectedRideId} userId={userId} onClose={() => setSelectedRideId(null)} />
+      )}
+      {selectedDriverForModal && (
+        <DriverProfileModal
+          driver={selectedDriverForModal.driver}
+          vehicleNumber={selectedDriverForModal.vehicleNumber}
+          onClose={() => setSelectedDriverForModal(null)}
+        />
       )}
     </div>
   );
