@@ -53,21 +53,31 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
       if (driverRides && driverRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
 
       // 2. Check if user is passenger
-      const { data: bookings } = await supabase.from('bookings')
-        .select('ride_id, status')
-        .eq('passenger_id', userId);
+      let isActivePassenger = false;
       
-      const activeBookings = bookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
-      
-      if (activeBookings.length > 0) {
-        const rideIds = activeBookings.map(b => b.ride_id);
-        const { data: allRides } = await supabase.from('rides').select('id, status');
-        if (allRides) {
-          const passengerRides = allRides.filter(r => rideIds.includes(r.id));
-          if (passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
+      // Try joined query first
+      const { data: pBookings } = await supabase.from('bookings').select('id, rides(id, status)').eq('passenger_id', userId).in('status', ['approved', 'pending']);
+      if (pBookings && pBookings.some((b: any) => b.rides && (b.rides.status === 'active' || b.rides.status === 'in_progress'))) {
+        isActivePassenger = true;
+      }
+
+      // FALLBACK: Raw JS cross-reference just in case joined query fails on this specific Supabase instance
+      if (!isActivePassenger) {
+        const { data: rawBookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
+        const activeRaw = rawBookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+        if (activeRaw.length > 0) {
+          const rIds = activeRaw.map(b => b.ride_id);
+          const { data: allRidesRaw } = await supabase.from('rides').select('id, status');
+          if (allRidesRaw) {
+            const passengerRides = allRidesRaw.filter(r => rIds.includes(r.id));
+            if (passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) {
+              isActivePassenger = true;
+            }
+          }
         }
       }
 
+      if (isActivePassenger) return true;
       return false;
     },
     refetchInterval: 5000

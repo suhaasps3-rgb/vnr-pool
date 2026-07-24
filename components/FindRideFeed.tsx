@@ -41,10 +41,28 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         const { data: dRides } = await supabase.from('rides').select('id, status').eq('driver_id', userId);
         if (dRides && dRides.some(r => r.status === 'active' || r.status === 'in_progress')) return [];
         
+        let isLocked = false;
         const { data: pBookings } = await supabase.from('bookings').select('id, rides(id, status)').eq('passenger_id', userId).in('status', ['approved', 'pending']);
         if (pBookings && pBookings.some((b: any) => b.rides && (b.rides.status === 'active' || b.rides.status === 'in_progress'))) {
-          return [];
+          isLocked = true;
         }
+
+        if (!isLocked) {
+          const { data: rawBookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
+          const activeRaw = rawBookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+          if (activeRaw.length > 0) {
+            const rIds = activeRaw.map(b => b.ride_id);
+            const { data: allRidesRaw } = await supabase.from('rides').select('id, status');
+            if (allRidesRaw) {
+              const passengerRides = allRidesRaw.filter(r => rIds.includes(r.id));
+              if (passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) {
+                isLocked = true;
+              }
+            }
+          }
+        }
+
+        if (isLocked) return [];
 
         let query = supabase.from('rides').select(queryStr).eq('status', 'active');
         if (rideCategory !== "all") query = query.eq('ride_category', rideCategory);
@@ -118,11 +136,29 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       if (driverRides && driverRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
 
       // 2. Check if user is passenger
+      let isActivePassenger = false;
       const { data: pBookings } = await supabase.from('bookings').select('id, rides(id, status)').eq('passenger_id', userId).in('status', ['approved', 'pending']);
       if (pBookings && pBookings.some((b: any) => b.rides && (b.rides.status === 'active' || b.rides.status === 'in_progress'))) {
-        return true;
+        isActivePassenger = true;
       }
 
+      // FALLBACK
+      if (!isActivePassenger) {
+        const { data: rawBookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
+        const activeRaw = rawBookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+        if (activeRaw.length > 0) {
+          const rIds = activeRaw.map(b => b.ride_id);
+          const { data: allRidesRaw } = await supabase.from('rides').select('id, status');
+          if (allRidesRaw) {
+            const passengerRides = allRidesRaw.filter(r => rIds.includes(r.id));
+            if (passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) {
+              isActivePassenger = true;
+            }
+          }
+        }
+      }
+
+      if (isActivePassenger) return true;
       return false;
     }
   });
@@ -152,8 +188,27 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         return;
       }
 
+      let isLocked = false;
       const { data: pBookings } = await supabase.from('bookings').select('id, rides(id, status)').eq('passenger_id', userId).in('status', ['approved', 'pending']);
       if (pBookings && pBookings.some((b: any) => b.rides && (b.rides.status === 'active' || b.rides.status === 'in_progress'))) {
+        isLocked = true;
+      }
+      if (!isLocked) {
+        const { data: rawBookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
+        const activeRaw = rawBookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+        if (activeRaw.length > 0) {
+          const rIds = activeRaw.map(b => b.ride_id);
+          const { data: allRidesRaw } = await supabase.from('rides').select('id, status');
+          if (allRidesRaw) {
+            const passengerRides = allRidesRaw.filter(r => rIds.includes(r.id));
+            if (passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) {
+              isLocked = true;
+            }
+          }
+        }
+      }
+
+      if (isLocked) {
         toast.error("Action Blocked: You cannot join a ride while you are currently in an active trip.");
         setIsProcessing(false);
         return;

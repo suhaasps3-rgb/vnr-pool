@@ -94,8 +94,27 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
       }
 
       // 2. Cannot offer if passenger in active ride
+      let isLocked = false;
       const { data: pBookings } = await supabase.from('bookings').select('id, rides(id, status)').eq('passenger_id', userId).in('status', ['approved', 'pending']);
       if (pBookings && pBookings.some((b: any) => b.rides && (b.rides.status === 'active' || b.rides.status === 'in_progress'))) {
+        isLocked = true;
+      }
+      if (!isLocked) {
+        const { data: rawBookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
+        const activeRaw = rawBookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+        if (activeRaw.length > 0) {
+          const rIds = activeRaw.map(b => b.ride_id);
+          const { data: allRidesRaw } = await supabase.from('rides').select('id, status');
+          if (allRidesRaw) {
+            const passengerRides = allRidesRaw.filter(r => rIds.includes(r.id));
+            if (passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) {
+              isLocked = true;
+            }
+          }
+        }
+      }
+
+      if (isLocked) {
         toast.error("Action Blocked: You cannot offer a new ride while you are currently in an active trip.");
         setLoading(false);
         return;
