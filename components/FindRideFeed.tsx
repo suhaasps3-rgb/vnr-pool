@@ -46,7 +46,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         if (error) throw error;
         return data;
       } else if (mode === "offered") {
-        const { data, error } = await supabase.from('rides').select(queryStr).eq('driver_id', userId).neq('status', 'cancelled').order('created_at', { ascending: false });
+        const { data, error } = await supabase.from('rides').select(queryStr).eq('driver_id', userId).order('created_at', { ascending: false });
         if (error) throw error;
         return data;
       } else if (mode === "booked") {
@@ -79,11 +79,21 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
   const handleRequestSeat = async (ride: any) => {
     try {
-      const { error } = await supabase.from('bookings').insert({
-        ride_id: ride.id,
-        passenger_id: userId,
-        status: 'pending'
-      });
+      const existingBooking = ride.bookings?.find((b: any) => b.passenger_id === userId);
+      
+      let error;
+      if (existingBooking) {
+        const { error: updateError } = await supabase.from('bookings').update({ status: 'pending' }).eq('id', existingBooking.id);
+        error = updateError;
+      } else {
+        const { error: insertError } = await supabase.from('bookings').insert({
+          ride_id: ride.id,
+          passenger_id: userId,
+          status: 'pending'
+        });
+        error = insertError;
+      }
+      
       if (error) throw error;
 
       // Send Notification to Driver
@@ -282,8 +292,14 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
               <div 
                 key={ride.id} 
                 onMouseEnter={() => onVehicleSelect(ride.vehicle_type as "car" | "auto" | "bike")}
-                className="ride-card opacity-0 ui-card ui-card-hover p-6 relative overflow-hidden group mb-4"
+                className={`ride-card opacity-0 ui-card ui-card-hover p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''}`}
               >
+                {ride.status === 'cancelled' && (
+                  <div className="absolute top-4 right-4 bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-200 dark:border-red-500/30">
+                    CANCELLED
+                  </div>
+                )}
+                
                 {/* Driver Info Header */}
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex items-center gap-4">
@@ -383,7 +399,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                     </div>
 
                     <div className="flex gap-2">
-                      {(isApproved || ride.driver_id === userId) && (
+                      {(isApproved || ride.driver_id === userId) && ride.status !== 'cancelled' && (
                         <button 
                           onClick={() => setSelectedRideId(ride.id)}
                           className="p-3 bg-slate-100 hover:bg-slate-200 dark:bg-[#0F172A] dark:hover:bg-slate-800 text-[#2563EB] dark:text-[#3B82F6] rounded-xl transition-colors"
@@ -392,7 +408,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                         </button>
                       )}
                       
-                      {ride.driver_id !== userId && !hasRequested && (
+                      {ride.driver_id !== userId && !hasRequested && ride.status !== 'cancelled' && (
                         <button 
                           onClick={() => handleRequestSeat(ride)}
                           className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ui-button-primary"
@@ -401,7 +417,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                         </button>
                       )}
 
-                      {ride.driver_id !== userId && hasRequested && (
+                      {ride.driver_id !== userId && hasRequested && ride.status !== 'cancelled' && (
                         <button 
                           onClick={() => handleCancelBooking(ride, myBooking)}
                           className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20"
@@ -422,7 +438,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                   </div>
                 </div>
 
-                {ride.driver_id === userId && ride.bookings.length > 0 && (
+                {ride.driver_id === userId && ride.bookings.length > 0 && ride.status !== 'cancelled' && (
                   <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 space-y-2">
                     <h4 className="text-sm font-bold text-gray-500 dark:text-gray-400">Manage Requests</h4>
                     {ride.bookings.map((booking: any) => (
