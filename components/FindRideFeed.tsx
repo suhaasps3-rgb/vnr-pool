@@ -192,6 +192,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
       toast.success("Ride started! It has been removed from the public feed.");
       queryClient.invalidateQueries({ queryKey: ["rides"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTrip"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTripGlobal"] });
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -214,6 +216,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
       toast.success("Ride marked as completed!");
       queryClient.invalidateQueries({ queryKey: ["rides"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTrip"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTripGlobal"] });
     } catch (error: any) {
       toast.error(error.message);
     }
