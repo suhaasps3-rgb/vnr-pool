@@ -11,6 +11,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   const [userGender, setUserGender] = useState<string | null>(null);
   const [userCarNumber, setUserCarNumber] = useState<string | null>(null);
   const [userBikeNumber, setUserBikeNumber] = useState<string | null>(null);
+  const [vehicleEntryMode, setVehicleEntryMode] = useState<'profile' | 'manual'>('profile');
 
   useEffect(() => {
     const supabase = createClient();
@@ -88,10 +89,9 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
       
       let finalVehicleNumber = formData.vehicle_number;
       if (formData.ride_category === 'personal_vehicle') {
-        if (formData.vehicle_type === 'car' && userCarNumber) {
-          finalVehicleNumber = userCarNumber;
-        } else if (formData.vehicle_type === 'bike' && userBikeNumber) {
-          finalVehicleNumber = userBikeNumber;
+        const hasProfileNumber = (formData.vehicle_type === 'car' && userCarNumber) || (formData.vehicle_type === 'bike' && userBikeNumber);
+        if (hasProfileNumber && vehicleEntryMode === 'profile') {
+          finalVehicleNumber = (formData.vehicle_type === 'car' ? userCarNumber : userBikeNumber) as string;
         }
       }
 
@@ -252,9 +252,25 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
             <div>
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Vehicle Number</label>
               {((formData.vehicle_type === 'car' && userCarNumber) || (formData.vehicle_type === 'bike' && userBikeNumber)) ? (
-                <div className="w-full p-4 bg-slate-100 dark:bg-[#1E293B] text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-white/10 rounded-xl uppercase font-bold flex items-center justify-between shadow-inner">
-                  <span>{formData.vehicle_type === 'car' ? userCarNumber : userBikeNumber}</span>
-                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-md border border-emerald-200 dark:border-emerald-500/20">From Profile</span>
+                <div className="space-y-3">
+                  <select 
+                    value={vehicleEntryMode}
+                    onChange={(e) => setVehicleEntryMode(e.target.value as 'profile' | 'manual')}
+                    className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all font-medium"
+                  >
+                    <option value="profile">{formData.vehicle_type === 'car' ? userCarNumber : userBikeNumber} (From Profile)</option>
+                    <option value="manual">Use a different vehicle...</option>
+                  </select>
+                  
+                  {vehicleEntryMode === 'manual' && (
+                    <input 
+                      required
+                      placeholder="e.g. TS 08 AB 1234"
+                      value={formData.vehicle_number}
+                      onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
+                      className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
+                    />
+                  )}
                 </div>
               ) : (
                 <input 
