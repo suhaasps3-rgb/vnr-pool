@@ -406,16 +406,16 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
   const maskMobile = (mobile: string, isApproved: boolean) => {
     if (isApproved) return mobile;
-    return `+91 ${mobile.slice(0, 2)}XXX X${mobile.slice(-4)}`;
+        return `+91 ${mobile.slice(0, 2)}XXX X${mobile.slice(-4)}`;
   };
 
   return (
     <div>
-      {/* FULL SCREEN OVERLAY LOCK FOR ACTIVE TRIPS */}
-      {mode === "feed" && hasActiveTrip && (
-        <div className="fixed inset-0 z-50 bg-[#F8FAFC] dark:bg-[#0F172A] flex flex-col items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-[#1E293B] p-10 rounded-3xl shadow-2xl border border-blue-200 dark:border-blue-500/20 max-w-md w-full text-center">
-            <div className="w-20 h-20 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner">
+        {/* FULL SCREEN OVERLAY LOCK FOR ACTIVE TRIPS */}
+        {mode === "feed" && hasActiveTrip && (
+          <div className="flex flex-col items-center justify-center py-12 px-6 animate-in fade-in duration-300">
+            <div className="bg-white dark:bg-[#1E293B] p-10 rounded-3xl shadow-lg border border-blue-200 dark:border-blue-500/20 max-w-md w-full text-center">
+              <div className="w-20 h-20 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner">
               🚗
             </div>
             <h2 className="text-2xl font-black text-[#0F172A] dark:text-white mb-4">Ride Reserved / In Progress</h2>
