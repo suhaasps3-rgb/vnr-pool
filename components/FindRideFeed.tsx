@@ -106,6 +106,21 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
     }
   };
 
+  const handleBlockUser = async (driverId: string, driverName: string) => {
+    if (!confirm(`Are you sure you want to block ${driverName}? You will no longer see their rides.`)) return;
+    try {
+      const { error } = await supabase.from('blocked_users').insert({
+        blocker_id: userId,
+        blocked_id: driverId
+      });
+      if (error) throw error;
+      toast.success(`${driverName} blocked successfully.`);
+      refetch();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to block user.");
+    }
+  };
+
   const maskMobile = (mobile: string, isApproved: boolean) => {
     if (isApproved) return mobile;
     return `+91 ${mobile.slice(0, 2)}XXX X${mobile.slice(-4)}`;
@@ -166,9 +181,11 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
                       <Trash2 className="w-4 h-4" />
                     </button>
                   )}
-                  <button className="text-gray-400 hover:text-red-500 transition-colors" title="Block User">
-                    <Ban className="w-4 h-4" />
-                  </button>
+                  {ride.driver_id !== userId && (
+                    <button onClick={() => handleBlockUser(ride.driver_id, ride.driver?.full_name)} className="text-gray-400 hover:text-red-500 transition-colors" title="Block User">
+                      <Ban className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

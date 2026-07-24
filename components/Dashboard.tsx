@@ -6,12 +6,15 @@ import { LogOut } from "lucide-react";
 import FindRideFeed from "./FindRideFeed";
 import OfferSeatForm from "./OfferSeatForm";
 import ThemeToggle from "./ThemeToggle";
+import BlockedUsersModal from "./BlockedUsersModal";
+import { UserX } from "lucide-react";
 
 type TabType = "find" | "offer";
 
 export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void, userId: string }) {
   const [activeTab, setActiveTab] = useState<TabType>("find");
   const [selectedVehicle, setSelectedVehicle] = useState<"car" | "auto" | "bike">("car");
+  const [showBlockedModal, setShowBlockedModal] = useState(false);
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
@@ -45,7 +48,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
         {/* User Controls */}
         <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-white/5">
           <ThemeToggle />
+          <button onClick={() => setShowBlockedModal(true)} className="ui-button px-4 py-2 text-sm font-medium flex-1 justify-center flex items-center gap-2" title="Manage Blocked Users">
+            <UserX className="w-4 h-4" /> Blocked
+          </button>
           <button onClick={onSignOut} className="ui-button px-4 py-2 text-sm font-medium flex-1 justify-center flex items-center gap-2">
+            <LogOut className="w-4 h-4" /> Sign Out
+          </button>
+        </div>
             <LogOut className="w-4 h-4" /> Sign Out
           </button>
         </div>
@@ -91,7 +100,11 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           <OfferSeatForm userId={userId} onVehicleSelect={setSelectedVehicle} />
         )}
       </motion.div>
-    </div>
+      </div>
+      
+      {showBlockedModal && (
+        <BlockedUsersModal userId={userId} onClose={() => setShowBlockedModal(false)} />
+      )}
     </div>
   );
 }
