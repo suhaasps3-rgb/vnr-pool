@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2 } from "lucide-react";
 import ChatModal from "./ChatModal";
 
-export default function FindRideFeed({ userId, onVehicleSelect }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void }) {
+export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
   const [womenOnly, setWomenOnly] = useState(false);
   const [selectedRideId, setSelectedRideId] = useState<string | null>(null);
@@ -23,24 +23,37 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
   }, [userId, supabase]);
 
   const { data: rides, isLoading, refetch } = useQuery({
-    queryKey: ["rides", rideCategory, womenOnly],
+    queryKey: ["rides", rideCategory, womenOnly, mode],
     queryFn: async () => {
-      let query = supabase.from('rides').select(`
+      const queryStr = `
         *,
         driver:users!driver_id(full_name, mobile_number, gender, branch, roll_no),
         bookings(id, passenger_id, status, passenger:users!passenger_id(full_name, gender, roll_no))
-      `).eq('status', 'active');
+      `;
 
-      if (rideCategory !== "all") {
-        query = query.eq('ride_category', rideCategory);
+      if (mode === "feed") {
+        let query = supabase.from('rides').select(queryStr).eq('status', 'active');
+        if (rideCategory !== "all") query = query.eq('ride_category', rideCategory);
+        if (womenOnly) query = query.eq('is_women_only', true);
+        
+        const { data, error } = await query;
+        if (error) throw error;
+        return data;
+      } else if (mode === "offered") {
+        const { data, error } = await supabase.from('rides').select(queryStr).eq('driver_id', userId).order('created_at', { ascending: false });
+        if (error) throw error;
+        return data;
+      } else if (mode === "booked") {
+        const { data: bookingData, error: bError } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId);
+        if (bError) throw bError;
+        const rideIds = bookingData.map((b: any) => b.ride_id);
+        
+        if (rideIds.length === 0) return [];
+
+        const { data, error } = await supabase.from('rides').select(queryStr).in('id', rideIds).order('created_at', { ascending: false });
+        if (error) throw error;
+        return data;
       }
-      if (womenOnly) {
-        query = query.eq('is_women_only', true);
-      }
-      
-      const { data, error } = await query;
-      if (error) throw error;
-      return data;
     }
   });
 
@@ -170,7 +183,8 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
   return (
     <div>
       {/* Filters Bar Redesign */}
-      <div className="flex flex-wrap gap-3 mb-6 bg-slate-50 dark:bg-[#0F172A] p-2 rounded-2xl border border-gray-200 dark:border-white/5">
+      {mode === "feed" && (
+        <div className="flex flex-wrap gap-3 mb-6 bg-slate-50 dark:bg-[#0F172A] p-2 rounded-2xl border border-gray-200 dark:border-white/5">
         <select 
           className="bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-[#2563EB] transition-colors shadow-sm"
           value={rideCategory}
@@ -193,6 +207,7 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
           </label>
         )}
       </div>
+      )}
 
       {/* Feed */}
       <div ref={containerRef} className="space-y-4">
@@ -207,6 +222,9 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
           </div>
         ) : (
           rides?.filter((ride) => {
+            if (mode === "booked") return true;
+            if (mode === "offered") return true;
+            
             if (ride.available_seats > 0) return true;
             if (ride.driver_id === userId) return true;
             const isApproved = ride.bookings.some((b: any) => b.passenger_id === userId && b.status === 'approved');
