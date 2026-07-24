@@ -122,6 +122,23 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
   const handleRequestSeat = async (ride: any) => {
     try {
+      // 1. FRESH DEEP CHECK: Guarantee user has no active trips before allowing request
+      const { data: bookingData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
+      const rideIds = bookingData?.map((b: any) => b.ride_id) || [];
+      if (rideIds.length > 0) {
+        const { data: passengerRides } = await supabase.from('rides').select('id').eq('status', 'in_progress').in('id', rideIds);
+        if (passengerRides && passengerRides.length > 0) {
+           toast.error("Action Blocked: You cannot join a ride while you are currently in an active trip.");
+           return;
+        }
+      }
+      const { data: driverRides } = await supabase.from('rides').select('id').eq('status', 'in_progress').eq('driver_id', userId);
+      if (driverRides && driverRides.length > 0) {
+        toast.error("Action Blocked: You cannot join a ride while you are currently driving an active trip.");
+        return;
+      }
+
+      // 2. Proceed with booking
       const existingBooking = ride.bookings?.find((b: any) => b.passenger_id === userId);
       
       let error;

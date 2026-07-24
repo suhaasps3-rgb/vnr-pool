@@ -85,6 +85,24 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
     const supabase = createClient();
 
     try {
+      // 1. FRESH DEEP CHECK: Guarantee user has no active trips before allowing to offer
+      const { data: bookingData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
+      const rideIds = bookingData?.map((b: any) => b.ride_id) || [];
+      if (rideIds.length > 0) {
+        const { data: passengerRides } = await supabase.from('rides').select('id').eq('status', 'in_progress').in('id', rideIds);
+        if (passengerRides && passengerRides.length > 0) {
+           toast.error("Action Blocked: You cannot offer a new ride while you are currently in an active trip.");
+           setLoading(false);
+           return;
+        }
+      }
+      const { data: driverRides } = await supabase.from('rides').select('id').eq('status', 'in_progress').eq('driver_id', userId);
+      if (driverRides && driverRides.length > 0) {
+        toast.error("Action Blocked: You cannot offer a new ride while you are currently driving an active trip.");
+        setLoading(false);
+        return;
+      }
+
       const departureTimeUTC = new Date(`${formData.departure_date}T${formData.departure_time}`).toISOString();
       
       let finalVehicleNumber = formData.vehicle_number;
