@@ -90,14 +90,16 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
   };
 
   const handleDeleteRide = async (rideId: string) => {
-    if (!confirm("Are you sure you want to delete this ride?")) return;
+    if (!confirm("Are you sure you want to cancel and remove this ride?")) return;
     try {
-      const { error } = await supabase.from('rides').delete().eq('id', rideId);
+      // Perform a soft-delete by updating status to 'cancelled' 
+      // since RLS policies don't permit hard deletes by default.
+      const { error } = await supabase.from('rides').update({ status: 'cancelled' }).eq('id', rideId);
       if (error) throw error;
-      toast.success("Ride deleted successfully.");
+      toast.success("Ride removed successfully.");
       refetch();
     } catch (err: any) {
-      toast.error(err.message || "Failed to delete ride.");
+      toast.error(err.message || "Failed to remove ride.");
     }
   };
 
