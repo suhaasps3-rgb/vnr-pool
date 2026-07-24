@@ -93,9 +93,10 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
             {hasActiveTrip ? (
               <button
                 onClick={() => setActiveTab("active")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-100/50 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-100/50 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 relative overflow-hidden group`}
               >
-                🚗 Ride in Progress
+                <span className="animate-pulse">🚗</span> Ride in Progress
+                <span className="absolute inset-0 bg-blue-500/10 scale-0 group-hover:scale-100 transition-transform duration-300 rounded-lg"></span>
               </button>
             ) : (
               <>
@@ -231,9 +232,10 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
         {hasActiveTrip ? (
           <button
             onClick={() => setActiveTab("active")}
-            className={`flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-100/50 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400`}
+            className={`flex-1 flex justify-center items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-100/50 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 relative overflow-hidden group`}
           >
-            🚗 Ride in Progress
+            <span className="animate-pulse">🚗</span> Ride in Progress
+            <span className="absolute inset-0 bg-blue-500/10 scale-0 group-hover:scale-100 transition-transform duration-300 rounded-lg"></span>
           </button>
         ) : (
           <>

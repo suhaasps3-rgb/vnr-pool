@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
-import anime from "animejs";
+import { motion } from "framer-motion";
+import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2 } from "lucide-react";
 import ChatModal from "./ChatModal";
@@ -163,19 +164,6 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
     }
   });
 
-  // Stagger animation on data load
-  useEffect(() => {
-    if (!isLoading && rides && rides.length > 0 && containerRef.current) {
-      anime({
-        targets: '.ride-card',
-        translateY: [20, 0],
-        opacity: [0, 1],
-        delay: anime.stagger(100, { start: 100 }),
-        easing: 'easeOutQuint',
-        duration: 800
-      });
-    }
-  }, [rides, isLoading]);
 
   const handleRequestSeat = async (ride: any) => {
     if (isProcessing) return;
@@ -245,13 +233,17 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       
       if (error) throw error;
 
-      // Send Notification to Driver
       await supabase.from('notifications').insert({
         user_id: ride.driver_id,
         message: `Someone requested to join your ride from ${ride.origin} to ${ride.destination}!`
       });
 
       toast.success("Seat requested! Waiting for driver approval.");
+      confetti({
+        particleCount: 100,
+        spread: 60,
+        origin: { y: 0.7 }
+      });
       queryClient.invalidateQueries({ queryKey: ["activeTripGlobal"] });
       queryClient.invalidateQueries({ queryKey: ["activeTrip"] });
       queryClient.invalidateQueries({ queryKey: ["rides"] });
@@ -326,6 +318,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       }
 
       toast.success("Ride marked as completed!");
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
       queryClient.invalidateQueries({ queryKey: ["rides"] });
       queryClient.invalidateQueries({ queryKey: ["activeTrip"] });
       queryClient.invalidateQueries({ queryKey: ["activeTripGlobal"] });
@@ -508,7 +505,13 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
             {mode === "active_trip" ? "No active trips found." : "No rides available. You are currently restricted to your active trip."}
           </div>
         ) : (
-          rides?.filter((ride) => {
+          <motion.div
+            variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } }}
+            initial="hidden"
+            animate="show"
+            className="space-y-4"
+          >
+            {rides?.filter((ride) => {
             if (mode === "booked" || mode === "offered") return true;
             
             if (mode === "feed") {
@@ -548,10 +551,13 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
             }
 
             return (
-              <div 
+              <motion.div 
                 key={ride.id} 
                 onMouseEnter={() => onVehicleSelect(ride.vehicle_type as "car" | "auto" | "bike")}
-                className={`ride-card opacity-0 ui-card ui-card-hover p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''} ${ride.status === 'completed' ? 'border-emerald-200 dark:border-emerald-500/30' : ''}`}
+                variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
+                whileHover={{ scale: 1.01, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className={`ui-card p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''} ${ride.status === 'completed' ? 'border-emerald-200 dark:border-emerald-500/30' : ''}`}
               >
                 {ride.status === 'cancelled' && (
                   <div className="absolute top-4 right-4 bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-200 dark:border-red-500/30 z-10">
@@ -808,9 +814,10 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                     ))}
                   </div>
                 )}
-              </div>
+              </motion.div>
             );
-          })
+          })}
+          </motion.div>
         )}
       </div>
 
