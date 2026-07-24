@@ -86,7 +86,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
     try {
       // 1. FRESH DEEP CHECK: Guarantee user has no active trips before allowing to offer
-      const { data: activeRides } = await supabase.from('rides').select('id, driver_id, bookings(passenger_id, status)').eq('status', 'in_progress');
+      const { data: activeRides } = await supabase.from('rides').select('id, driver_id, bookings(passenger_id, status)').in('status', ['active', 'in_progress']);
       const hasActive = activeRides?.some((ride: any) => {
         if (ride.driver_id === userId) return true;
         return ride.bookings?.some((b: any) => b.passenger_id === userId && b.status === 'approved');

@@ -62,7 +62,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         if (error) throw error;
         return data;
       } else if (mode === "active_trip") {
-        const { data: activeRides, error } = await supabase.from('rides').select(queryStr).eq('status', 'in_progress');
+        const { data: activeRides, error } = await supabase.from('rides').select(queryStr).in('status', ['active', 'in_progress']);
         if (error) throw error;
         
         return activeRides?.filter((ride: any) => {
@@ -76,7 +76,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
   const { data: hasActiveTrip } = useQuery({
     queryKey: ["activeTrip", userId],
     queryFn: async () => {
-      const { data: activeRides, error } = await supabase.from('rides').select('id, driver_id, bookings(passenger_id, status)').eq('status', 'in_progress');
+      const { data: activeRides, error } = await supabase.from('rides').select('id, driver_id, bookings(passenger_id, status)').in('status', ['active', 'in_progress']);
       if (error) return false;
 
       return activeRides?.some((ride: any) => {
@@ -103,7 +103,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
   const handleRequestSeat = async (ride: any) => {
     try {
       // 1. FRESH DEEP CHECK: Guarantee user has no active trips before allowing request
-      const { data: activeRides } = await supabase.from('rides').select('id, driver_id, bookings(passenger_id, status)').eq('status', 'in_progress');
+      const { data: activeRides } = await supabase.from('rides').select('id, driver_id, bookings(passenger_id, status)').in('status', ['active', 'in_progress']);
       const hasActive = activeRides?.some((ride: any) => {
         if (ride.driver_id === userId) return true;
         return ride.bookings?.some((b: any) => b.passenger_id === userId && b.status === 'approved');
@@ -364,7 +364,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       <div ref={containerRef} className="space-y-4">
         {mode === "feed" && hasActiveTrip ? (
           <div className="text-center py-16 bg-blue-50 dark:bg-blue-500/10 rounded-2xl border border-blue-100 dark:border-blue-500/20">
-            <h3 className="text-xl font-bold text-blue-900 dark:text-blue-100 mb-2">🚗 Ride in Progress</h3>
+            <h3 className="text-xl font-bold text-blue-900 dark:text-blue-100 mb-2">🚗 Ride Reserved / In Progress</h3>
             <p className="text-blue-700 dark:text-blue-300">You must complete your current ride before finding a new one.</p>
           </div>
         ) : isLoading ? (

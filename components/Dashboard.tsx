@@ -45,7 +45,9 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const { data: hasActiveTrip } = useQuery({
     queryKey: ["activeTripGlobal", userId],
     queryFn: async () => {
-      const { data: activeRides, error } = await supabase.from('rides').select('id, driver_id, bookings(passenger_id, status)').eq('status', 'in_progress');
+      const { data: activeRides, error } = await supabase.from('rides')
+        .select('id, driver_id, bookings(passenger_id, status)')
+        .in('status', ['active', 'in_progress']);
       
       if (error) {
         console.error("Error fetching active trips:", error);
