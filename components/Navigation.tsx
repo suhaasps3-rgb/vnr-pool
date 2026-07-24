@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Bell, User, Search, PlusCircle, Bookmark, Check } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
+import { LogOut, Bell, User, Search, PlusCircle, Bookmark, Check, ChevronDown, Settings, Car, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
@@ -18,8 +18,25 @@ interface NavigationProps {
 
 export default function Navigation({ userId, onSignOut, activeTab, setActiveTab, hasActiveTrip }: NavigationProps) {
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const supabase = createClient();
   const queryClient = useQueryClient();
+  
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const { data: userProfile } = useQuery({
+    queryKey: ["profile", userId],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('users').select('*').eq('id', userId).single();
+      if (error) throw error;
+      return data;
+    }
+  });
 
   const { data: notifications } = useQuery({
     queryKey: ["notifications", userId],
@@ -122,32 +139,12 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                 </button>
               </>
             )}
-            <button
-              onClick={() => setActiveTab("my-rides")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === "my-rides"
-                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
-                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
-              }`}
-            >
-              <Bookmark className="w-4 h-4" /> My Rides
-            </button>
-            <button
-              onClick={() => setActiveTab("profile")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === "profile"
-                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
-                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
-              }`}
-            >
-              <User className="w-4 h-4" /> Profile
-            </button>
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-2 relative">
+          <div className="flex items-center gap-3 relative">
             <button 
-              onClick={() => setShowNotifications(!showNotifications)}
+              onClick={() => { setShowNotifications(!showNotifications); setShowProfileMenu(false); }}
               className="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-white/5 transition-colors relative"
             >
               <Bell className="w-5 h-5" />
@@ -206,23 +203,71 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
               )}
             </AnimatePresence>
 
-            <ThemeToggle />
-            <div className="h-6 w-px bg-gray-200 dark:bg-white/10 mx-2 hidden sm:block"></div>
-            <button onClick={onSignOut} className="hidden sm:flex items-center gap-2 p-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 transition-colors">
-              <LogOut className="w-4 h-4" /> Sign Out
-            </button>
-            
-            {/* Mobile Profile Avatar */}
-            <button 
-              onClick={() => setActiveTab("profile")}
-              className={`sm:hidden p-2 rounded-full transition-colors ${
-                activeTab === "profile" 
-                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]" 
-                  : "bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300"
-              }`}
-            >
-              <User className="w-5 h-5" />
-            </button>
+            {/* Profile Dropdown */}
+            <div className="relative">
+              <button 
+                onClick={() => { setShowProfileMenu(!showProfileMenu); setShowNotifications(false); }}
+                className="flex items-center gap-2 p-1 pl-2 pr-3 rounded-full bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2 dark:focus:ring-offset-[#0F172A]"
+              >
+                <div className="w-8 h-8 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-bold text-sm shadow-inner">
+                  {userProfile?.full_name?.charAt(0).toUpperCase() || <User className="w-4 h-4" />}
+                </div>
+                <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+              </button>
+
+              <AnimatePresence>
+                {showProfileMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute top-12 right-0 w-64 bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden z-50"
+                  >
+                    <div className="p-4 border-b border-gray-100 dark:border-white/5 flex flex-col items-center text-center">
+                      <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black text-2xl shadow-inner mb-3">
+                        {userProfile?.full_name?.charAt(0).toUpperCase() || <User className="w-8 h-8" />}
+                      </div>
+                      <h3 className="font-bold text-[#0F172A] dark:text-white truncate w-full px-2">{userProfile?.full_name || "Loading..."}</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{userProfile?.roll_no}</p>
+                    </div>
+
+                    <div className="p-2 space-y-1">
+                      <button 
+                        onClick={() => { setActiveTab("profile"); setShowProfileMenu(false); }}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-colors text-left"
+                      >
+                        <Settings className="w-4 h-4 text-slate-400" /> Edit Profile & Photo
+                      </button>
+                      <button 
+                        onClick={() => { setActiveTab("profile"); setShowProfileMenu(false); }}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-colors text-left"
+                      >
+                        <Car className="w-4 h-4 text-slate-400" /> Vehicle Details
+                      </button>
+                      
+                      {mounted && (
+                        <button 
+                          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-colors text-left"
+                        >
+                          {theme === "dark" ? <Sun className="w-4 h-4 text-slate-400" /> : <Moon className="w-4 h-4 text-slate-400" />}
+                          {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                        </button>
+                      )}
+                    </div>
+                    
+                    <div className="p-2 border-t border-gray-100 dark:border-white/5">
+                      <button 
+                        onClick={() => { onSignOut(); setShowProfileMenu(false); }} 
+                        className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" /> Sign Out
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
