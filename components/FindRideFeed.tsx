@@ -134,6 +134,28 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
     }
   };
 
+  const handleStartRide = async (ride: any) => {
+    try {
+      const { error } = await supabase.from('rides').update({ status: 'in_progress' }).eq('id', ride.id);
+      if (error) throw error;
+
+      // Notify approved passengers
+      const approvedPassengers = ride.bookings?.filter((b: any) => b.status === 'approved') || [];
+      if (approvedPassengers.length > 0) {
+        const notifications = approvedPassengers.map((b: any) => ({
+          user_id: b.passenger_id,
+          message: `Your ride from ${ride.origin} to ${ride.destination} is now in progress!`
+        }));
+        await supabase.from('notifications').insert(notifications);
+      }
+
+      toast.success("Ride started! It has been removed from the public feed.");
+      queryClient.invalidateQueries({ queryKey: ["rides"] });
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   const handleCompleteRide = async (ride: any) => {
     try {
       const { error } = await supabase.from('rides').update({ status: 'completed' }).eq('id', ride.id);
@@ -323,6 +345,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                     CANCELLED
                   </div>
                 )}
+                {ride.status === 'in_progress' && (
+                  <div className="absolute top-4 right-4 bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 dark:border-blue-500/30 z-10">
+                    IN PROGRESS
+                  </div>
+                )}
                 {ride.status === 'completed' && (
                   <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 dark:border-emerald-500/30 z-10">
                     COMPLETED
@@ -442,7 +469,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                         </button>
                       )}
                       
-                      {ride.driver_id !== userId && !hasRequested && ride.status !== 'cancelled' && ride.status !== 'completed' && (
+                      {ride.driver_id !== userId && !hasRequested && ride.status === 'active' && (
                         <button 
                           onClick={() => handleRequestSeat(ride)}
                           className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ui-button-primary"
@@ -451,7 +478,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                         </button>
                       )}
 
-                      {ride.driver_id !== userId && hasRequested && ride.status !== 'cancelled' && ride.status !== 'completed' && (
+                      {ride.driver_id !== userId && hasRequested && ride.status === 'active' && (
                         <button 
                           onClick={() => handleCancelBooking(ride, myBooking)}
                           className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20"
@@ -467,7 +494,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                 {/* Driver Controls */}
                 {ride.driver_id === userId && ride.status !== 'cancelled' && (
                   <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 flex gap-2 justify-end">
-                    {ride.status !== 'completed' && (
+                    {ride.status === 'active' && (
+                      <button 
+                        onClick={() => handleStartRide(ride)}
+                        className="px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500/20 rounded-lg text-sm font-bold transition-colors"
+                      >
+                        Start Ride
+                      </button>
+                    )}
+                    {(ride.status === 'active' || ride.status === 'in_progress') && (
                       <button 
                         onClick={() => handleCompleteRide(ride)}
                         className="px-4 py-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500/20 rounded-lg text-sm font-bold transition-colors"
