@@ -509,13 +509,20 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
           </div>
         ) : (
           rides?.filter((ride) => {
-            if (mode === "booked") return true;
-            if (mode === "offered") return true;
+            if (mode === "booked" || mode === "offered") return true;
             
-            if (ride.available_seats > 0) return true;
-            if (ride.driver_id === userId) return true;
-            const isApproved = ride.bookings.some((b: any) => b.passenger_id === userId && b.status === 'approved');
-            return isApproved;
+            if (mode === "feed") {
+              if (ride.status !== 'active') return false;
+              if (ride.available_seats <= 0) return false;
+              return true;
+            }
+
+            if (mode === "active_trip") {
+              if (ride.status === 'cancelled' || ride.status === 'completed') return false;
+              return true;
+            }
+
+            return true;
           }).map((ride) => {
             const myBooking = ride.bookings.find((b: any) => b.passenger_id === userId && (b.status === 'approved' || b.status === 'pending'));
             const isApproved = myBooking?.status === 'approved';
