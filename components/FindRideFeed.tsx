@@ -9,13 +9,18 @@ import { toast } from "sonner";
 import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2 } from "lucide-react";
 import ChatModal from "./ChatModal";
 import RateUser from "./RateUser";
+import RideCard from "./RideCard";
+import BookSeatModal from "./BookSeatModal";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip" }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
   const [womenOnly, setWomenOnly] = useState(false);
   const [searchOrigin, setSearchOrigin] = useState("");
   const [searchDestination, setSearchDestination] = useState("");
+  const [timeFilter, setTimeFilter] = useState<"all" | "morning" | "afternoon" | "evening">("all");
+  const [minSeats, setMinSeats] = useState<number>(1);
   const [selectedRideId, setSelectedRideId] = useState<string | null>(null);
+  const [selectedRideForBooking, setSelectedRideForBooking] = useState<{ride: any, price: number} | null>(null);
   const [userGender, setUserGender] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);

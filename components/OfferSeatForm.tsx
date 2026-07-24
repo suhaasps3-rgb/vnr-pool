@@ -14,6 +14,84 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   const [userCarNumber, setUserCarNumber] = useState<string | null>(null);
   const [userBikeNumber, setUserBikeNumber] = useState<string | null>(null);
   const [vehicleEntryMode, setVehicleEntryMode] = useState<'profile' | 'manual'>('profile');
+  const [showOriginDropdown, setShowOriginDropdown] = useState(false);
+  const [showDestDropdown, setShowDestDropdown] = useState(false);
+
+  const COMMON_LOCATIONS = [
+    "Abids",
+    "Alwal",
+    "Ameerpet Metro",
+    "AS Rao Nagar",
+    "Attapur",
+    "Bachupally X Roads",
+    "Balnagar",
+    "Banjara Hills",
+    "Begumpet",
+    "BHEL",
+    "Bolarum",
+    "Bowenpally",
+    "Chanda Nagar",
+    "Charminar",
+    "Dilsukhnagar",
+    "DSL Virtue Mall Uppal",
+    "ECIL X Roads",
+    "Erragadda",
+    "Financial District",
+    "Gachibowli",
+    "Gachibowli Wipro Circle",
+    "Habsiguda",
+    "Hafeezpet",
+    "Hi-Tech City",
+    "Inorbit Mall Madhapur",
+    "JNTU Metro",
+    "Jubilee Hills Checkpost",
+    "Kacheguda Station",
+    "Khairatabad",
+    "Kokapet",
+    "Kompally",
+    "Kondapur",
+    "Kothapet",
+    "Koti",
+    "KPHB Colony",
+    "Kukatpally Metro",
+    "Lakdikapul",
+    "LB Nagar",
+    "Lingampally",
+    "Madhapur",
+    "Mahatma Gandhi Bus Station (MGBS)",
+    "Malkajgiri",
+    "Manikonda",
+    "Medchal",
+    "Mehdipatnam",
+    "Miyapur X Roads",
+    "Moosapet",
+    "Nagole",
+    "Nampally Station",
+    "Nanakramguda",
+    "Narsingi",
+    "Nexus Mall Kukatpally",
+    "Nizampet X Roads",
+    "Panjagutta",
+    "Patancheru",
+    "Pragathi Nagar Kaman",
+    "Raidurg",
+    "Ramanthapur",
+    "Sainikpuri",
+    "Sanjeeva Reddy Nagar",
+    "Sarath City Capital Mall",
+    "Secunderabad Station",
+    "Shaikpet",
+    "Shamshabad Airport",
+    "Somajiguda",
+    "SR Nagar",
+    "Suchitra Junction",
+    "Tarnaka",
+    "Tolichowki",
+    "Uppal X Roads",
+    "Vanastalipuram",
+    "VNR VJIET Campus Gate 1",
+    "VNR VJIET Campus Gate 2"
+  ];
 
   useEffect(() => {
     const supabase = createClient();
@@ -204,25 +282,74 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
             </select>
           </div>
 
-          <div>
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Origin</label>
+          <div className="relative z-[100]">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+              Origin {showOriginDropdown ? "(OPEN)" : "(CLOSED)"}
+            </label>
             <input 
               required
               placeholder="e.g. JNTU Metro"
               value={formData.origin}
-              onChange={(e) => setFormData({...formData, origin: e.target.value})}
+              onChange={(e) => {
+                setFormData({...formData, origin: e.target.value});
+                setShowOriginDropdown(true);
+              }}
+              onFocus={() => setShowOriginDropdown(true)}
               className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
+            <div 
+              className="absolute z-[100] w-full mt-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
+              style={{ display: showOriginDropdown ? "block" : "none" }}
+            >
+              {(formData.origin ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.origin.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
+                <div 
+                  key={loc}
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // Prevent focus loss
+                    setFormData({...formData, origin: loc});
+                    setShowOriginDropdown(false);
+                  }}
+                  className="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-sm text-slate-700 dark:text-slate-200"
+                >
+                  {loc}
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div>
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Destination</label>
+          <div className="relative z-[90]">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+              Destination {showDestDropdown ? "(OPEN)" : "(CLOSED)"}
+            </label>
             <input 
               required
+              placeholder="e.g. VNR VJIET"
               value={formData.destination}
-              onChange={(e) => setFormData({...formData, destination: e.target.value})}
+              onChange={(e) => {
+                setFormData({...formData, destination: e.target.value});
+                setShowDestDropdown(true);
+              }}
+              onFocus={() => setShowDestDropdown(true)}
               className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
+            <div 
+              className="absolute z-[100] w-full mt-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
+              style={{ display: showDestDropdown ? "block" : "none" }}
+            >
+              {(formData.destination ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.destination.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
+                <div 
+                  key={loc}
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // Prevent focus loss
+                    setFormData({...formData, destination: loc});
+                    setShowDestDropdown(false);
+                  }}
+                  className="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-sm text-slate-700 dark:text-slate-200"
+                >
+                  {loc}
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

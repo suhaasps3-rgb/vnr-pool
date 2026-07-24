@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ShieldCheck, MapPin, Zap, Users, Search, ArrowRight, Shield, Clock, X } from "lucide-react";
 import AuthScreen from "./AuthScreen";
+import { VNRCarPool3DHero } from "./carpool-hero-3d";
 
 export default function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -48,57 +49,8 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-32">
         
-        {/* HERO SECTION */}
-        <div className="flex flex-col items-center text-center mb-24">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 font-medium text-sm mb-8 shadow-[0_0_30px_rgba(37,99,235,0.15)]"
-          >
-            <ShieldCheck className="w-4 h-4" /> Exclusive for VNR VJIET Students
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-6 leading-[1.1]"
-          >
-            Carpool to Campus, <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">
-              Made Seamless.
-            </span>
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl text-slate-400 max-w-2xl mb-12 font-medium"
-          >
-            Share rides with verified peers. Split fuel costs automatically. Connect with your college community every morning.
-          </motion.p>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
-          >
-            <button 
-              onClick={() => setShowAuthModal(true)}
-              className="px-8 py-4 rounded-2xl font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_40px_rgba(37,99,235,0.4)] hover:shadow-[0_0_60px_rgba(37,99,235,0.6)] transition-all flex items-center justify-center gap-2 group"
-            >
-              Find a Ride <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button 
-              onClick={() => setShowAuthModal(true)}
-              className="px-8 py-4 rounded-2xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 text-white transition-all flex items-center justify-center gap-2"
-            >
-              Offer a Seat
-            </button>
-          </motion.div>
+        <div className="mb-24 mt-8">
+          <VNRCarPool3DHero onAction={() => setShowAuthModal(true)} />
         </div>
 
         {/* INTERACTIVE SEARCH BAR (MOCK) */}

@@ -131,7 +131,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
         </div>
 
         {/* Main Content Area */}
-        <div className="w-full max-w-4xl bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/5 rounded-3xl shadow-xl overflow-hidden">
+        <div className="w-full max-w-4xl bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/5 rounded-3xl shadow-xl">
           <div className="p-4 md:p-8">
             <motion.div
               key={activeTab}
