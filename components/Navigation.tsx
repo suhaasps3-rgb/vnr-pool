@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogOut, Bell, User, Search, PlusCircle, Bookmark, Check } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 
@@ -32,8 +33,34 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab 
       if (error) throw error;
       return data;
     },
-    refetchInterval: 5000 // Poll every 5 seconds for new notifications
+    refetchInterval: 5000 // Poll every 5 seconds as fallback
   });
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('realtime:notifications')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `user_id=eq.${userId}`
+        },
+        (payload) => {
+          toast.success(payload.new.message, {
+            duration: 8000,
+            icon: '🔔',
+          });
+          queryClient.invalidateQueries({ queryKey: ["notifications", userId] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [userId, queryClient, supabase]);
 
   const unreadCount = notifications?.filter(n => !n.is_read).length || 0;
 
