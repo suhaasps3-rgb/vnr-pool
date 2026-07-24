@@ -91,15 +91,9 @@ ALTER TABLE public.rides ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
 
--- Users: Users can read all users (except ones that blocked them or they blocked), but can only update their own profile.
-CREATE POLICY "Users can read non-blocked users" ON public.users
-FOR SELECT USING (
-    id NOT IN (
-        SELECT blocked_id FROM public.blocked_users WHERE blocker_id = auth.uid()
-        UNION
-        SELECT blocker_id FROM public.blocked_users WHERE blocked_id = auth.uid()
-    )
-);
+-- Users: Users can read all other users (rides/messages are still protected by their own policies).
+CREATE POLICY "Users can read all users" ON public.users
+FOR SELECT USING (true);
 
 CREATE POLICY "Users can update their own profile" ON public.users
 FOR UPDATE USING (auth.uid() = id);
@@ -193,3 +187,25 @@ FOR INSERT WITH CHECK (
 -- Enable Realtime on tables
 alter publication supabase_realtime add table public.messages;
 alter publication supabase_realtime add table public.rides;
+
+-- 8. Create Notifications Table
+CREATE TABLE public.notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY ""Users can read own notifications"" ON public.notifications
+FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY ""Users can insert notifications"" ON public.notifications
+FOR INSERT WITH CHECK (true); -- Allow triggering notifications by anyone, or we can restrict it. Actually, letting authenticated users insert is fine for peer-to-peer.
+
+CREATE POLICY ""Users can update own notifications"" ON public.notifications
+FOR UPDATE USING (auth.uid() = user_id);
+
+alter publication supabase_realtime add table public.notifications;

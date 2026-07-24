@@ -73,15 +73,22 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
     }
   };
 
-  const handleManageRequest = async (bookingId: string, status: 'approved' | 'rejected', rideId: string, availableSeats: number) => {
+  const handleManageRequest = async (bookingId: string, passengerId: string, status: 'approved' | 'rejected', ride: any) => {
     try {
       const { error: bookingError } = await supabase.from('bookings').update({ status }).eq('id', bookingId);
       if (bookingError) throw bookingError;
 
       if (status === 'approved') {
-        const { error: rideError } = await supabase.from('rides').update({ available_seats: availableSeats - 1 }).eq('id', rideId);
+        const { error: rideError } = await supabase.from('rides').update({ available_seats: ride.available_seats - 1 }).eq('id', ride.id);
         if (rideError) throw rideError;
       }
+
+      // Send Notification to Passenger
+      await supabase.from('notifications').insert({
+        user_id: passengerId,
+        message: `Your seat request for ${ride.origin} to ${ride.destination} has been ${status}!`
+      });
+
       toast.success(`Request ${status}!`);
       refetch();
     } catch (err: any) {
@@ -295,14 +302,14 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
                         {booking.status === 'pending' && (
                           <div className="flex gap-2">
                             <button 
-                              onClick={() => handleManageRequest(booking.id, 'approved', ride.id, ride.available_seats)}
+                              onClick={() => handleManageRequest(booking.id, booking.passenger_id, 'approved', ride)}
                               disabled={ride.available_seats <= 0}
                               className="text-xs bg-green-50 dark:bg-green-500/20 text-green-700 dark:text-green-400 px-3 py-1.5 rounded-lg hover:bg-green-100 dark:hover:bg-green-500/30 transition-colors disabled:opacity-50 font-medium"
                             >
                               Accept
                             </button>
                             <button 
-                              onClick={() => handleManageRequest(booking.id, 'rejected', ride.id, ride.available_seats)}
+                              onClick={() => handleManageRequest(booking.id, booking.passenger_id, 'rejected', ride)}
                               className="text-xs bg-red-50 dark:bg-red-500/20 text-red-700 dark:text-red-400 px-3 py-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-500/30 transition-colors font-medium"
                             >
                               Reject
