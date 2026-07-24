@@ -36,6 +36,17 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       `;
 
       if (mode === "feed") {
+        // NUCLEAR LOCK: If user has ANY active or in-progress trip, immediately return empty feed.
+        const { data: dRides } = await supabase.from('rides').select('id').eq('driver_id', userId).in('status', ['active', 'in_progress']).limit(1);
+        if (dRides && dRides.length > 0) return [];
+        
+        const { data: bData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
+        if (bData && bData.length > 0) {
+           const rIds = bData.map(b => b.ride_id);
+           const { data: pRides } = await supabase.from('rides').select('id').in('id', rIds).in('status', ['active', 'in_progress']).limit(1);
+           if (pRides && pRides.length > 0) return [];
+        }
+
         let query = supabase.from('rides').select(queryStr).eq('status', 'active');
         if (rideCategory !== "all") query = query.eq('ride_category', rideCategory);
         if (womenOnly) query = query.eq('is_women_only', true);
