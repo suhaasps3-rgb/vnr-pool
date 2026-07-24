@@ -61,11 +61,11 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
       
       if (activeBookings.length > 0) {
         const rideIds = activeBookings.map(b => b.ride_id);
-        const { data: passengerRides } = await supabase.from('rides')
-          .select('id, status')
-          .in('id', rideIds);
-        
-        if (passengerRides && passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
+        const { data: allRides } = await supabase.from('rides').select('id, status');
+        if (allRides) {
+          const passengerRides = allRides.filter(r => rideIds.includes(r.id));
+          if (passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
+        }
       }
 
       return false;
