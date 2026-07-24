@@ -46,29 +46,26 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
     queryKey: ["activeTripGlobal", userId],
     queryFn: async () => {
       // 1. Check if user is driver
-      const { data: driverRides, error: dError } = await supabase.from('rides')
-        .select('id')
-        .eq('driver_id', userId)
-        .in('status', ['active', 'in_progress'])
-        .limit(1);
+      const { data: driverRides } = await supabase.from('rides')
+        .select('id, status')
+        .eq('driver_id', userId);
       
-      if (driverRides && driverRides.length > 0) return true;
+      if (driverRides && driverRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
 
       // 2. Check if user is passenger
-      const { data: bookings, error: bError } = await supabase.from('bookings')
-        .select('ride_id')
-        .eq('passenger_id', userId)
-        .in('status', ['approved', 'pending']);
+      const { data: bookings } = await supabase.from('bookings')
+        .select('ride_id, status')
+        .eq('passenger_id', userId);
       
-      if (bookings && bookings.length > 0) {
-        const rideIds = bookings.map(b => b.ride_id);
+      const activeBookings = bookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+      
+      if (activeBookings.length > 0) {
+        const rideIds = activeBookings.map(b => b.ride_id);
         const { data: passengerRides } = await supabase.from('rides')
-          .select('id')
-          .in('id', rideIds)
-          .in('status', ['active', 'in_progress'])
-          .limit(1);
+          .select('id, status')
+          .in('id', rideIds);
         
-        if (passengerRides && passengerRides.length > 0) return true;
+        if (passengerRides && passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
       }
 
       return false;

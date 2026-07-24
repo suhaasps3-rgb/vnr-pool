@@ -37,14 +37,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
       if (mode === "feed") {
         // NUCLEAR LOCK: If user has ANY active or in-progress trip, immediately return empty feed.
-        const { data: dRides } = await supabase.from('rides').select('id').eq('driver_id', userId).in('status', ['active', 'in_progress']).limit(1);
-        if (dRides && dRides.length > 0) return [];
+        const { data: dRides } = await supabase.from('rides').select('id, status').eq('driver_id', userId);
+        if (dRides && dRides.some(r => r.status === 'active' || r.status === 'in_progress')) return [];
         
-        const { data: bData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).in('status', ['approved', 'pending']);
-        if (bData && bData.length > 0) {
-           const rIds = bData.map(b => b.ride_id);
-           const { data: pRides } = await supabase.from('rides').select('id').in('id', rIds).in('status', ['active', 'in_progress']).limit(1);
-           if (pRides && pRides.length > 0) return [];
+        const { data: bData } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
+        const activeB = bData?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+        if (activeB.length > 0) {
+           const rIds = activeB.map(b => b.ride_id);
+           const { data: pRides } = await supabase.from('rides').select('id, status').in('id', rIds);
+           if (pRides && pRides.some(r => r.status === 'active' || r.status === 'in_progress')) return [];
         }
 
         let query = supabase.from('rides').select(queryStr).eq('status', 'active');
@@ -113,28 +114,25 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
     queryFn: async () => {
       // 1. Check if user is driver
       const { data: driverRides } = await supabase.from('rides')
-        .select('id')
-        .eq('driver_id', userId)
-        .in('status', ['active', 'in_progress'])
-        .limit(1);
+        .select('id, status')
+        .eq('driver_id', userId);
       
-      if (driverRides && driverRides.length > 0) return true;
+      if (driverRides && driverRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
 
       // 2. Check if user is passenger
       const { data: bookings } = await supabase.from('bookings')
-        .select('ride_id')
-        .eq('passenger_id', userId)
-        .in('status', ['approved', 'pending']);
+        .select('ride_id, status')
+        .eq('passenger_id', userId);
       
-      if (bookings && bookings.length > 0) {
-        const rideIds = bookings.map(b => b.ride_id);
+      const activeBookings = bookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+      
+      if (activeBookings.length > 0) {
+        const rideIds = activeBookings.map(b => b.ride_id);
         const { data: passengerRides } = await supabase.from('rides')
-          .select('id')
-          .in('id', rideIds)
-          .in('status', ['active', 'in_progress'])
-          .limit(1);
+          .select('id, status')
+          .in('id', rideIds);
         
-        if (passengerRides && passengerRides.length > 0) return true;
+        if (passengerRides && passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) return true;
       }
 
       return false;
@@ -158,17 +156,18 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
   const handleRequestSeat = async (ride: any) => {
     try {
       // 1. FRESH DEEP CHECK: Guarantee user has no active trips before allowing request
-      const { data: driverRides } = await supabase.from('rides').select('id').eq('driver_id', userId).in('status', ['active', 'in_progress']).limit(1);
-      if (driverRides && driverRides.length > 0) {
+      const { data: driverRides } = await supabase.from('rides').select('id, status').eq('driver_id', userId);
+      if (driverRides && driverRides.some(r => r.status === 'active' || r.status === 'in_progress')) {
         toast.error("Action Blocked: You cannot join a ride while you are driving an active trip.");
         return;
       }
 
-      const { data: bookings } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).in('status', ['approved', 'pending']);
-      if (bookings && bookings.length > 0) {
-        const rideIds = bookings.map(b => b.ride_id);
-        const { data: passengerRides } = await supabase.from('rides').select('id').in('id', rideIds).in('status', ['active', 'in_progress']).limit(1);
-        if (passengerRides && passengerRides.length > 0) {
+      const { data: bookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId);
+      const activeBookings = bookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
+      if (activeBookings.length > 0) {
+        const rideIds = activeBookings.map(b => b.ride_id);
+        const { data: passengerRides } = await supabase.from('rides').select('id, status').in('id', rideIds);
+        if (passengerRides && passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) {
           toast.error("Action Blocked: You cannot join a ride while you are currently in an active trip.");
           return;
         }
