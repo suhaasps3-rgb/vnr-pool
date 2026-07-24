@@ -72,7 +72,38 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
       text: text
     });
 
-    if (error) toast.error("Failed to send message");
+    if (error) {
+      toast.error("Failed to send message");
+      return;
+    }
+
+    // Notify other ride participants
+    const { data: rideData } = await supabase
+      .from('rides')
+      .select('driver_id, bookings(passenger_id, status)')
+      .eq('id', rideId)
+      .single();
+
+    if (rideData) {
+      const participants = new Set<string>();
+      participants.add(rideData.driver_id);
+      rideData.bookings.forEach((b: any) => {
+        if (b.status === 'approved') participants.add(b.passenger_id);
+      });
+      participants.delete(userId); // Don't notify sender
+
+      const { data: userData } = await supabase.from('users').select('full_name').eq('id', userId).single();
+      const senderName = userData?.full_name || 'Someone';
+
+      const notifications = Array.from(participants).map(pid => ({
+        user_id: pid,
+        message: `New message from ${senderName}: "${text.length > 30 ? text.substring(0,30)+'...' : text}"`
+      }));
+
+      if (notifications.length > 0) {
+        await supabase.from('notifications').insert(notifications);
+      }
+    }
   };
 
   const handleBlockUser = async (targetUserId: string) => {
