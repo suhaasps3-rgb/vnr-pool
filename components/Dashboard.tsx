@@ -159,28 +159,11 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           className="flex flex-col gap-8"
         >
 
-          {/* Metrics Bento Grid */}
+          {/* Verified Student Banner */}
           <motion.section 
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            className="w-full"
           >
-            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 flex flex-col gap-2">
-              <div className="flex items-center justify-between text-slate-400 mb-1">
-                <span className="text-xs font-semibold uppercase tracking-wider">Total Rides Shared</span>
-                <TrendingUp className="w-4 h-4 text-indigo-400" />
-              </div>
-              <div className="text-3xl font-black text-white">4,208</div>
-              <div className="text-xs text-indigo-400 font-medium">+12% this week</div>
-            </div>
-
-            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 flex flex-col gap-2">
-              <div className="flex items-center justify-between text-slate-400 mb-1">
-                <span className="text-xs font-semibold uppercase tracking-wider">Fuel Saved</span>
-                <Wallet className="w-4 h-4 text-teal-400" />
-              </div>
-              <div className="text-3xl font-black text-white">₹85.4K</div>
-              <div className="text-xs text-teal-400 font-medium">Est. across all users</div>
-            </div>
 
             <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-center items-center text-center gap-3 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent" />
