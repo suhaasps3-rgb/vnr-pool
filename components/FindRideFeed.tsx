@@ -103,6 +103,33 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
     }
   };
 
+  const handleCancelBooking = async (ride: any, booking: any) => {
+    if (!confirm("Are you sure you want to cancel your seat?")) return;
+    try {
+      const { error } = await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', booking.id);
+      if (error) throw error;
+
+      if (booking.status === 'approved') {
+        const { error: rideError } = await supabase.from('rides').update({ available_seats: ride.available_seats + 1 }).eq('id', ride.id);
+        if (rideError) throw rideError;
+      }
+
+      const { data: userData } = await supabase.from('users').select('full_name').eq('id', userId).single();
+      const passengerName = userData?.full_name || 'A passenger';
+
+      // Notify the driver
+      await supabase.from('notifications').insert({
+        user_id: ride.driver_id,
+        message: `${passengerName} has cancelled their ${booking.status === 'approved' ? 'seat' : 'request'} on your ride from ${ride.origin} to ${ride.destination}.`
+      });
+
+      toast.success("Seat cancelled successfully.");
+      refetch();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to cancel seat.");
+    }
+  };
+
   const handleDeleteRide = async (rideId: string) => {
     if (!confirm("Are you sure you want to cancel and remove this ride?")) return;
     try {
@@ -185,8 +212,9 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
             const isApproved = ride.bookings.some((b: any) => b.passenger_id === userId && b.status === 'approved');
             return isApproved;
           }).map((ride) => {
-            const isApproved = ride.bookings.some((b: any) => b.passenger_id === userId && b.status === 'approved');
-            const hasRequested = ride.bookings.some((b: any) => b.passenger_id === userId);
+            const myBooking = ride.bookings.find((b: any) => b.passenger_id === userId && (b.status === 'approved' || b.status === 'pending'));
+            const isApproved = myBooking?.status === 'approved';
+            const hasRequested = !!myBooking;
 
             return (
               <div 
@@ -285,15 +313,21 @@ export default function FindRideFeed({ userId, onVehicleSelect }: { userId: stri
                         </button>
                       )}
                       
-                      {ride.driver_id !== userId && (
+                      {ride.driver_id !== userId && !hasRequested && (
                         <button 
                           onClick={() => handleRequestSeat(ride)}
-                          disabled={hasRequested}
-                          className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
-                            hasRequested ? "bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed" : "ui-button-primary"
-                          }`}
+                          className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ui-button-primary"
                         >
-                          {hasRequested ? (isApproved ? "Approved" : "Requested") : "Book Seat"}
+                          Book Seat
+                        </button>
+                      )}
+
+                      {ride.driver_id !== userId && hasRequested && (
+                        <button 
+                          onClick={() => handleCancelBooking(ride, myBooking)}
+                          className="px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/20"
+                        >
+                          Cancel {isApproved ? 'Seat' : 'Request'}
                         </button>
                       )}
                     </div>
