@@ -68,6 +68,13 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
       return;
     }
 
+    const departureDateTime = new Date(`${formData.departure_date}T${formData.departure_time}`);
+    if (departureDateTime < new Date()) {
+      toast.error("You cannot schedule a ride in the past. Please select a valid future date and time.");
+      setLoading(false);
+      return;
+    }
+
     const supabase = createClient();
 
     try {
@@ -168,6 +175,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
               <input 
                 required
                 type="date"
+                min={new Date().toISOString().split('T')[0]}
                 value={formData.departure_date}
                 onChange={(e) => setFormData({...formData, departure_date: e.target.value})}
                 className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
