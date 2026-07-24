@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { User, Car, Bike, Star, Loader2, Save, Image as ImageIcon } from "lucide-react";
+import { User, Car, Bike, Star, Loader2, Save, Image as ImageIcon, Upload } from "lucide-react";
+import { useRef } from "react";
 
 export default function Profile({ userId }: { userId: string }) {
   const supabase = createClient();
   const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [carNumber, setCarNumber] = useState("");
   const [bikeNumber, setBikeNumber] = useState("");
@@ -38,6 +40,46 @@ export default function Profile({ userId }: { userId: string }) {
       setAvatarUrl(user.avatar_url || "");
     }
   }, [user]);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File is too large! Please select an image under 5MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_SIZE = 256;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height && width > MAX_SIZE) {
+          height *= MAX_SIZE / width;
+          width = MAX_SIZE;
+        } else if (height > MAX_SIZE) {
+          width *= MAX_SIZE / height;
+          height = MAX_SIZE;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Compress as JPEG
+        const base64String = canvas.toDataURL("image/jpeg", 0.7);
+        setAvatarUrl(base64String);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
 
   const updateProfile = useMutation({
     mutationFn: async () => {
@@ -124,16 +166,38 @@ export default function Profile({ userId }: { userId: string }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-2 sm:col-span-2">
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
-              <ImageIcon className="w-4 h-4" /> Photo URL (Optional)
+              <ImageIcon className="w-4 h-4" /> Profile Photo
             </label>
-            <input
-              type="text"
-              placeholder="Paste a direct image URL (e.g. https://imgur.com/..., https://github.com/...png)"
-              value={avatarUrl}
-              onChange={(e) => setAvatarUrl(e.target.value)}
-              disabled={!isEditing}
-              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium"
+            <input 
+              type="file" 
+              accept="image/*" 
+              className="hidden" 
+              ref={fileInputRef} 
+              onChange={handleImageUpload} 
             />
+            <div className="flex items-center gap-4">
+              {avatarUrl && (
+                <img src={avatarUrl} alt="Preview" className="w-12 h-12 rounded-full object-cover border border-gray-200 shadow-sm" />
+              )}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={!isEditing}
+                className="flex items-center gap-2 bg-slate-100 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-xl font-medium hover:bg-slate-200 dark:hover:bg-white/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Upload className="w-4 h-4" /> 
+                {avatarUrl ? "Change Photo" : "Upload Photo"}
+              </button>
+              {avatarUrl && isEditing && (
+                <button
+                  type="button"
+                  onClick={() => setAvatarUrl("")}
+                  className="text-sm text-red-500 font-medium hover:underline"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
@@ -194,7 +258,7 @@ export default function Profile({ userId }: { userId: string }) {
               onClick={() => setIsEditing(true)}
               className="px-6 py-2.5 rounded-xl font-bold bg-slate-100 dark:bg-white/5 text-gray-700 dark:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-colors"
             >
-              Edit Vehicles
+              Edit Profile
             </button>
           )}
         </div>
