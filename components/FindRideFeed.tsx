@@ -408,6 +408,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                     <span className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400 font-medium ml-2">
                       <Shield className="w-4 h-4" /> {maskMobile(ride.driver?.mobile_number, isApproved)}
                     </span>
+                    {ride.ride_category === 'personal_vehicle' && ride.vehicle_number && (isApproved || ride.driver_id === userId) && (
+                      <span className="bg-orange-50 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 dark:border-orange-500/30 uppercase tracking-widest ml-1 shadow-sm">
+                        {ride.vehicle_number}
+                      </span>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-4 w-full md:w-auto">
