@@ -18,6 +18,13 @@ export function VNRCarPoolWaveHero({ onAction }: { onAction?: () => void }) {
       {/* Hero Content Overlay */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-16 text-center flex flex-col items-center">
         
+        {/* VNR Logo */}
+        <img 
+          src="/vnr_logo.png" 
+          alt="VNR VJIET Logo" 
+          className="h-28 sm:h-36 w-auto object-contain mb-8 opacity-90 drop-shadow-2xl" 
+        />
+
         {/* Verification Tag */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-medium mb-6 backdrop-blur-md">
           <ShieldCheck className="w-4 h-4 text-violet-400" /> Exclusive to VNR VJIET Students & Faculty
