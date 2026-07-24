@@ -46,7 +46,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         if (error) throw error;
         return data;
       } else if (mode === "offered") {
-        const { data, error } = await supabase.from('rides').select(queryStr).eq('driver_id', userId).order('created_at', { ascending: false });
+        const { data, error } = await supabase.from('rides').select(queryStr).eq('driver_id', userId).neq('status', 'cancelled').order('created_at', { ascending: false });
         if (error) throw error;
         return data;
       } else if (mode === "booked") {
