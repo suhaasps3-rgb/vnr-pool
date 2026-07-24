@@ -45,24 +45,21 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const { data: hasActiveTrip } = useQuery({
     queryKey: ["activeTripGlobal", userId],
     queryFn: async () => {
-      const { data: bookingData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
-      const rideIds = bookingData?.map((b: any) => b.ride_id) || [];
+      const { data: activeRides, error } = await supabase.from('rides').select('id, driver_id, bookings(passenger_id, status)').eq('status', 'in_progress');
       
-      let passengerActive = false;
-      if (rideIds.length > 0) {
-        const { data: passengerRides, error: pError } = await supabase.from('rides').select('id').eq('status', 'in_progress').in('id', rideIds);
-        if (pError) console.error("Error fetching passenger active trip:", pError);
-        if (passengerRides && passengerRides.length > 0) {
-           passengerActive = true;
-        }
+      if (error) {
+        console.error("Error fetching active trips:", error);
+        return false;
       }
 
-      const { data: driverRides, error: dError } = await supabase.from('rides').select('id').eq('status', 'in_progress').eq('driver_id', userId);
-      if (dError) console.error("Error fetching driver active trip:", dError);
-      
-      const driverActive = (driverRides && driverRides.length > 0) || false;
+      if (!activeRides) return false;
 
-      return passengerActive || driverActive;
+      const isActive = activeRides.some((ride: any) => {
+        if (ride.driver_id === userId) return true;
+        return ride.bookings?.some((b: any) => b.passenger_id === userId && b.status === 'approved');
+      });
+
+      return isActive;
     },
     refetchInterval: 5000
   });

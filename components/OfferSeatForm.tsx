@@ -86,19 +86,14 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
     try {
       // 1. FRESH DEEP CHECK: Guarantee user has no active trips before allowing to offer
-      const { data: bookingData } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId).eq('status', 'approved');
-      const rideIds = bookingData?.map((b: any) => b.ride_id) || [];
-      if (rideIds.length > 0) {
-        const { data: passengerRides } = await supabase.from('rides').select('id').eq('status', 'in_progress').in('id', rideIds);
-        if (passengerRides && passengerRides.length > 0) {
-           toast.error("Action Blocked: You cannot offer a new ride while you are currently in an active trip.");
-           setLoading(false);
-           return;
-        }
-      }
-      const { data: driverRides } = await supabase.from('rides').select('id').eq('status', 'in_progress').eq('driver_id', userId);
-      if (driverRides && driverRides.length > 0) {
-        toast.error("Action Blocked: You cannot offer a new ride while you are currently driving an active trip.");
+      const { data: activeRides } = await supabase.from('rides').select('id, driver_id, bookings(passenger_id, status)').eq('status', 'in_progress');
+      const hasActive = activeRides?.some((ride: any) => {
+        if (ride.driver_id === userId) return true;
+        return ride.bookings?.some((b: any) => b.passenger_id === userId && b.status === 'approved');
+      });
+      
+      if (hasActive) {
+        toast.error("Action Blocked: You cannot offer a new ride while you are currently in an active trip.");
         setLoading(false);
         return;
       }
