@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { User, Car, Bike, Star, Loader2, Save } from "lucide-react";
+import { User, Car, Bike, Star, Loader2, Save, Image as ImageIcon } from "lucide-react";
 
 export default function Profile({ userId }: { userId: string }) {
   const supabase = createClient();
@@ -12,6 +12,8 @@ export default function Profile({ userId }: { userId: string }) {
 
   const [carNumber, setCarNumber] = useState("");
   const [bikeNumber, setBikeNumber] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   const { data: user, isLoading } = useQuery({
@@ -32,6 +34,8 @@ export default function Profile({ userId }: { userId: string }) {
     if (user) {
       setCarNumber(user.car_number || "");
       setBikeNumber(user.bike_number || "");
+      setFullName(user.full_name || "");
+      setAvatarUrl(user.avatar_url || "");
     }
   }, [user]);
 
@@ -41,7 +45,9 @@ export default function Profile({ userId }: { userId: string }) {
         .from('users')
         .update({
           car_number: carNumber,
-          bike_number: bikeNumber
+          bike_number: bikeNumber,
+          full_name: fullName,
+          avatar_url: avatarUrl
         })
         .eq('id', userId);
       
@@ -72,13 +78,27 @@ export default function Profile({ userId }: { userId: string }) {
   return (
     <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-white dark:bg-[#1E293B] rounded-3xl shadow-sm border border-gray-100 dark:border-white/5">
       <div className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-100 dark:border-white/5">
-        <div className="w-20 h-20 bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-3xl font-black shadow-inner">
-          {user?.full_name?.charAt(0).toUpperCase()}
+        <div className="w-20 h-20 bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-3xl font-black shadow-inner overflow-hidden relative flex-shrink-0">
+          {user?.avatar_url ? (
+            <img src={user.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+          ) : (
+            user?.full_name?.charAt(0).toUpperCase()
+          )}
         </div>
-        <div>
-          <h2 className="text-2xl font-black text-gray-900 dark:text-white">
-            {user?.full_name}
-          </h2>
+        <div className="flex-1">
+          {isEditing ? (
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Your Full Name"
+              className="text-2xl font-black text-gray-900 dark:text-white bg-transparent border-b-2 border-[#2563EB] outline-none w-full pb-1 mb-1"
+            />
+          ) : (
+            <h2 className="text-2xl font-black text-gray-900 dark:text-white">
+              {user?.full_name}
+            </h2>
+          )}
           <div className="flex items-center gap-4 text-sm mt-1">
             <span className="text-gray-500 dark:text-gray-400 font-medium">
               {user?.roll_no} • {user?.branch}
@@ -97,11 +117,24 @@ export default function Profile({ userId }: { userId: string }) {
             <Car className="w-5 h-5 text-gray-400" /> Vehicle Registration
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-            Add your vehicle numbers here so co-passengers can easily identify your vehicle when you offer a ride.
+            Update your profile photo URL or vehicle registration numbers below.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-2 sm:col-span-2">
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+              <ImageIcon className="w-4 h-4" /> Photo URL (Optional)
+            </label>
+            <input
+              type="text"
+              placeholder="Paste a direct image URL (e.g. https://imgur.com/..., https://github.com/...png)"
+              value={avatarUrl}
+              onChange={(e) => setAvatarUrl(e.target.value)}
+              disabled={!isEditing}
+              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium"
+            />
+          </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
               <Car className="w-4 h-4" /> Car Number
@@ -138,6 +171,8 @@ export default function Profile({ userId }: { userId: string }) {
                 onClick={() => {
                   setCarNumber(user?.car_number || "");
                   setBikeNumber(user?.bike_number || "");
+                  setFullName(user?.full_name || "");
+                  setAvatarUrl(user?.avatar_url || "");
                   setIsEditing(false);
                 }}
                 className="px-6 py-2.5 rounded-xl font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
