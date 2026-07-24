@@ -139,6 +139,16 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                 </button>
               </>
             )}
+            <button
+              onClick={() => setActiveTab("my-rides")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === "my-rides"
+                  ? "bg-[#2563EB]/10 text-[#2563EB] dark:bg-[#3B82F6]/20 dark:text-[#3B82F6]"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+              }`}
+            >
+              <Bookmark className="w-4 h-4" /> My Rides
+            </button>
           </nav>
 
           {/* Right Actions */}
