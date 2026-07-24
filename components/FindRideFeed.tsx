@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import anime from "animejs";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
   const [userGender, setUserGender] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     supabase.from('users').select('gender').eq('id', userId).single().then(({ data }) => {
