@@ -174,7 +174,20 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
         }
       }
 
-      // 2. Proceed with booking
+      // 2. FRESH DEEP CHECK: Target Ride Status
+      const { data: targetRide } = await supabase.from('rides').select('status, available_seats').eq('id', ride.id).single();
+      if (!targetRide || targetRide.status !== 'active') {
+        toast.error("Action Blocked: This ride has already started or is no longer available.");
+        refetch();
+        return;
+      }
+      if (targetRide.available_seats <= 0) {
+        toast.error("Action Blocked: This ride is already full.");
+        refetch();
+        return;
+      }
+
+      // 3. Proceed with booking
       const existingBooking = ride.bookings?.find((b: any) => b.passenger_id === userId);
       
       let error;
@@ -353,6 +366,24 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
   return (
     <div>
+      {/* FULL SCREEN OVERLAY LOCK FOR ACTIVE TRIPS */}
+      {mode === "feed" && hasActiveTrip && (
+        <div className="fixed inset-0 z-50 bg-[#F8FAFC] dark:bg-[#0F172A] flex flex-col items-center justify-center p-6 animate-in fade-in duration-300">
+          <div className="bg-white dark:bg-[#1E293B] p-10 rounded-3xl shadow-2xl border border-blue-200 dark:border-blue-500/20 max-w-md w-full text-center">
+            <div className="w-20 h-20 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner">
+              🚗
+            </div>
+            <h2 className="text-2xl font-black text-[#0F172A] dark:text-white mb-4">Ride Reserved / In Progress</h2>
+            <p className="text-slate-600 dark:text-slate-400 font-medium mb-8">
+              You are strictly restricted to one active ride at a time. You cannot view other rides or book new seats until your current ride is completed or cancelled.
+            </p>
+            <p className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
+              Navigate to the "Ride in Progress" tab.
+            </p>
+          </div>
+        </div>
+      )}
+
       {mode === "feed" && (
         <>
           {hasActiveTrip && (
@@ -422,12 +453,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
       {/* Feed */}
       <div ref={containerRef} className="space-y-4">
-        {mode === "feed" && hasActiveTrip ? (
-          <div className="text-center py-16 bg-blue-50 dark:bg-blue-500/10 rounded-2xl border border-blue-100 dark:border-blue-500/20">
-            <h3 className="text-xl font-bold text-blue-900 dark:text-blue-100 mb-2">🚗 Ride Reserved / In Progress</h3>
-            <p className="text-blue-700 dark:text-blue-300">You must complete your current ride before finding a new one.</p>
-          </div>
-        ) : isLoading ? (
+        {isLoading ? (
           // Skeleton Loaders
           [...Array(3)].map((_, i) => (
             <div key={i} className="glass-card h-32 animate-pulse" />
