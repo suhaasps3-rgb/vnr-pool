@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ShieldCheck, MapPin, Zap, Users, Search, ArrowRight, Shield, Clock, X } from "lucide-react";
 import AuthScreen from "./AuthScreen";
-import { VNRCarPool3DHero } from "./carpool-hero-3d";
+import { VNRCarPoolWaveHero } from "./carpool-hero-wave";
 
 export default function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -50,7 +50,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-32">
         
         <div className="mb-24 mt-8">
-          <VNRCarPool3DHero onAction={() => setShowAuthModal(true)} />
+          <VNRCarPoolWaveHero />
         </div>
 
         {/* INTERACTIVE SEARCH BAR (MOCK) */}
