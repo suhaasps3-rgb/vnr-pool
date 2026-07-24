@@ -7,7 +7,7 @@ import anime from "animejs";
 import { toast } from "sonner";
 import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2 } from "lucide-react";
 import ChatModal from "./ChatModal";
-import RateDriver from "./RateDriver";
+import RateUser from "./RateUser";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip" }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
@@ -738,7 +738,35 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
                 {/* Rate Driver Section for Passengers */}
                 {ride.status === 'completed' && ride.driver_id !== userId && isApproved && (
-                  <RateDriver rideId={ride.id} driverId={ride.driver_id} userId={userId} />
+                  <RateUser rideId={ride.id} raterId={userId} ratedId={ride.driver_id} role="driver" />
+                )}
+
+                {/* Rate Passengers Section for Drivers */}
+                {ride.status === 'completed' && ride.driver_id === userId && ride.bookings.some((b: any) => b.status === 'approved') && (
+                  <div className="mt-4 pt-4 border-t border-neutral-100 dark:border-white/5">
+                    <h4 className="text-sm font-bold text-[#0F172A] dark:text-white mb-3">Rate Passengers</h4>
+                    <div className="space-y-4">
+                      {ride.bookings.filter((b: any) => b.status === 'approved').map((booking: any) => (
+                        <div key={booking.id} className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/10">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="w-8 h-8 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center">
+                              <User className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-[#0F172A] dark:text-white">{booking.users?.full_name || 'Passenger'}</p>
+                              <p className="text-xs text-slate-500">{maskMobile(booking.users?.mobile_number, true)}</p>
+                            </div>
+                          </div>
+                          <RateUser 
+                            rideId={ride.id} 
+                            raterId={userId} 
+                            ratedId={booking.passenger_id} 
+                            role="passenger" 
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
 
                 {ride.driver_id === userId && ride.bookings.length > 0 && ride.status !== 'cancelled' && (

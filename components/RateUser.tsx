@@ -6,19 +6,30 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 
-export default function RateDriver({ rideId, driverId, userId }: { rideId: string, driverId: string, userId: string }) {
+export default function RateUser({ 
+  rideId, 
+  raterId, 
+  ratedId,
+  role
+}: { 
+  rideId: string, 
+  raterId: string, 
+  ratedId: string,
+  role: "driver" | "passenger" 
+}) {
   const [hoveredStar, setHoveredStar] = useState(0);
   const supabase = createClient();
   const queryClient = useQueryClient();
 
   const { data: existingRating, isLoading } = useQuery({
-    queryKey: ["rating", rideId, userId],
+    queryKey: ["rating", rideId, raterId, ratedId],
     queryFn: async () => {
       const { data } = await supabase
         .from('ratings')
         .select('*')
         .eq('ride_id', rideId)
-        .eq('rater_id', userId)
+        .eq('rater_id', raterId)
+        .eq('rated_id', ratedId)
         .single();
       return data;
     }
@@ -29,34 +40,41 @@ export default function RateDriver({ rideId, driverId, userId }: { rideId: strin
       // 1. Insert Rating
       const { error: ratingError } = await supabase.from('ratings').insert({
         ride_id: rideId,
-        rater_id: userId,
-        rated_id: driverId,
+        rater_id: raterId,
+        rated_id: ratedId,
         score
       });
       if (ratingError) throw ratingError;
 
-      // 2. Fetch driver's current stats
-      const { data: driver, error: driverError } = await supabase
+      // 2. Fetch rated user's current stats
+      const { data: ratedUser, error: userError } = await supabase
         .from('users')
         .select('rating_sum, rating_count')
-        .eq('id', driverId)
+        .eq('id', ratedId)
         .single();
-      if (driverError) throw driverError;
+      if (userError) throw userError;
 
-      // 3. Update driver stats
+      // 3. Update rated user's stats
       const { error: updateError } = await supabase
         .from('users')
         .update({
-          rating_sum: (driver?.rating_sum || 0) + score,
-          rating_count: (driver?.rating_count || 0) + 1
+          rating_sum: (ratedUser?.rating_sum || 0) + score,
+          rating_count: (ratedUser?.rating_count || 0) + 1
         })
-        .eq('id', driverId);
+        .eq('id', ratedId);
       
       if (updateError) throw updateError;
+
+      // 4. Send notification
+      const { error: notifError } = await supabase.from('notifications').insert({
+        user_id: ratedId,
+        message: `You received a ${score}-star rating for your recent ride!`
+      });
+      if (notifError) console.error("Failed to send rating notification:", notifError);
     },
     onSuccess: () => {
       toast.success("Thanks for rating!");
-      queryClient.invalidateQueries({ queryKey: ["rating", rideId, userId] });
+      queryClient.invalidateQueries({ queryKey: ["rating", rideId, raterId, ratedId] });
     },
     onError: (err: any) => {
       toast.error(err.message || "Failed to submit rating.");
@@ -73,14 +91,18 @@ export default function RateDriver({ rideId, driverId, userId }: { rideId: strin
             <Star key={star} className={`w-5 h-5 ${star <= existingRating.score ? 'fill-current' : 'opacity-30'}`} />
           ))}
         </div>
-        <span className="text-sm font-semibold text-green-700 dark:text-green-400">You rated this ride!</span>
+        <span className="text-sm font-semibold text-green-700 dark:text-green-400">
+          You rated this {role}!
+        </span>
       </div>
     );
   }
 
   return (
     <div className="mt-4 p-4 bg-slate-50 dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/10">
-      <p className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Rate your driver</p>
+      <p className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+        Rate your {role}
+      </p>
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
