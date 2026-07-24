@@ -506,7 +506,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
           </div>
         ) : (
           <motion.div
-            variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } }}
+            variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.25, delayChildren: 0.1 } } }}
             initial="hidden"
             animate="show"
             className="space-y-4"
@@ -554,9 +554,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
               <motion.div 
                 key={ride.id} 
                 onMouseEnter={() => onVehicleSelect(ride.vehicle_type as "car" | "auto" | "bike")}
-                variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-                whileHover={{ scale: 1.01, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                variants={{ 
+                  hidden: { opacity: 0, y: 30, scale: 0.95 }, 
+                  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 200, damping: 20 } } 
+                }}
+                whileHover={{ scale: 1.02, boxShadow: "0 15px 30px -5px rgba(0, 0, 0, 0.15)" }}
                 className={`ui-card p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''} ${ride.status === 'completed' ? 'border-emerald-200 dark:border-emerald-500/30' : ''}`}
               >
                 {ride.status === 'cancelled' && (
