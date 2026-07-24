@@ -202,6 +202,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
               <input 
                 required
                 type="time"
+                min={formData.departure_date === new Date().toISOString().split('T')[0] ? new Date().toTimeString().slice(0, 5) : undefined}
                 value={formData.departure_time}
                 onChange={(e) => setFormData({...formData, departure_time: e.target.value})}
                 className="w-full p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"

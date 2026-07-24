@@ -138,6 +138,17 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
     try {
       const { error } = await supabase.from('rides').update({ status: 'completed' }).eq('id', ride.id);
       if (error) throw error;
+
+      // Notify approved passengers
+      const approvedPassengers = ride.bookings?.filter((b: any) => b.status === 'approved') || [];
+      if (approvedPassengers.length > 0) {
+        const notifications = approvedPassengers.map((b: any) => ({
+          user_id: b.passenger_id,
+          message: `Your ride from ${ride.origin} to ${ride.destination} has been completed by the driver. Please rate your experience!`
+        }));
+        await supabase.from('notifications').insert(notifications);
+      }
+
       toast.success("Ride marked as completed!");
       queryClient.invalidateQueries({ queryKey: ["rides"] });
     } catch (error: any) {
