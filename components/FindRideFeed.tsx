@@ -523,7 +523,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
                         Start Ride
                       </button>
                     )}
-                    {(ride.status === 'active' || ride.status === 'in_progress') && (
+                    {ride.status === 'in_progress' && (
                       <button 
                         onClick={() => handleCompleteRide(ride)}
                         className="px-4 py-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500/20 rounded-lg text-sm font-bold transition-colors"
