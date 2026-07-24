@@ -100,10 +100,10 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
     { id: "offer", label: "Offer a Ride", icon: Car },
     { id: "my-rides", label: "My Bookings", icon: Route },
     { id: "profile", label: "Profile", icon: Users },
-  ] as const;
+  ];
 
   if (hasActiveTrip && !TABS.find(t => t.id === "active")) {
-    (TABS as any).push({ id: "active", label: "Active Trip", icon: Activity });
+    TABS.push({ id: "active", label: "Active Trip", icon: Activity });
   }
 
   // Cost Calc Logic
