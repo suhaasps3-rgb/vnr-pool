@@ -240,12 +240,20 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Price Per Seat (Calculated)</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+              {formData.ride_category === 'auto_split' ? "Pricing Method" : "Price Per Seat (Calculated)"}
+            </label>
             <div className="w-full p-4 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-500/20 rounded-xl flex items-center justify-between shadow-sm">
-              <span className="text-xl">₹{Math.ceil(formData.total_cost / (formData.ride_category === 'auto_split' ? formData.total_seats + 1 : formData.total_seats))}</span>
-              <span className="text-xs text-emerald-600/70 dark:text-emerald-400/70 font-medium">
-                ({formData.total_seats} seats{formData.ride_category === 'auto_split' ? " + 1 driver" : ""})
-              </span>
+              {formData.ride_category === 'auto_split' ? (
+                <span className="text-sm">Dynamic split based on active passengers</span>
+              ) : (
+                <>
+                  <span className="text-xl">₹{Math.ceil(formData.total_cost / formData.total_seats)}</span>
+                  <span className="text-xs text-emerald-600/70 dark:text-emerald-400/70 font-medium">
+                    ({formData.total_seats} seats)
+                  </span>
+                </>
+              )}
             </div>
           </div>
 
