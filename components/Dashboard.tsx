@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, MapPin, Calendar, Users, Search, UserX } from "lucide-react";
 import FindRideFeed from "./FindRideFeed";

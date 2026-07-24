@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void }) {
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [userGender, setUserGender] = useState<string | null>(null);
   const [userCarNumber, setUserCarNumber] = useState<string | null>(null);
