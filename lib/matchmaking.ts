@@ -43,7 +43,29 @@ export const ROUTES: string[][] = [
   // Custom Route 8: The Outer West Highway
   ["patancheru", "bhel", "chanda nagar", "madinaguda", "miyapur", "bachupally (vnr)", "vnr vjiet"],
   // Custom Route 9: The Inner Ring Road to IT Corridor to JNTU
-  ["attapur", "mehdipatnam", "tolichowki", "gachibowli", "hi-tech city", "kukatpally", "kphb", "jntu", "nizampet", "bachupally (vnr)", "vnr vjiet"]
+  ["attapur", "mehdipatnam", "tolichowki", "gachibowli", "hi-tech city", "kukatpally", "kphb", "jntu", "nizampet", "bachupally (vnr)", "vnr vjiet"],
+  // Custom Route 10: Shamshabad ORR to VNR
+  ["shamshabad", "orr", "narsingi", "kokapet", "bachupally exit", "bachupally", "vnr vjiet"],
+  // Custom Route 11: Medchal ORR to VNR
+  ["medchal", "orr", "dundigal", "bachupally exit", "bachupally", "vnr vjiet"],
+  // Custom Route 12: Patancheru ORR to VNR
+  ["patancheru", "orr", "bachupally exit", "bachupally", "vnr vjiet"],
+  // Custom Route 13: LB Nagar Corridor
+  ["lb nagar", "dilsukhnagar", "malakpet", "nampally", "lakdikapul", "punjagutta", "ameerpet", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Custom Route 14: Uppal Corridor
+  ["uppal", "habsiguda", "tarnaka", "secunderabad", "paradise", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Custom Route 15: Koti Corridor
+  ["koti", "lakdikapul", "ameerpet", "kukatpally", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Custom Route 16: Ameerpet Corridor
+  ["ameerpet", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Custom Route 17: Hitech City Corridor
+  ["hi-tech city", "mindspace", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Custom Route 18: Gachibowli Corridor (Text Request)
+  ["gachibowli", "kondapur", "kphb", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Custom Route 19: Gachibowli Corridor (Image Request)
+  ["financial district", "nanakramguda", "gachibowli", "kondapur", "hafeezpet", "miyapur", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Custom Route 20: Kompally Corridor
+  ["kompally", "suchitra", "jeedimetla", "gundlapochampally", "dundigal", "gandimaisamma", "bowrampet", "bachupally", "vnr vjiet"]
 ];
 
 export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string): boolean {
