@@ -32,26 +32,52 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const [calcPassengers, setCalcPassengers] = useState<number>(4);
 
   useEffect(() => {
+    const DISTANCE_MAP: Record<string, number> = {
+      "abids": 22, "alwal": 20, "ameerpet metro": 18, "as rao nagar": 25, "attapur": 28,
+      "bachupally x roads": 3, "balnagar": 13, "banjara hills": 20, "begumpet": 18, "bhel": 15,
+      "bolarum": 18, "bowenpally": 16, "chanda nagar": 12, "charminar": 25, "dilsukhnagar": 30,
+      "dsl virtue mall uppal": 35, "ecil x roads": 28, "erragadda": 15, "financial district": 22,
+      "gachibowli": 20, "gachibowli wipro circle": 22, "habsiguda": 30, "hafeezpet": 10,
+      "hi-tech city": 18, "inorbit mall madhapur": 18, "jntu metro": 10, "jubilee hills checkpost": 18,
+      "kacheguda station": 24, "khairatabad": 20, "kokapet": 25, "kompally": 12, "kondapur": 15,
+      "kothapet": 32, "koti": 23, "kphb colony": 11, "kukatpally metro": 12, "lakdikapul": 21,
+      "lb nagar": 35, "lingampally": 16, "madhapur": 18, "mahatma gandhi bus station (mgbs)": 25,
+      "malkajgiri": 22, "manikonda": 22, "medchal": 20, "mehdipatnam": 25, "miyapur x roads": 8,
+      "moosapet": 14, "nagole": 35, "nampally station": 22, "nanakramguda": 22, "narsingi": 25,
+      "nexus mall kukatpally": 13, "nizampet x roads": 8, "panjagutta": 19, "patancheru": 18,
+      "pragathi nagar kaman": 5, "raidurg": 20, "ramanthapur": 32, "sainikpuri": 25,
+      "sanjeeva reddy nagar": 16, "sarath city capital mall": 16, "secunderabad station": 22,
+      "shaikpet": 22, "shamshabad airport": 45, "somajiguda": 19, "sr nagar": 16,
+      "suchitra junction": 15, "tarnaka": 28, "tolichowki": 24, "uppal x roads": 35,
+      "vanastalipuram": 38
+    };
+
     const handleUpdateDistance = (e: any) => {
-      const { origin, dest } = e.detail;
-      const combined = `${origin} ${dest}`.toLowerCase();
+      const origin = (e.detail.origin || "").toLowerCase().trim();
+      const dest = (e.detail.dest || "").toLowerCase().trim();
       
-      if (!combined.trim()) return;
+      if (!origin && !dest) return;
 
-      // Smart distance estimator to VNR VJIET
-      let dist = 15; // default fallback
-      if (combined.match(/pragathi|bachupally/)) dist = 10;
-      else if (combined.match(/nizampet/)) dist = 11;
-      else if (combined.match(/miyapur|hafeezpet/)) dist = 12;
-      else if (combined.match(/kukatpally|jntu|kphb/)) dist = 15;
-      else if (combined.match(/bhel|chanda nagar|lingampally/)) dist = 20;
-      else if (combined.match(/gachibowli|hitech|kondapur|madhapur|jubilee/)) dist = 25;
-      else if (combined.match(/ameerpet|begumpet|erragadda|sr nagar/)) dist = 22;
-      else if (combined.match(/secunderabad|alwal|bowenpally/)) dist = 30;
-      else if (combined.match(/mehdipatnam|attapur|tolichowki/)) dist = 35;
-      else if (combined.match(/lb nagar|dilsukhnagar|uppal|kothapet/)) dist = 40;
+      // Identify which one is NOT VNR VJIET
+      let targetLocation = "";
+      if (origin.includes("vnr") && !dest.includes("vnr")) targetLocation = dest;
+      else if (dest.includes("vnr") && !origin.includes("vnr")) targetLocation = origin;
+      else if (!origin.includes("vnr") && !dest.includes("vnr")) {
+        // If neither is VNR (which shouldn't happen), just pick one that is in map
+        targetLocation = origin in DISTANCE_MAP ? origin : dest;
+      }
 
-      setCalcDistance(dist);
+      if (targetLocation && DISTANCE_MAP[targetLocation]) {
+        setCalcDistance(DISTANCE_MAP[targetLocation]);
+      } else {
+        // Fallback keyword matching just in case they typed a partial name in FindRideFeed
+        for (const [key, dist] of Object.entries(DISTANCE_MAP)) {
+          if (targetLocation.includes(key.split(' ')[0])) {
+            setCalcDistance(dist);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener('updateDistance', handleUpdateDistance);
