@@ -38,11 +38,6 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
         if (error) throw error;
         toast.success("Successfully logged in!");
         onAuthSuccess();
-      } else if (authMode === "forgot_password") {
-        const { error } = await supabase.auth.resetPasswordForEmail(email);
-        if (error) throw error;
-        toast.success("OTP sent to your email!");
-        setAuthMode("verify_otp");
       } else if (authMode === "verify_otp") {
         if (password !== confirmPassword) {
           toast.error("Passwords do not match!");
@@ -66,6 +61,26 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
       }
     } catch (err: any) {
       toast.error(err.message || "Authentication failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@vnrvjiet\.in$/i;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid @vnrvjiet.in college email in the field above first.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) throw error;
+      toast.success("OTP sent to your email!");
+      setAuthMode("verify_otp");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
@@ -164,8 +179,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
               authMode === "login" ? "Sign In" : 
-              authMode === "signup" ? "Create Account" : 
-              authMode === "forgot_password" ? "Send OTP" : "Verify & Reset"
+              authMode === "signup" ? "Create Account" : "Verify & Reset"
             )}
           </motion.button>
         </form>
@@ -173,7 +187,8 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
         <div className="mt-6 flex flex-col items-center gap-3">
           {authMode === "login" && (
             <button 
-              onClick={() => setAuthMode("forgot_password")}
+              type="button"
+              onClick={handleForgotPassword}
               className="text-sm text-blue-600 dark:text-blue-400 font-medium hover:underline"
             >
               Forgot your password?
