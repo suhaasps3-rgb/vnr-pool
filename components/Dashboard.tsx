@@ -28,8 +28,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
 
   // Widget States
   const [calcDistance, setCalcDistance] = useState<number>(15);
-  const [calcMileage, setCalcMileage] = useState<number>(18);
-  const [calcFuelPrice, setCalcFuelPrice] = useState<number>(109);
+  const [calcVehicle, setCalcVehicle] = useState<"car" | "bike">("car");
+  const [calcPassengers, setCalcPassengers] = useState<number>(4);
 
   // Real-time listener
   useEffect(() => {
@@ -108,9 +108,17 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   }
 
   // Cost Calc Logic
-  const fuelCost = (calcDistance / calcMileage) * calcFuelPrice;
-  // Adjusted for realism: added a 1.5x multiplier for AC/Maintenance, divided by 2 people (Driver + 1 Passenger), plus ₹15 base convenience fee
-  const recommendedSplit = Math.ceil((fuelCost * 1.5) / 2) + 15;
+  let ratePerKm = 0;
+  if (calcVehicle === "bike") {
+    ratePerKm = 2.55;
+  } else {
+    if (calcPassengers === 4) ratePerKm = 2.66;
+    else if (calcPassengers === 3) ratePerKm = 3.55;
+    else if (calcPassengers === 2) ratePerKm = 5.32;
+    else ratePerKm = 10.65;
+  }
+  
+  const recommendedSplit = Math.ceil(ratePerKm * calcDistance);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
@@ -277,14 +285,48 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                 </h3>
                 
                 <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    <button 
+                      onClick={() => { setCalcVehicle("car"); setCalcPassengers(4); }}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "car" ? "bg-teal-500 text-slate-950" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                    >
+                      Car
+                    </button>
+                    <button 
+                      onClick={() => { setCalcVehicle("bike"); setCalcPassengers(1); }}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "bike" ? "bg-teal-500 text-slate-950" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                    >
+                      Bike
+                    </button>
+                  </div>
+
+                  {calcVehicle === "car" && (
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 block">Total Passengers (excluding you)</label>
+                      <div className="flex gap-2">
+                        {[1, 2, 3, 4].map(num => (
+                          <button
+                            key={num}
+                            onClick={() => setCalcPassengers(num)}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-colors ${calcPassengers === num ? "bg-indigo-500 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                          >
+                            {num}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 block">Distance (km)</label>
+                    <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex justify-between">
+                      <span>Distance (km)</span>
+                      <span className="text-teal-400">{calcDistance} km</span>
+                    </label>
                     <input 
                       type="range" min="1" max="40" 
                       value={calcDistance} onChange={(e) => setCalcDistance(Number(e.target.value))}
                       className="w-full h-1.5 bg-slate-800 rounded-full appearance-none accent-teal-400"
                     />
-                    <div className="text-right text-xs text-slate-300 mt-1 font-medium">{calcDistance} km</div>
                   </div>
                   
                   <div className="pt-2 border-t border-slate-800/50 flex justify-between items-end">
