@@ -40,7 +40,13 @@ export const DISTANCE_MAP: Record<string, number> = {
   "bachupally (vnr)": 0, "kukatpally": 12, "kphb": 11, "jntu": 10, "nizampet": 8,
   "ameerpet": 18, "secunderabad": 22, "orr": 15, "bachupally exit": 4, 
   "narsingi": 25, "paradise": 20, "mindspace": 18, "gundlapochampally": 12,
-  "dundigal": 15, "gandimaisamma": 10, "bowrampet": 6, "pragathi nagar": 5
+  "dundigal": 15, "gandimaisamma": 10, "bowrampet": 6, "pragathi nagar": 5,
+  "upperpally": 28, "esi": 17, "allwyn x roads": 9, "airport": 45, "rajendranagar": 30,
+  "bharat nagar": 14, "khajaguda": 21, "assembly": 21, "gandhi bhavan": 22, 
+  "sultan bazar": 23, "mgbs": 25, "chaderghat": 26, "hayathnagar": 40, 
+  "secunderabad east": 22, "parade ground": 21, "stadium": 34, "ngri": 33, 
+  "kapra": 27, "quthbullapur": 14, "shamshabad orr": 45, "gachibowli orr": 20, 
+  "aramghar": 32
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)

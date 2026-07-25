@@ -65,7 +65,39 @@ export const ROUTES: string[][] = [
   // Custom Route 19: Gachibowli Corridor (Image Request)
   ["financial district", "nanakramguda", "gachibowli", "kondapur", "hafeezpet", "miyapur", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
   // Custom Route 20: Kompally Corridor
-  ["kompally", "suchitra", "jeedimetla", "gundlapochampally", "dundigal", "gandimaisamma", "bowrampet", "bachupally", "vnr vjiet"]
+  ["kompally", "suchitra", "jeedimetla", "gundlapochampally", "dundigal", "gandimaisamma", "bowrampet", "bachupally", "vnr vjiet"],
+  // Extended Route 21: Attapur Route
+  ["attapur", "upperpally", "mehdipatnam", "rethibowli", "tolichowki", "gachibowli", "hi-tech city", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 22: Secunderabad Route
+  ["secunderabad", "paradise", "bowenpally", "balanagar", "moosapet", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 23: Ameerpet Route
+  ["panjagutta", "ameerpet", "esi", "sr nagar", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 24: Miyapur Route
+  ["miyapur", "hafeezpet", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 25: KPHB Route
+  ["kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 26: Shamshabad Route
+  ["shamshabad", "aramghar", "attapur", "mehdipatnam", "gachibowli", "hi-tech city", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 27: ORR Route
+  ["shamshabad orr", "kokapet", "narsingi", "gachibowli orr", "bachupally exit", "bachupally", "vnr vjiet"],
+  // Extended Route 28: South Hyderabad Corridor
+  ["airport", "shamshabad", "rajendranagar", "attapur", "mehdipatnam", "masab tank", "lakdikapul", "khairatabad", "punjagutta", "ameerpet", "esi", "erragadda", "bharat nagar", "moosapet", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 29: IT Corridor
+  ["financial district", "kokapet", "narsingi", "khajaguda", "manikonda", "tolichowki", "gachibowli", "raidurg", "hi-tech city", "madhapur", "kondapur", "hafeezpet", "miyapur", "allwyn x roads", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 30: Central Hyderabad Corridor
+  ["assembly", "gandhi bhavan", "nampally", "sultan bazar", "mgbs", "chaderghat", "dilsukhnagar", "lb nagar", "hayathnagar", "punjagutta", "ameerpet", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 31: Secunderabad Corridor
+  ["secunderabad east", "parade ground", "paradise", "bowenpally", "balanagar", "moosapet", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 32: North-East Corridor
+  ["nagole", "stadium", "ngri", "habsiguda", "tarnaka", "mettuguda", "secunderabad", "paradise", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 33: ECIL Corridor
+  ["sainikpuri", "kapra", "ecil", "as rao nagar", "neredmet", "malkajgiri", "bowenpally", "kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 34: North-West Corridor
+  ["medchal", "kompally", "alwal", "suchitra", "jeedimetla", "suraram", "quthbullapur", "dundigal", "gandimaisamma", "bachupally", "vnr vjiet"],
+  // Extended Route 35: Western Corridor
+  ["patancheru", "beeramguda", "bhel", "lingampally", "chanda nagar", "madinaguda", "miyapur", "allwyn x roads", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Extended Route 36: Short VNR Corridor
+  ["kukatpally", "kphb", "jntu", "miyapur", "allwyn x roads", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"]
 ];
 
 export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string): boolean {
