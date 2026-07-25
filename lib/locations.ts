@@ -47,7 +47,10 @@ export const DISTANCE_MAP: Record<string, number> = {
   "secunderabad east": 22, "parade ground": 21, "stadium": 34, "ngri": 33, 
   "kapra": 27, "quthbullapur": 14, "shamshabad orr": 45, "gachibowli orr": 20, 
   "aramghar": 32, "outer ring road": 15, "jubilee hills": 19, "road no. 5": 20,
-  "yusufguda": 18, "omc": 24, "esi hospital": 17, "narayanguda": 23
+  "yusufguda": 18, "omc": 24, "esi hospital": 17, "narayanguda": 23,
+  
+  // Specific aliases requested by user
+  "vnr vjiet, bachupally": 0, "nexus mall, hyd": 13, "gvk one mall": 19, "gvk mall": 19
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
