@@ -511,8 +511,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
 
           {/* Functional Search Bar */}
           {/* Functional Search Bar */}
-          <div className="flex flex-col md:flex-row gap-3 p-3 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-stretch shadow-sm">
-            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group z-50">
+          <div className="flex flex-col md:flex-row gap-3 p-3 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-stretch shadow-sm relative z-[60]">
+            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group z-[60]">
               <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
               <input 
                 type="text" 
@@ -536,7 +536,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 {gettingLocation ? <Loader2 className="w-4 h-4 animate-spin" /> : "📍"}
               </button>
               <div 
-                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
+                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-[60]"
                 style={{ display: showOriginDropdown ? "block" : "none" }}
               >
                 {(searchOrigin ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(searchOrigin.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
@@ -555,7 +555,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               </div>
             </div>
             
-            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group z-40">
+            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group z-[55]">
               <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
               <input 
                 type="text" 
@@ -570,7 +570,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 className="bg-transparent outline-none w-full text-sm text-slate-900 dark:text-white placeholder-slate-400 group-focus-within:placeholder-slate-300" 
               />
               <div 
-                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
+                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-[55]"
                 style={{ display: showDestDropdown ? "block" : "none" }}
               >
                 {(searchDestination ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(searchDestination.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
