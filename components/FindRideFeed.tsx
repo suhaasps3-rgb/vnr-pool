@@ -956,11 +956,19 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                     <h4 className="text-sm font-bold text-gray-500 dark:text-gray-400">Manage Requests</h4>
                     {ride.bookings.map((booking: any) => (
                       <div key={booking.id} className="flex items-center justify-between bg-gray-50 dark:bg-white/5 p-3 rounded-xl border border-gray-100 dark:border-white/5">
-                        <div className="text-sm">
-                          <span className="font-bold text-gray-900 dark:text-white">{booking.passenger?.full_name}</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">({booking.passenger?.roll_no})</span>
-                          {booking.status === 'approved' && <span className="ml-2 text-xs text-green-600 dark:text-green-400 font-bold">Approved</span>}
-                          {booking.status === 'rejected' && <span className="ml-2 text-xs text-red-600 dark:text-red-400 font-bold">Rejected</span>}
+                        <div className="text-sm flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-gray-900 dark:text-white">{booking.passenger?.full_name}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">({booking.passenger?.roll_no})</span>
+                            {booking.calculated_price && <span className="text-emerald-600 dark:text-emerald-400 font-black text-xs ml-auto pr-4">₹{booking.calculated_price}</span>}
+                          </div>
+                          {booking.pickup_location && booking.dropoff_location && (
+                            <div className="text-[10px] font-medium text-slate-500 mt-1">
+                              📍 {booking.pickup_location} <span className="mx-1">→</span> 📍 {booking.dropoff_location}
+                            </div>
+                          )}
+                          {booking.status === 'approved' && <span className="mt-1 block text-xs text-green-600 dark:text-green-400 font-bold">Approved</span>}
+                          {booking.status === 'rejected' && <span className="mt-1 block text-xs text-red-600 dark:text-red-400 font-bold">Rejected</span>}
                         </div>
                         {booking.status === 'pending' && (
                           <div className="flex gap-2">
