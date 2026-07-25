@@ -220,17 +220,18 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           if (data && data.address) {
             let bestMatch = null;
             let bestIndex = Infinity;
-            if (data.display_name) {
-              const displayLower = data.display_name.toLowerCase();
-              for (const loc of COMMON_LOCATIONS) {
-                const idx = displayLower.indexOf(loc.toLowerCase());
-                if (idx !== -1) {
-                  if (idx < bestIndex) {
-                    bestIndex = idx;
-                    bestMatch = loc;
-                  } else if (idx === bestIndex && loc.length > (bestMatch?.length || 0)) {
-                    bestMatch = loc;
-                  }
+            
+            const addressValues = data.address ? Object.values(data.address).join(', ') : "";
+            const searchString = (addressValues + ", " + (data.display_name || "")).toLowerCase();
+            
+            for (const loc of COMMON_LOCATIONS) {
+              const idx = searchString.indexOf(loc.toLowerCase());
+              if (idx !== -1) {
+                if (idx < bestIndex) {
+                  bestIndex = idx;
+                  bestMatch = loc;
+                } else if (idx === bestIndex && loc.length > (bestMatch?.length || 0)) {
+                  bestMatch = loc;
                 }
               }
             }
