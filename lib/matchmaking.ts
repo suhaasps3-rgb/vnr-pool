@@ -237,11 +237,25 @@ export function getPossibleRoutes(rideOrigin: string, rideDest: string): { index
   const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec');
   
   const findLocIndex = (route: string[], queryLoc: string) => {
-    const q = normalize(queryLoc);
+    const q = queryLoc.toLowerCase().trim();
     if (!q) return -1;
+    
+    // 1st Pass: Exact full string match (ignoring case)
+    let idx = route.findIndex(node => node.toLowerCase().trim() === q);
+    if (idx !== -1) return idx;
+    
+    // 2nd Pass: Exact word match (e.g. 'chintal' matches 'chintal shapur signal' but ideally we want strict matching if possible)
+    // Actually, 'chintal shapur signal' SHOULD NOT match if the user is in 'chintal' and there is a better route for 'chintal'.
+    // We will do a word boundary regex check.
+    const regex = new RegExp(`\\b${q}\\b`, 'i');
+    idx = route.findIndex(node => regex.test(node));
+    if (idx !== -1) return idx;
+
+    // 3rd Pass: Partial Match as fallback
+    const normQ = normalize(queryLoc);
     return route.findIndex(node => {
       const n = normalize(node);
-      return q.includes(n) || n.includes(q);
+      return normQ.includes(n) || n.includes(normQ);
     });
   };
 
