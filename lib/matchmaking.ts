@@ -41,7 +41,9 @@ export const ROUTES: string[][] = [
   // Custom Route 7: The Financial District Ring
   ["tellapur", "nallagandla", "financial district", "gachibowli", "kondapur", "hafeezpet", "miyapur", "bachupally (vnr)", "vnr vjiet"],
   // Custom Route 8: The Outer West Highway
-  ["patancheru", "bhel", "chanda nagar", "madinaguda", "miyapur", "bachupally (vnr)", "vnr vjiet"]
+  ["patancheru", "bhel", "chanda nagar", "madinaguda", "miyapur", "bachupally (vnr)", "vnr vjiet"],
+  // Custom Route 9: The Inner Ring Road to IT Corridor to JNTU
+  ["attapur", "mehdipatnam", "tolichowki", "gachibowli", "hi-tech city", "kukatpally", "kphb", "jntu", "nizampet", "bachupally (vnr)", "vnr vjiet"]
 ];
 
 export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string): boolean {
