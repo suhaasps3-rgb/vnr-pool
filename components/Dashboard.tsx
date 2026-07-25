@@ -32,6 +32,15 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const [calcPassengers, setCalcPassengers] = useState<number>(4);
 
   useEffect(() => {
+    if (selectedVehicle === "bike") {
+      setCalcVehicle("bike");
+      setCalcPassengers(1);
+    } else if (selectedVehicle === "car") {
+      setCalcVehicle("car");
+    }
+  }, [selectedVehicle]);
+
+  useEffect(() => {
     const DISTANCE_MAP: Record<string, number> = {
       "abids": 22, "alwal": 20, "ameerpet metro": 18, "as rao nagar": 25, "attapur": 28,
       "bachupally x roads": 3, "balnagar": 13, "banjara hills": 20, "begumpet": 18, "bhel": 15,
