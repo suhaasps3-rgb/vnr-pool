@@ -52,7 +52,7 @@ export default function BookSeatModal({
   // Validate that at least one location is VNR
   const isVnrPresent = pickup.toLowerCase().includes('vnr') || dropoff.toLowerCase().includes('vnr');
   // Ensure the route is somewhat valid (different points)
-  const isSameLocation = pickup === dropoff;
+  const isSameLocation = pickup?.toLowerCase() === dropoff?.toLowerCase();
   const canSubmit = isVnrPresent && !isSameLocation && pickup && dropoff;
 
   return (
@@ -102,17 +102,24 @@ export default function BookSeatModal({
                     <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-2">Pickup Location</label>
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
-                      <select 
-                        value={pickup} 
-                        onChange={(e) => setPickup(e.target.value)}
-                        disabled={isFromVnr}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {!validLocations.includes(ride.origin) && <option value={ride.origin}>{ride.origin} (Driver's Start)</option>}
-                        {validLocations.map(loc => (
-                          <option key={loc} value={loc}>{loc}</option>
-                        ))}
-                      </select>
+                      {isFromVnr ? (
+                        <div className="w-full pl-10 pr-4 py-2.5 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-sm font-semibold text-gray-500 dark:text-gray-400 capitalize cursor-not-allowed flex items-center">
+                          {ride.origin}
+                        </div>
+                      ) : (
+                        <select 
+                          value={pickup} 
+                          onChange={(e) => setPickup(e.target.value)}
+                          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize"
+                        >
+                          {!validLocations.includes(ride.origin) && !ride.origin.toLowerCase().includes('vnr') && (
+                            <option value={ride.origin}>{ride.origin} (Driver's Start)</option>
+                          )}
+                          {validLocations.filter(loc => !loc.toLowerCase().includes('vnr')).map(loc => (
+                            <option key={loc} value={loc}>{loc}</option>
+                          ))}
+                        </select>
+                      )}
                     </div>
                     {isFromVnr && <p className="text-[10px] text-blue-600 dark:text-blue-400 mt-1 font-medium">* Pickup is locked to VNR VJIET for this route.</p>}
                   </div>
@@ -121,17 +128,24 @@ export default function BookSeatModal({
                     <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-2">Dropoff Location</label>
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
-                      <select 
-                        value={dropoff} 
-                        onChange={(e) => setDropoff(e.target.value)}
-                        disabled={isToVnr}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {!validLocations.includes(ride.destination) && <option value={ride.destination}>{ride.destination} (Driver's End)</option>}
-                        {validLocations.map(loc => (
-                          <option key={loc} value={loc}>{loc}</option>
-                        ))}
-                      </select>
+                      {isToVnr ? (
+                        <div className="w-full pl-10 pr-4 py-2.5 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg text-sm font-semibold text-gray-500 dark:text-gray-400 capitalize cursor-not-allowed flex items-center">
+                          {ride.destination}
+                        </div>
+                      ) : (
+                        <select 
+                          value={dropoff} 
+                          onChange={(e) => setDropoff(e.target.value)}
+                          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize"
+                        >
+                          {!validLocations.includes(ride.destination) && !ride.destination.toLowerCase().includes('vnr') && (
+                            <option value={ride.destination}>{ride.destination} (Driver's End)</option>
+                          )}
+                          {validLocations.filter(loc => !loc.toLowerCase().includes('vnr')).map(loc => (
+                            <option key={loc} value={loc}>{loc}</option>
+                          ))}
+                        </select>
+                      )}
                     </div>
                     {isToVnr && <p className="text-[10px] text-blue-600 dark:text-blue-400 mt-1 font-medium">* Dropoff is locked to VNR VJIET for this route.</p>}
                   </div>
