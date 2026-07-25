@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Users, ShieldCheck, ChevronRight } from "lucide-react";
+import { MapPin, Clock, Users, ShieldCheck, ChevronRight, Map } from "lucide-react";
 import { format } from "date-fns";
+import DynamicMap from "./DynamicMap";
 
 export default function RideCard({ 
   ride, 
@@ -32,6 +34,8 @@ export default function RideCard({
   isProcessing: boolean;
 }) {
   
+  const [showMap, setShowMap] = useState(false);
+
   // Determine glow color based on vehicle type
   const glowColor = ride.vehicle_type === 'car' ? 'rgba(59, 130, 246, 0.4)' // Blue
                   : ride.vehicle_type === 'auto' ? 'rgba(16, 185, 129, 0.4)' // Emerald
@@ -133,7 +137,7 @@ export default function RideCard({
       </div>
 
       {/* Stats Bar */}
-      <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5 mb-6">
+      <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5 mb-4">
         <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
           <Clock className="w-4 h-4" />
           <span className="text-sm font-semibold">
@@ -148,6 +152,23 @@ export default function RideCard({
             <span className="text-xs font-medium">seats left</span>
           </div>
         </div>
+      </div>
+
+      {/* Route Map Toggle */}
+      <div className="mb-6">
+        <button 
+          onClick={(e) => { e.stopPropagation(); setShowMap(!showMap); }}
+          className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-2"
+        >
+          <MapPin className="w-4 h-4" />
+          {showMap ? "Hide Route Map" : "View Route Map"}
+        </button>
+        
+        {showMap && (
+          <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-300" onClick={(e) => e.stopPropagation()}>
+            <DynamicMap origin={ride.origin} destination={ride.destination} />
+          </div>
+        )}
       </div>
 
       {/* Actions */}
