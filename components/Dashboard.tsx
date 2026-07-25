@@ -181,6 +181,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   }
   
   const recommendedSplit = Math.ceil(ratePerKm * calcDistance);
+  const totalEarnings = recommendedSplit * calcPassengers;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
@@ -391,16 +392,24 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                     />
                   </div>
                   
-                  <div className="pt-2 border-t border-slate-800/50 flex justify-between items-end">
-                    <div>
-                      <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Recommended per seat</div>
-                      <div className="text-2xl font-black text-white flex items-start gap-1">
-                        <span className="text-sm text-slate-400 mt-1">₹</span>{recommendedSplit}
+                  <div className="pt-3 border-t border-slate-800/50 flex flex-col gap-3">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">Per seat</div>
+                        <div className="text-xl font-bold text-white flex items-start gap-0.5">
+                          <span className="text-xs text-slate-400 mt-1">₹</span>{recommendedSplit}
+                        </div>
+                      </div>
+                      
+                      <div className="h-8 w-px bg-slate-800/80"></div>
+                      
+                      <div className="text-right">
+                        <div className="text-[10px] text-teal-500/70 uppercase tracking-wider mb-0.5 font-bold">Total Fare</div>
+                        <div className="text-xl font-black text-teal-400 flex items-start gap-0.5 justify-end">
+                          <span className="text-xs text-teal-500/50 mt-1">₹</span>{totalEarnings}
+                        </div>
                       </div>
                     </div>
-                    <button className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white transition-colors">
-                      Copy
-                    </button>
                   </div>
                 </div>
               </div>
