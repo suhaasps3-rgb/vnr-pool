@@ -46,11 +46,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
           const data = await res.json();
-          if (data && data.address) {
-            // Prefer suburb, then neighbourhood, then city_district
-            const locName = data.address.suburb || data.address.neighbourhood || data.address.city_district || data.name || "Unknown Location";
+          if (data && data.locality) {
+            // BigDataCloud returns locality, city, etc.
+            const locName = data.locality || data.city || "Unknown Location";
             setSearchOrigin(locName);
             toast.success(`Location found: ${locName}`);
           } else {
