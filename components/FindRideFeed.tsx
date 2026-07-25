@@ -507,7 +507,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           )}
 
           {/* Functional Search Bar */}
-          <div className="hidden md:flex flex-wrap gap-3 p-3 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-center shadow-sm">
+          <div className="flex flex-col md:flex-row flex-wrap gap-3 p-3 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-stretch shadow-sm">
             <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group">
               <MapPin className="w-5 h-5 text-slate-400" />
               <input 
