@@ -32,8 +32,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const [calcDistance, setCalcDistance] = useState<number>(15);
   const [calcVehicle, setCalcVehicle] = useState<"car" | "bike">("car");
   const [calcPassengers, setCalcPassengers] = useState<number>(4);
-  const [totalRidesShared, setTotalRidesShared] = useState<number>(42);
-  const [fuelSaved, setFuelSaved] = useState<number>(1250);
+
   useEffect(() => {
     if (selectedVehicle === "bike") {
       setCalcVehicle("bike");
@@ -176,34 +175,37 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const totalEarnings = recommendedSplit * calcPassengers;
 
   return (
-    <div className="dark min-h-screen bg-slate-950 text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
       
-      {/* Ambient Lighting */}
-      <div className="absolute top-0 left-[10%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
-      <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
-      <div className="absolute top-[40%] left-[-10%] w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
+      {/* Ambient Lighting - Dynamic based on theme */}
+      <div className="absolute top-0 left-[10%] w-[500px] h-[500px] bg-indigo-400/30 dark:bg-indigo-600/10 rounded-full blur-[100px] dark:blur-[120px] pointer-events-none opacity-60 dark:opacity-50 mix-blend-multiply dark:mix-blend-screen" />
+      <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-teal-300/30 dark:bg-teal-500/10 rounded-full blur-[100px] dark:blur-[120px] pointer-events-none opacity-60 dark:opacity-50 mix-blend-multiply dark:mix-blend-screen" />
+      <div className="absolute top-[40%] left-[-10%] w-[400px] h-[400px] bg-purple-300/20 dark:bg-purple-600/10 rounded-full blur-[100px] dark:blur-[120px] pointer-events-none opacity-50 mix-blend-multiply dark:mix-blend-screen" />
 
-      {/* 1. Integrated Top Bar (Glassmorphic) */}
-      <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80">
+      {/* Modern Top Bar */}
+      <header className="sticky top-0 z-50 w-full backdrop-blur-2xl bg-white/80 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-9 h-9 bg-gradient-to-tr from-indigo-600 to-indigo-400 rounded-xl flex items-center justify-center font-black text-lg text-white shadow-lg shadow-indigo-600/20">
               V
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-tight text-white leading-none">VNR Pool Dashboard</h1>
-              <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-400 mt-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active Campus Rides
+              <h1 className="text-sm font-bold tracking-tight text-slate-900 dark:text-white leading-none">VNR Pool Dashboard</h1>
+              <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 mt-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Campus Network
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
+            
             <button onClick={() => setShowBlockedModal(true)} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group" title="Manage Blocked Users">
               <UserX className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </button>
+
             <ThemeToggle />
             <NotificationBell userId={userId} />
+
             <button onClick={onSignOut} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group" title="Sign Out">
               <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             </button>
@@ -212,6 +214,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 flex flex-col gap-8">
+        
+        {/* Animated Staggered Container */}
         <motion.div 
           initial="hidden" animate="visible"
           variants={{
@@ -221,59 +225,22 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           className="flex flex-col gap-8"
         >
 
-          {/* 2. Bento Stat Grid */}
+          {/* Verified Student Banner */}
           <motion.section 
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            className="w-full"
           >
-            {/* Stat Card 1: Rides */}
-            <div className="bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-colors rounded-xl p-5 flex flex-col justify-between relative overflow-hidden group">
-              <div className="flex justify-between items-start mb-2">
-                <div className="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
-                  <Route className="w-5 h-5" />
-                </div>
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
-              </div>
-              <div>
-                <div className="text-2xl font-black text-white">{totalRidesShared}</div>
-                <div className="text-xs text-slate-400 font-medium">Total Rides Shared</div>
-              </div>
-            </div>
-
-            {/* Stat Card 2: Fuel Saved */}
-            <div className="bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-colors rounded-xl p-5 flex flex-col justify-between relative overflow-hidden group">
-              <div className="flex justify-between items-start mb-2">
-                <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
-                  <Wallet className="w-5 h-5" />
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl font-black text-white">₹{fuelSaved}</div>
-                <div className="text-xs text-slate-400 font-medium">Fuel Cost Saved</div>
-              </div>
-            </div>
-
-            {/* Stat Card 3: Verification */}
-            <div className="bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-colors rounded-xl p-5 flex flex-col justify-between relative overflow-hidden group">
-              <div className="absolute -right-4 -bottom-4 opacity-10">
-                <ShieldCheck className="w-32 h-32 text-indigo-500" />
-              </div>
-              <div className="flex justify-between items-start mb-2 relative z-10">
-                <div className="p-2 bg-indigo-500/20 rounded-lg text-indigo-400">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-              </div>
+            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 flex flex-col justify-center items-center text-center gap-3 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent" />
+              <ShieldCheck className="w-8 h-8 text-indigo-600 dark:text-indigo-400 relative z-10" />
               <div className="relative z-10">
-                <div className="text-lg font-bold text-white flex items-center gap-1.5">
-                  Verified VNRian
-                  <CheckCircle2 className="w-4 h-4 text-indigo-400" />
-                </div>
-                <div className="text-xs text-slate-400 font-medium">Identity Authenticated</div>
+                <div className="text-sm font-bold text-slate-900 dark:text-white">Verified Student</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">VNR VJIET ID Authenticated</div>
               </div>
             </div>
           </motion.section>
 
-          {/* 3. Main Content Area (65% / 35% Split) */}
+          {/* 2-Column Workspace Grid */}
           <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* LEFT COLUMN: Main App Area */}
@@ -282,8 +249,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               className="lg:col-span-8 flex flex-col gap-6"
             >
               
-              {/* Tab Navigation (Framer Motion layoutId) */}
-              <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-xl p-1.5 flex overflow-x-auto no-scrollbar shadow-sm">
+              {/* Tab Navigation */}
+              <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-xl p-1.5 flex overflow-x-auto no-scrollbar shadow-sm">
                 {TABS.map((tab) => {
                   const isActive = activeTab === tab.id;
                   const Icon = tab.icon;
@@ -292,14 +259,14 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id as TabType)}
                       className={cn(
-                         "relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex-shrink-0",
-                        isActive ? "text-white" : "text-slate-400 hover:text-slate-200"
+                        "relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex-shrink-0",
+                        isActive ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
                       )}
                     >
                       {isActive && (
                         <motion.div
-                          layoutId="saasTabIndicator"
-                          className="absolute inset-0 bg-slate-800 rounded-lg shadow-sm border border-slate-700/50"
+                          layoutId="activeTabIndicator"
+                          className="absolute inset-0 bg-slate-100 dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700/50"
                           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                         />
                       )}
@@ -313,10 +280,11 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               </div>
 
               {/* Dynamic Workspace Container */}
-              <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-1 shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/0 via-indigo-500/0 to-indigo-500/0 group-hover:from-indigo-500/10 transition-all duration-500 pointer-events-none" />
+              <div className="bg-white/80 dark:bg-slate-900/40 backdrop-blur-2xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-1 shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden group">
+                {/* Subtle border glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/5 via-transparent to-transparent dark:from-indigo-500/0 dark:via-indigo-500/0 dark:to-indigo-500/0 group-hover:from-indigo-500/15 dark:group-hover:from-indigo-500/10 transition-all duration-500 pointer-events-none" />
                 
-                <div className="bg-slate-950 rounded-xl p-4 sm:p-6 lg:p-8 min-h-[500px] relative z-10">
+                <div className="bg-slate-50/80 dark:bg-slate-950 rounded-xl p-4 sm:p-6 lg:p-8 min-h-[500px] relative z-10">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}
@@ -344,10 +312,34 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               className="lg:col-span-4 flex flex-col gap-6 sticky top-24"
             >
               
-              {/* Fuel Split Calculator Micro-Widget */}
-              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-sm">
-                <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-                  <Wallet className="w-4 h-4 text-indigo-400" />
+              {/* Pickup Map Placeholder */}
+              <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm group">
+                <div className="h-32 bg-slate-100 dark:bg-slate-800 relative flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1)_0%,transparent_100%)]" />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:16px_16px]" />
+                  <MapPin className="w-8 h-8 text-indigo-400 relative z-10 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]" />
+                  
+                  {/* Decorative map nodes */}
+                  <div className="absolute top-8 left-8 w-2 h-2 bg-slate-600 rounded-full" />
+                  <div className="absolute top-20 right-12 w-2 h-2 bg-slate-600 rounded-full" />
+                  <div className="absolute bottom-6 left-24 w-3 h-3 bg-teal-500 rounded-full shadow-[0_0_10px_rgba(20,184,166,0.5)]" />
+                  
+                  <svg className="absolute inset-0 w-full h-full stroke-slate-700/50 fill-none" strokeWidth="2" strokeDasharray="4 4">
+                    <path d="M 40,40 L 100,100 L 150,80" />
+                  </svg>
+                </div>
+                <div className="p-4 border-t border-slate-200 dark:border-slate-800/80">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Campus Hotspots</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    High demand pickups at Kukatpally (JNTU), Pragathi Nagar, and Miyapur X Roads.
+                  </p>
+                </div>
+              </div>
+
+              {/* Fuel Split Calculator */}
+              <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Wallet className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                   Quick Fare Splitter
                 </h3>
                 
@@ -355,13 +347,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   <div className="grid grid-cols-2 gap-2">
                     <button 
                       onClick={() => { setCalcVehicle("car"); setCalcPassengers(4); }}
-                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "car" ? "bg-indigo-500 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "car" ? "bg-indigo-500 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
                     >
                       Car
                     </button>
                     <button 
                       onClick={() => { setCalcVehicle("bike"); setCalcPassengers(1); }}
-                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "bike" ? "bg-indigo-500 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "bike" ? "bg-indigo-500 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
                     >
                       Bike
                     </button>
@@ -369,13 +361,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
 
                   {calcVehicle === "car" && (
                     <div>
-                      <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 block">Total Passengers</label>
+                      <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 block">Total Passengers (excluding you)</label>
                       <div className="flex gap-2">
                         {[1, 2, 3, 4].map(num => (
                           <button
                             key={num}
                             onClick={() => setCalcPassengers(num)}
-                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-colors ${calcPassengers === num ? "bg-indigo-500 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-colors ${calcPassengers === num ? "bg-indigo-500 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
                           >
                             {num}
                           </button>
@@ -387,56 +379,49 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   <div>
                     <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex justify-between">
                       <span>Distance (km)</span>
-                      <span className="text-indigo-400">{calcDistance} km</span>
+                      <span className="text-indigo-500 dark:text-indigo-400">{calcDistance} km</span>
                     </label>
                     <input 
                       type="range" min="1" max="40" 
                       value={calcDistance} onChange={(e) => setCalcDistance(Number(e.target.value))}
-                      className="w-full h-1.5 bg-slate-800 rounded-full appearance-none accent-indigo-500 cursor-pointer"
+                      className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full appearance-none accent-indigo-500 cursor-pointer"
                     />
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-end gap-4 p-4 bg-slate-950 rounded-xl border border-slate-800/80">
+                <div className="mt-6 flex items-end gap-4 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800/80">
                   <div className="flex-1">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Per Seat</div>
-                    <div className="text-xl font-black text-white">₹{recommendedSplit}</div>
+                    <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Per Seat</div>
+                    <div className="text-xl font-black text-slate-900 dark:text-white">₹{recommendedSplit}</div>
                   </div>
-                  <div className="w-px h-10 bg-slate-800" />
+                  <div className="w-px h-10 bg-slate-200 dark:bg-slate-800" />
                   <div className="flex-1 text-right">
-                    <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-1">Total Fare</div>
-                    <div className="text-2xl font-black text-indigo-400">₹{totalEarnings}</div>
+                    <div className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-1">Total Recommended Fare</div>
+                    <div className="text-2xl font-black text-indigo-500 dark:text-indigo-400">₹{totalEarnings}</div>
                   </div>
                 </div>
               </div>
 
-              {/* Safety Guidelines Accordion */}
-              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl overflow-hidden shadow-sm">
-                <details className="group" open>
-                  <summary className="text-sm font-bold text-white p-5 flex items-center justify-between cursor-pointer list-none select-none">
-                    <div className="flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-amber-500" />
-                      Safety Guidelines
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-slate-400 group-open:rotate-90 transition-transform" />
-                  </summary>
-                  <div className="px-5 pb-5">
-                    <ul className="space-y-3">
-                      <li className="flex items-start gap-2 text-xs text-slate-400">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                        Verify the driver's college ID before boarding.
-                      </li>
-                      <li className="flex items-start gap-2 text-xs text-slate-400">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                        Share your live location with a friend via WhatsApp.
-                      </li>
-                      <li className="flex items-start gap-2 text-xs text-slate-400">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                        Payments should only be made directly to the driver via UPI.
-                      </li>
-                    </ul>
-                  </div>
-                </details>
+              {/* Safety Guidelines */}
+              <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                  Safety Guidelines
+                </h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
+                    Verify the driver's college ID before boarding.
+                  </li>
+                  <li className="flex items-start gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
+                    Share your live location with a friend via WhatsApp.
+                  </li>
+                  <li className="flex items-start gap-2 text-xs text-slate-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    Payments should only be made directly to the driver via UPI.
+                  </li>
+                </ul>
               </div>
 
             </motion.div>
