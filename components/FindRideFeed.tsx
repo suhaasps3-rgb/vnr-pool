@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2 } from "lucide-react";
+import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2, Calendar } from "lucide-react";
 import ChatModal from "./ChatModal";
 import RateUser from "./RateUser";
 import RideCard from "./RideCard";
@@ -19,6 +19,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   const [womenOnly, setWomenOnly] = useState(false);
   const [searchOrigin, setSearchOrigin] = useState("");
   const [searchDestination, setSearchDestination] = useState("");
+  const [searchDate, setSearchDate] = useState("");
   const [timeFilter, setTimeFilter] = useState<"all" | "morning" | "afternoon" | "evening">("all");
   const [minSeats, setMinSeats] = useState<number>(1);
   const [selectedRideId, setSelectedRideId] = useState<string | null>(null);
@@ -41,7 +42,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   }, [searchOrigin, searchDestination]);
 
   const { data: rides, isLoading, refetch } = useQuery({
-    queryKey: ["rides", rideCategory, womenOnly, mode, searchOrigin, searchDestination],
+    queryKey: ["rides", rideCategory, womenOnly, mode, searchOrigin, searchDestination, searchDate],
     queryFn: async () => {
       const queryStr = `
         *,
@@ -56,6 +57,14 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         if (womenOnly) query = query.eq('is_women_only', true);
         if (searchOrigin) query = query.ilike('origin', `%${searchOrigin}%`);
         if (searchDestination) query = query.ilike('destination', `%${searchDestination}%`);
+        if (searchDate) {
+          const startOfDay = new Date(searchDate);
+          startOfDay.setHours(0, 0, 0, 0);
+          const endOfDay = new Date(searchDate);
+          endOfDay.setHours(23, 59, 59, 999);
+          query = query.gte('departure_time', startOfDay.toISOString());
+          query = query.lte('departure_time', endOfDay.toISOString());
+        }
         
         query = query.order('created_at', { ascending: false });
         
@@ -455,6 +464,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 value={searchDestination}
                 onChange={(e) => setSearchDestination(e.target.value)}
                 className="bg-transparent outline-none w-full text-sm dark:text-white" 
+              />
+            </div>
+            <div className="flex-1 min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm focus-within:border-[#2563EB] transition-colors">
+              <Calendar className="w-5 h-5 text-slate-400" />
+              <input 
+                type="date"
+                value={searchDate}
+                onChange={(e) => setSearchDate(e.target.value)}
+                className="bg-transparent outline-none w-full text-sm text-slate-700 dark:text-white [color-scheme:light] dark:[color-scheme:dark]" 
               />
             </div>
           </div>
