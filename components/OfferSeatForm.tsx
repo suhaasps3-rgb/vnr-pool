@@ -220,7 +220,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           if (data && data.address) {
             // Prefer smaller localities first
             const addr = data.address;
-            const locName = addr.neighbourhood || addr.suburb || addr.residential || addr.village || addr.town || addr.city_district || addr.county || addr.road || addr.city || data.name || "Unknown Location";
+            const locName = addr.neighbourhood || addr.suburb || addr.residential || addr.village || addr.town || addr.city_district || addr.county || addr.road || addr.city || data.name || (data.display_name ? data.display_name.split(',')[0] : "Unknown Location");
             setFormData(prev => ({...prev, origin: locName}));
             toast.success(`Location found: ${locName}`);
           } else {
