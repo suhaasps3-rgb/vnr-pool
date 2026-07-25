@@ -706,32 +706,32 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 200, damping: 20 } } 
                 }}
                 whileHover={{ scale: 1.02, boxShadow: "0 15px 30px -5px rgba(0, 0, 0, 0.15)" }}
-                className={`ui-card p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''} ${ride.status === 'completed' ? 'border-emerald-200 dark:border-emerald-500/30' : ''}`}
+                className={`ui-card p-4 md:p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''} ${ride.status === 'completed' ? 'border-emerald-200 dark:border-emerald-500/30' : ''}`}
               >
                 {ride.status === 'cancelled' && (
-                  <div className="absolute top-4 right-4 bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-200 dark:border-red-500/30 z-10">
+                  <div className="absolute top-4 right-4 bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold border border-red-200 dark:border-red-500/30 z-10">
                     CANCELLED
                   </div>
                 )}
                 {ride.status === 'in_progress' && (
-                  <div className="absolute top-4 right-4 bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 dark:border-blue-500/30 z-10">
+                  <div className="absolute top-4 right-4 bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold border border-blue-200 dark:border-blue-500/30 z-10">
                     IN PROGRESS
                   </div>
                 )}
                 {ride.status === 'completed' && (
-                  <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 dark:border-emerald-500/30 z-10">
+                  <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold border border-emerald-200 dark:border-emerald-500/30 z-10">
                     COMPLETED
                   </div>
                 )}
                 
                 {mode === "feed" && isAIMatch(ride.origin, ride.destination, searchOrigin, searchDestination, ride.chosen_route_index) && (
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-purple-700 dark:text-purple-300 px-4 py-1 rounded-full text-[10px] font-black tracking-widest border border-purple-500/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse z-10">
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-purple-700 dark:text-purple-300 px-3 md:px-4 py-1 rounded-full text-[8px] md:text-[10px] font-black tracking-widest border border-purple-500/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse z-10">
                     ✨ AI MATCH: PERFECT ROUTE OVERLAY
                   </div>
                 )}
                 
                 {/* Driver Info Header */}
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex justify-between items-start mb-4 md:mb-6">
                   <div className="flex items-start md:items-center gap-3 md:gap-4 flex-1 min-w-0">
                     <div 
                       onClick={() => setSelectedDriverForModal({ driver: ride.driver, vehicleNumber: ride.vehicle_number })}
@@ -760,7 +760,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 shrink-0">
                     {ride.driver_id !== userId && (
                       <button onClick={() => handleBlockUser(ride.driver_id, ride.driver?.full_name)} className="p-2 text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 dark:bg-white/5 dark:hover:bg-red-500/10 rounded-full transition-colors" title="Block User">
                         <Ban className="w-4 h-4" />
@@ -770,24 +770,24 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 </div>
 
                 {/* Route Visualizer */}
-                <div className="flex gap-6 mb-6">
+                <div className="flex gap-4 md:gap-6 mb-4 md:mb-6">
                   {/* Timeline Node */}
                   <div className="flex flex-col items-center mt-1">
-                    <div className="w-3 h-3 rounded-full border-2 border-[#10B981] bg-white dark:bg-[#1E293B] z-10"></div>
-                    <div className="w-0.5 h-10 bg-gray-200 dark:bg-slate-700 -my-1"></div>
-                    <div className="w-3 h-3 rounded-full bg-[#2563EB] z-10"></div>
+                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full border-2 border-[#10B981] bg-white dark:bg-[#1E293B] z-10"></div>
+                    <div className="w-0.5 h-8 md:h-10 bg-gray-200 dark:bg-slate-700 -my-1"></div>
+                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#2563EB] z-10"></div>
                   </div>
                   
                   {/* Locations & Time */}
-                  <div className="flex flex-col justify-between py-0.5 flex-1 h-[4.5rem]">
-                    <div className="flex justify-between items-start">
-                      <p className="font-bold text-[#0F172A] dark:text-white">{ride.origin}</p>
-                      <p className="text-sm font-semibold text-[#0F172A] dark:text-white">
+                  <div className="flex flex-col justify-between py-0 flex-1 h-[3.5rem] md:h-[4.5rem]">
+                    <div className="flex justify-between items-start gap-2">
+                      <p className="font-bold text-sm md:text-base text-[#0F172A] dark:text-white leading-tight">{ride.origin}</p>
+                      <p className="text-xs md:text-sm font-semibold text-[#0F172A] dark:text-white shrink-0 text-right">
                         {format(new Date(ride.departure_time), "MMM d, h:mm a")}
                       </p>
                     </div>
                     <div className="flex justify-between items-end">
-                      <p className="font-bold text-[#0F172A] dark:text-white">{ride.destination}</p>
+                      <p className="font-bold text-sm md:text-base text-[#0F172A] dark:text-white leading-tight">{ride.destination}</p>
                     </div>
                   </div>
                 </div>
