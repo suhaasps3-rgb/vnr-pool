@@ -13,7 +13,7 @@ import RideCard from "./RideCard";
 import BookSeatModal from "./BookSeatModal";
 import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
-import { isAIMatch, ROUTES, calculateFractionalPrice } from "@/lib/matchmaking";
+import { isAIMatch, ROUTES, calculateFractionalPrice, findLocIndex } from "@/lib/matchmaking";
 import { ALL_LOCATIONS as COMMON_LOCATIONS } from "@/lib/locations";
 import DynamicMap from "./DynamicMap";
 
@@ -854,7 +854,18 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   
                   {activeMapId === ride.id && (
                     <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-300" onClick={(e) => e.stopPropagation()}>
-                      <DynamicMap origin={ride.origin} destination={ride.destination} />
+                      {(() => {
+                        let waypoints = undefined;
+                        if (ride.chosen_route_index !== null && ride.chosen_route_index !== undefined && ROUTES[ride.chosen_route_index]) {
+                            const fullRoute = ROUTES[ride.chosen_route_index];
+                            const oIdx = findLocIndex(fullRoute, ride.origin);
+                            const dIdx = findLocIndex(fullRoute, ride.destination);
+                            if (oIdx !== -1 && dIdx !== -1 && oIdx <= dIdx) {
+                                waypoints = fullRoute.slice(oIdx, dIdx + 1);
+                            }
+                        }
+                        return <DynamicMap origin={ride.origin} destination={ride.destination} waypoints={waypoints} />;
+                      })()}
                     </div>
                   )}
                 </div>

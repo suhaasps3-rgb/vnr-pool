@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { MapPin, Clock, Users, ShieldCheck, ChevronRight, Map } from "lucide-react";
 import { format } from "date-fns";
 import DynamicMap from "./DynamicMap";
+import { ROUTES, findLocIndex } from "@/lib/matchmaking";
 
 export default function RideCard({ 
   ride, 
@@ -166,7 +167,18 @@ export default function RideCard({
         
         {showMap && (
           <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-300" onClick={(e) => e.stopPropagation()}>
-            <DynamicMap origin={ride.origin} destination={ride.destination} />
+            {(() => {
+              let waypoints = undefined;
+              if (ride.chosen_route_index !== null && ride.chosen_route_index !== undefined && ROUTES[ride.chosen_route_index]) {
+                  const fullRoute = ROUTES[ride.chosen_route_index];
+                  const oIdx = findLocIndex(fullRoute, ride.origin);
+                  const dIdx = findLocIndex(fullRoute, ride.destination);
+                  if (oIdx !== -1 && dIdx !== -1 && oIdx <= dIdx) {
+                      waypoints = fullRoute.slice(oIdx, dIdx + 1);
+                  }
+              }
+              return <DynamicMap origin={ride.origin} destination={ride.destination} waypoints={waypoints} />;
+            })()}
           </div>
         )}
       </div>

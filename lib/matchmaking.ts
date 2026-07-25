@@ -1,5 +1,22 @@
 import { DISTANCE_MAP } from './locations';
 
+export const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec').replace('balnagar', 'balanagar');
+
+export const findLocIndex = (route: string[], queryLoc: string) => {
+  const q = queryLoc.toLowerCase().trim();
+  if (!q) return -1;
+  let idx = route.findIndex(node => node.toLowerCase().trim() === q);
+  if (idx !== -1) return idx;
+  const regex = new RegExp(`\\b${q}\\b`, 'i');
+  idx = route.findIndex(node => regex.test(node));
+  if (idx !== -1) return idx;
+  const normQ = normalize(queryLoc);
+  return route.findIndex(node => {
+    const n = normalize(node);
+    return normQ.includes(n) || n.includes(normQ);
+  });
+};
+
 export const ROUTES: string[][] = [
   // S1: PATANCHERU TO VNRVJIET
   ["patancheru", "beeramguda kaman", "bhel", "chandanagar", "miyapur", "vnr vjiet"],
@@ -233,29 +250,7 @@ export const ROUTES: string[][] = [
 export function getPossibleRoutes(rideOrigin: string, rideDest: string): { index: number, path: string[] }[] {
   const rO = rideOrigin.toLowerCase();
   const rD = rideDest.toLowerCase();
-  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec').replace('balnagar', 'balanagar');
-  const findLocIndex = (route: string[], queryLoc: string) => {
-    const q = queryLoc.toLowerCase().trim();
-    if (!q) return -1;
-    
-    // 1st Pass: Exact full string match (ignoring case)
-    let idx = route.findIndex(node => node.toLowerCase().trim() === q);
-    if (idx !== -1) return idx;
-    
-    // 2nd Pass: Exact word match (e.g. 'chintal' matches 'chintal shapur signal' but ideally we want strict matching if possible)
-    // Actually, 'chintal shapur signal' SHOULD NOT match if the user is in 'chintal' and there is a better route for 'chintal'.
-    // We will do a word boundary regex check.
-    const regex = new RegExp(`\\b${q}\\b`, 'i');
-    idx = route.findIndex(node => regex.test(node));
-    if (idx !== -1) return idx;
 
-    // 3rd Pass: Partial Match as fallback
-    const normQ = normalize(queryLoc);
-    return route.findIndex(node => {
-      const n = normalize(node);
-      return normQ.includes(n) || n.includes(normQ);
-    });
-  };
 
   const validRoutes: { index: number, path: string[] }[] = [];
 
@@ -319,17 +314,7 @@ export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: st
   const sO = searchOrigin ? searchOrigin.toLowerCase() : "";
   const sD = searchDest ? searchDest.toLowerCase() : "";
   
-  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec');
-  
-  // Helper to find index of a location in a route
-  const findLocIndex = (route: string[], queryLoc: string) => {
-    const q = normalize(queryLoc);
-    if (!q) return -1;
-    return route.findIndex(node => {
-      const n = normalize(node);
-      return q.includes(n) || n.includes(q);
-    });
-  };
+
 
   const routesToCheck = chosenRouteIndex !== null && chosenRouteIndex !== undefined && chosenRouteIndex >= 0 && chosenRouteIndex < ROUTES.length
     ? [ROUTES[chosenRouteIndex]]

@@ -16,6 +16,7 @@ L.Icon.Default.mergeOptions({
 interface MapComponentProps {
   origin: string;
   destination: string;
+  waypoints?: string[];
 }
 
 function ChangeView({ bounds }: { bounds: L.LatLngBounds | null }) {
@@ -28,11 +29,12 @@ function ChangeView({ bounds }: { bounds: L.LatLngBounds | null }) {
   return null;
 }
 
-export default function MapComponent({ origin, destination }: MapComponentProps) {
+export default function MapComponent({ origin, destination, waypoints }: MapComponentProps) {
   const [routeData, setRouteData] = useState<{
     originCoords: [number, number];
     destCoords: [number, number];
     routeCoords: [number, number][];
+    waypointCoords?: { name: string, coords: [number, number] }[];
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -44,7 +46,7 @@ export default function MapComponent({ origin, destination }: MapComponentProps)
         // Helper to geocode with fallback
         const geocode = async (locName: string) => {
           // Hardcode VNR VJIET for 100% accuracy since it's the anchor of the app
-          if (locName.toLowerCase().includes("vnr") || locName.toLowerCase().includes("vjiet")) {
+          if (locName.toLowerCase().includes("vnr") || locName.toLowerCase().includes("vjiet") || locName.toLowerCase().includes("bachupally")) {
             return { lat: 17.5388, lon: 78.3868 };
           }
           
@@ -79,8 +81,26 @@ export default function MapComponent({ origin, destination }: MapComponentProps)
         const dLat = dCoords.lat;
         const dLon = dCoords.lon;
 
+        let allCoords = [{lat: oLat, lon: oLon}];
+        let wpCoords = [];
+        
+        if (waypoints && waypoints.length > 0) {
+          for (const wp of waypoints) {
+            if (wp.toLowerCase() === origin.toLowerCase() || wp.toLowerCase() === destination.toLowerCase()) continue;
+            try {
+              const c = await geocode(wp);
+              wpCoords.push({ name: wp, coords: [c.lat, c.lon] as [number, number] });
+              allCoords.push(c);
+            } catch (err) {
+              console.warn("Could not geocode waypoint", wp);
+            }
+          }
+        }
+        allCoords.push({lat: dLat, lon: dLon});
+
         // Fetch Route from OSRM
-        const routeRes = await fetch(`https://router.project-osrm.org/route/v1/driving/${oLon},${oLat};${dLon},${dLat}?overview=full&geometries=geojson`);
+        const coordsString = allCoords.map(c => `${c.lon},${c.lat}`).join(';');
+        const routeRes = await fetch(`https://router.project-osrm.org/route/v1/driving/${coordsString}?overview=full&geometries=geojson`);
         const routeDataAPI = await routeRes.json();
         
         if (routeDataAPI.code !== "Ok" || !routeDataAPI.routes || routeDataAPI.routes.length === 0) {
@@ -94,6 +114,7 @@ export default function MapComponent({ origin, destination }: MapComponentProps)
           originCoords: [oLat, oLon],
           destCoords: [dLat, dLon],
           routeCoords,
+          waypointCoords: wpCoords
         });
       } catch (err: any) {
         setError(err.message);
@@ -143,6 +164,11 @@ export default function MapComponent({ origin, destination }: MapComponentProps)
         <Marker position={routeData.originCoords}>
           <Popup>{origin} (Origin)</Popup>
         </Marker>
+        {routeData.waypointCoords && routeData.waypointCoords.map((wp, idx) => (
+          <Marker key={idx} position={wp.coords}>
+            <Popup>{wp.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</Popup>
+          </Marker>
+        ))}
         <Marker position={routeData.destCoords}>
           <Popup>{destination} (Destination)</Popup>
         </Marker>
