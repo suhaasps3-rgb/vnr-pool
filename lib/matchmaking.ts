@@ -159,7 +159,75 @@ export const ROUTES: string[][] = [
   // Img Route 30: Narsingi
   ["narsingi", "gachibowli", "kondapur", "kphb", "jntu", "vnr vjiet"],
   // Img Route 31: Rajendranagar
-  ["rajendranagar", "attapur", "mehdipatnam", "ameerpet", "kukatpally", "vnr vjiet"]
+  ["rajendranagar", "attapur", "mehdipatnam", "ameerpet", "kukatpally", "vnr vjiet"],
+  // Img Route 32: Raidurg
+  ["raidurg", "hi-tech city", "madhapur", "kphb", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 33: HITEC City
+  ["hi-tech city", "madhapur", "kphb", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 34: Madhapur
+  ["madhapur", "kphb", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 35: Jubilee Hills Check Post
+  ["jubilee hills", "madhapur", "kphb", "jntu", "vnr vjiet"],
+  // Img Route 36: Road No. 5 Jubilee Hills
+  ["road no. 5", "jubilee hills", "madhapur", "jntu", "vnr vjiet"],
+  // Img Route 37: Yusufguda
+  ["yusufguda", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 38: Begumpet
+  ["begumpet", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 39: Paradise
+  ["paradise", "secunderabad", "balanagar", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 40: Secunderabad East
+  ["secunderabad east", "paradise", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 41: Parade Ground
+  ["parade ground", "paradise", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 42: Mettuguda
+  ["mettuguda", "secunderabad", "paradise", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 43: Tarnaka 2
+  ["tarnaka", "mettuguda", "secunderabad", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 44: Habsiguda
+  ["habsiguda", "tarnaka", "secunderabad", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 45: NGRI
+  ["ngri", "habsiguda", "tarnaka", "secunderabad", "jntu", "vnr vjiet"],
+  // Img Route 46: Stadium
+  ["stadium", "uppal", "tarnaka", "secunderabad", "jntu", "vnr vjiet"],
+  // Img Route 47: Nagole 2
+  ["nagole", "uppal", "tarnaka", "secunderabad", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 48: RTC X Roads
+  ["rtc x rds", "musheerabad", "secunderabad", "paradise", "kukatpally", "vnr vjiet"],
+  // Img Route 49: Narayanguda
+  ["narayanguda", "chikkadpally", "rtc x rds", "musheerabad", "kukatpally", "vnr vjiet"],
+  // Img Route 50: Sultan Bazar
+  ["sultan bazar", "mgbs", "nampally", "ameerpet", "kukatpally", "vnr vjiet"],
+  // Img Route 51: MGBS
+  ["mgbs", "nampally", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 52: Osmania Medical College
+  ["omc", "mgbs", "nampally", "ameerpet", "vnr vjiet"],
+  // Img Route 53: Gandhi Bhavan
+  ["gandhi bhavan", "nampally", "ameerpet", "kukatpally", "vnr vjiet"],
+  // Img Route 54: Assembly
+  ["assembly", "lakdikapul", "khairatabad", "ameerpet", "vnr vjiet"],
+  // Img Route 55: Khairatabad
+  ["khairatabad", "punjagutta", "ameerpet", "kukatpally", "vnr vjiet"],
+  // Img Route 56: Punjagutta
+  ["punjagutta", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 57: ESI Hospital
+  ["esi hospital", "erragadda", "bharat nagar", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 58: Bharat Nagar
+  ["bharat nagar", "moosapet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 59: Moosapet
+  ["moosapet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 60: Balanagar
+  ["balanagar", "kukatpally", "jntu", "nizampet", "vnr vjiet"],
+  // Img Route 61: Kukatpally
+  ["kukatpally", "kphb", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 62: JNTU College
+  ["jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 63: Miyapur 2
+  ["miyapur", "allwyn x roads", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 64: Dilsukhnagar 2
+  ["dilsukhnagar", "mgbs", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 65: LB Nagar 2
+  ["lb nagar", "dilsukhnagar", "mgbs", "ameerpet", "kukatpally", "jntu", "vnr vjiet"]
 ];
 
 export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string): boolean {
