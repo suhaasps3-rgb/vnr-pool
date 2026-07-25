@@ -149,7 +149,14 @@ export const DISTANCE_MAP: Record<string, number> = {
   "mvsr engineering college": 40, "nadergul": 40, "cvr college of engineering": 48,
   "gurunanak institutions": 50, "ibrahimpatnam": 50, "tkr college": 35,
   "meerpet": 35, "badangpet": 36, "b n reddy nagar": 37, "hastinapuram": 36,
-  "turkayamjal": 42, "bonguloor": 45
+  "turkayamjal": 42, "bonguloor": 45,
+  
+  // North Hyderabad Landmarks & Colleges
+  "dhulapally": 11, "doolapally": 11, "st. martin's engineering college": 11,
+  "st martins": 11, "dairy farm road": 14, "fox sagar lake": 11,
+  "petbasheerabad": 12, "yellampet": 17, "athvelli": 18, "pudur": 22,
+  "medchal railway station": 20, "apparel park": 13, "siva sivani": 12,
+  "loyola academy": 18, "army college of dental sciences": 25
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
