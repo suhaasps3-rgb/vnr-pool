@@ -14,6 +14,7 @@ import BookSeatModal from "./BookSeatModal";
 import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
 import { isAIMatch, ROUTES, calculateFractionalPrice } from "@/lib/matchmaking";
+import { ALL_LOCATIONS as COMMON_LOCATIONS } from "@/lib/locations";
 import DynamicMap from "./DynamicMap";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", onSearchChange }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip", onSearchChange?: (origin: string, dest: string) => void }) {
@@ -21,6 +22,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   const [womenOnly, setWomenOnly] = useState(false);
   const [searchOrigin, setSearchOrigin] = useState("");
   const [searchDestination, setSearchDestination] = useState("");
+  const [showOriginDropdown, setShowOriginDropdown] = useState(false);
+  const [showDestDropdown, setShowDestDropdown] = useState(false);
   const [searchDate, setSearchDate] = useState("");
   const [timeFilter, setTimeFilter] = useState<"all" | "morning" | "afternoon" | "evening">("all");
   const [minSeats, setMinSeats] = useState<number>(1);
@@ -507,14 +510,20 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           )}
 
           {/* Functional Search Bar */}
-          <div className="flex flex-col md:flex-row flex-wrap gap-3 p-3 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-stretch shadow-sm">
-            <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group">
-              <MapPin className="w-5 h-5 text-slate-400" />
+          {/* Functional Search Bar */}
+          <div className="flex flex-col md:flex-row gap-3 p-3 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-stretch shadow-sm">
+            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group z-50">
+              <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
               <input 
                 type="text" 
                 placeholder="Leaving from..." 
                 value={searchOrigin}
-                onChange={(e) => setSearchOrigin(e.target.value)}
+                onChange={(e) => {
+                  setSearchOrigin(e.target.value);
+                  setShowOriginDropdown(true);
+                }}
+                onFocus={() => setShowOriginDropdown(true)}
+                onBlur={() => setTimeout(() => setShowOriginDropdown(false), 150)}
                 className="bg-transparent outline-none w-full text-sm text-slate-900 dark:text-white placeholder-slate-400 group-focus-within:placeholder-slate-300" 
               />
               <button
@@ -526,19 +535,62 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               >
                 {gettingLocation ? <Loader2 className="w-4 h-4 animate-spin" /> : "📍"}
               </button>
+              <div 
+                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
+                style={{ display: showOriginDropdown ? "block" : "none" }}
+              >
+                {(searchOrigin ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(searchOrigin.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
+                  <div 
+                    key={loc}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      setSearchOrigin(loc);
+                      setShowOriginDropdown(false);
+                    }}
+                    className="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-sm text-slate-700 dark:text-slate-200"
+                  >
+                    {loc}
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group">
-              <MapPin className="w-5 h-5 text-slate-400" />
+            
+            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group z-40">
+              <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
               <input 
                 type="text" 
                 placeholder="Going to..." 
                 value={searchDestination}
-                onChange={(e) => setSearchDestination(e.target.value)}
+                onChange={(e) => {
+                  setSearchDestination(e.target.value);
+                  setShowDestDropdown(true);
+                }}
+                onFocus={() => setShowDestDropdown(true)}
+                onBlur={() => setTimeout(() => setShowDestDropdown(false), 150)}
                 className="bg-transparent outline-none w-full text-sm text-slate-900 dark:text-white placeholder-slate-400 group-focus-within:placeholder-slate-300" 
               />
+              <div 
+                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
+                style={{ display: showDestDropdown ? "block" : "none" }}
+              >
+                {(searchDestination ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(searchDestination.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
+                  <div 
+                    key={loc}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      setSearchDestination(loc);
+                      setShowDestDropdown(false);
+                    }}
+                    className="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-sm text-slate-700 dark:text-slate-200"
+                  >
+                    {loc}
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex-1 min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300">
-              <Calendar className="w-5 h-5 text-slate-400" />
+            
+            <div className="flex-[0.5] min-w-0 md:min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300">
+              <Calendar className="w-5 h-5 text-slate-400 shrink-0" />
               <input 
                 type="date"
                 min={new Date().toISOString().split('T')[0]}
