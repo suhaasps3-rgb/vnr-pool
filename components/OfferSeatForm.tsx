@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Loader2, LocateFixed } from "lucide-react";
 import { motion } from "framer-motion";
 import { ALL_LOCATIONS as COMMON_LOCATIONS } from "@/lib/locations";
 import { getPossibleRoutes } from "@/lib/matchmaking";
@@ -290,7 +290,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 disabled={gettingLocation}
                 className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1 bg-blue-50 dark:bg-blue-500/10 px-2 py-1 rounded-md transition-colors disabled:opacity-50"
               >
-                {gettingLocation ? <Loader2 className="w-3 h-3 animate-spin" /> : "📍"}
+                {gettingLocation ? <Loader2 className="w-3 h-3 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
                 {gettingLocation ? "Locating..." : "Use Current Location"}
               </button>
             </div>

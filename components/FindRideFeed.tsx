@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2, Calendar } from "lucide-react";
+import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2, Calendar, LocateFixed } from "lucide-react";
 import ChatModal from "./ChatModal";
 import RateUser from "./RateUser";
 import RideCard from "./RideCard";
@@ -545,7 +545,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 title="Use Current Location"
                 className="p-1.5 rounded-lg text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/20 transition-colors disabled:opacity-50 flex items-center justify-center shrink-0"
               >
-                {gettingLocation ? <Loader2 className="w-4 h-4 animate-spin" /> : "📍"}
+                {gettingLocation ? <Loader2 className="w-5 h-5 animate-spin" /> : <LocateFixed className="w-5 h-5" />}
               </button>
               <div 
                 className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-[60]"
@@ -613,14 +613,14 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               </div>
             </div>
             
-            <div className="flex-[0.5] min-w-0 md:min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300">
-              <Calendar className="w-5 h-5 text-slate-400 shrink-0" />
+            <div className="flex-[0.5] relative min-w-0 md:min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300">
+              <Calendar className="w-5 h-5 text-slate-400 shrink-0 pointer-events-none" />
               <input 
                 type="date"
                 min={new Date().toISOString().split('T')[0]}
                 value={searchDate}
                 onChange={(e) => setSearchDate(e.target.value)}
-                className="bg-transparent outline-none w-full text-sm text-slate-700 dark:text-white [color-scheme:light] dark:[color-scheme:dark]" 
+                className="bg-transparent outline-none w-full text-sm text-slate-700 dark:text-white [color-scheme:light] dark:[color-scheme:dark] [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer" 
               />
             </div>
           </div>
