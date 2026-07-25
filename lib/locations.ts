@@ -111,7 +111,16 @@ export const DISTANCE_MAP: Record<string, number> = {
   "basheerbagh": 22, "secretariat": 21, "domalguda": 21, "ashok nagar": 22,
   "gandhi hospital": 23, "park lane": 20, "sd road": 20, "sindhi colony": 19,
   "rasoolpura": 19, "sanjeevaiah park": 20, "banjara hills road no 12": 19,
-  "banjara hills road no 10": 19, "banjara hills road no 1": 19
+  "banjara hills road no 10": 19, "banjara hills road no 1": 19,
+  
+  // Old City & Near Charminar Landmarks
+  "mecca masjid": 25, "makka masjid": 25, "laad bazaar": 25, "madina circle": 24,
+  "pathergatti": 24, "nayapul": 24, "afzal gunj": 24, "darulshifa": 25,
+  "purani haveli": 26, "yakutpura": 26, "dabirpura": 25, "chanchalguda": 27,
+  "hussaini alam": 26, "bahadurpura": 28, "kishan bagh": 29, "mir alam tank": 29,
+  "aliabad": 28, "moghalpura": 26, "khilwat": 26, "moazzam jahi market": 22,
+  "begum bazaar": 23, "mangalhat": 24, "dhoolpet": 24, "goshamahal": 23,
+  "mallepally": 22, "madina": 24
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
