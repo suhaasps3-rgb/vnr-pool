@@ -13,6 +13,7 @@ import RideCard from "./RideCard";
 import BookSeatModal from "./BookSeatModal";
 import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
+import { isAIMatch } from "@/lib/matchmaking";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", onSearchChange }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip", onSearchChange?: (origin: string, dest: string) => void }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
@@ -589,6 +590,12 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 {ride.status === 'completed' && (
                   <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 dark:border-emerald-500/30 z-10">
                     COMPLETED
+                  </div>
+                )}
+                
+                {mode === "feed" && isAIMatch(ride.origin, ride.destination, searchOrigin, searchDestination) && (
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-purple-700 dark:text-purple-300 px-4 py-1 rounded-full text-[10px] font-black tracking-widest border border-purple-500/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse z-10">
+                    ✨ AI MATCH: PERFECT ROUTE OVERLAY
                   </div>
                 )}
                 
