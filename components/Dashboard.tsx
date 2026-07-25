@@ -32,8 +32,6 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const [calcDistance, setCalcDistance] = useState<number>(15);
   const [calcVehicle, setCalcVehicle] = useState<"car" | "bike">("car");
   const [calcPassengers, setCalcPassengers] = useState<number>(4);
-  const [totalRidesShared, setTotalRidesShared] = useState<number>(42);
-  const [fuelSaved, setFuelSaved] = useState<number>(1250);
   useEffect(() => {
     if (selectedVehicle === "bike") {
       setCalcVehicle("bike");
@@ -233,54 +231,20 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           className="flex flex-col gap-8"
         >
 
-          {/* 2. Bento Stat Grid */}
+          {/* Verified Student Banner */}
           <motion.section 
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            className="w-full"
           >
-            {/* Stat Card 1: Rides */}
-            <div className="bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-colors rounded-xl p-5 flex flex-col justify-between relative overflow-hidden group">
-              <div className="flex justify-between items-start mb-2">
-                <div className="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
-                  <Route className="w-5 h-5" />
-                </div>
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
-              </div>
-              <div>
-                <div className="text-2xl font-black text-white">{totalRidesShared}</div>
-                <div className="text-xs text-slate-400 font-medium">Total Rides Shared</div>
-              </div>
-            </div>
-
-            {/* Stat Card 2: Fuel Saved */}
-            <div className="bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-colors rounded-xl p-5 flex flex-col justify-between relative overflow-hidden group">
-              <div className="flex justify-between items-start mb-2">
-                <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
-                  <Wallet className="w-5 h-5" />
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl font-black text-white">₹{fuelSaved}</div>
-                <div className="text-xs text-slate-400 font-medium">Fuel Cost Saved</div>
-              </div>
-            </div>
-
-            {/* Stat Card 3: Verification */}
-            <div className="bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-colors rounded-xl p-5 flex flex-col justify-between relative overflow-hidden group">
-              <div className="absolute -right-4 -bottom-4 opacity-10">
-                <ShieldCheck className="w-32 h-32 text-indigo-500" />
-              </div>
-              <div className="flex justify-between items-start mb-2 relative z-10">
-                <div className="p-2 bg-indigo-500/20 rounded-lg text-indigo-400">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-              </div>
+            <div className="bg-slate-900/50 border border-slate-800/80 rounded-xl p-5 flex flex-col justify-center items-center text-center gap-3 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent pointer-events-none" />
+              <ShieldCheck className="w-8 h-8 text-indigo-400 relative z-10" />
               <div className="relative z-10">
-                <div className="text-lg font-bold text-white flex items-center gap-1.5">
+                <div className="text-sm font-bold text-white flex items-center justify-center gap-1.5">
                   Verified VNRian
-                  <CheckCircle2 className="w-4 h-4 text-indigo-400" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
                 </div>
-                <div className="text-xs text-slate-400 font-medium">Identity Authenticated</div>
+                <div className="text-xs text-slate-400 mt-0.5">VNR VJIET ID Authenticated</div>
               </div>
             </div>
           </motion.section>
