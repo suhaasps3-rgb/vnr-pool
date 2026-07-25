@@ -143,43 +143,34 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
     queryFn: async () => {
       // 1. Check if user is driver
       const { data: driverRides } = await supabase.from('rides')
-        .select('id, status, bookings(id, status)')
-        .eq('driver_id', userId);
+        .select('id, status')
+        .eq('driver_id', userId)
+        .eq('status', 'in_progress');
       
-      if (driverRides) {
-        for (const r of driverRides) {
-          if (r.status === 'in_progress') return true;
-          if (r.status === 'active' && r.bookings && r.bookings.some((b: any) => b.status === 'approved')) {
-            return true;
-          }
-        }
-      }
+      if (driverRides && driverRides.length > 0) return true;
 
       // 2. Check if user is passenger
       let isActivePassenger = false;
       const { data: pBookings } = await supabase.from('bookings').select('id, rides(id, status)').eq('passenger_id', userId).eq('status', 'approved');
-      if (pBookings && pBookings.some((b: any) => b.rides && (b.rides.status === 'active' || b.rides.status === 'in_progress'))) {
+      if (pBookings && pBookings.some((b: any) => b.rides && b.rides.status === 'in_progress')) {
         isActivePassenger = true;
       }
 
       // FALLBACK
       if (!isActivePassenger) {
         const { data: rawBookings } = await supabase.from('bookings').select('ride_id, status').eq('passenger_id', userId).eq('status', 'approved');
-        const activeRaw = rawBookings?.filter(b => b.status === 'approved' || b.status === 'pending') || [];
-        if (activeRaw.length > 0) {
-          const rIds = activeRaw.map(b => b.ride_id);
-          const { data: allRidesRaw } = await supabase.from('rides').select('id, status');
+        if (rawBookings && rawBookings.length > 0) {
+          const rIds = rawBookings.map(b => b.ride_id);
+          const { data: allRidesRaw } = await supabase.from('rides').select('id, status').eq('status', 'in_progress');
           if (allRidesRaw) {
             const passengerRides = allRidesRaw.filter(r => rIds.includes(r.id));
-            if (passengerRides.some(r => r.status === 'active' || r.status === 'in_progress')) {
+            if (passengerRides.length > 0) {
               isActivePassenger = true;
             }
           }
         }
       }
-
-      if (isActivePassenger) return true;
-      return false;
+      return isActivePassenger;
     }
   });
 
