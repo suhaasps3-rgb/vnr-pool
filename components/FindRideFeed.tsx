@@ -11,6 +11,7 @@ import ChatModal from "./ChatModal";
 import RateUser from "./RateUser";
 import RideCard from "./RideCard";
 import BookSeatModal from "./BookSeatModal";
+import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", onSearchChange }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip", onSearchChange?: (origin: string, dest: string) => void }) {
@@ -645,7 +646,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                     <div className="flex justify-between items-start">
                       <p className="font-bold text-[#0F172A] dark:text-white">{ride.origin}</p>
                       <p className="text-sm font-semibold text-[#0F172A] dark:text-white">
-                        {new Date(ride.departure_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        {format(new Date(ride.departure_time), "MMM d, h:mm a")}
                       </p>
                     </div>
                     <div className="flex justify-between items-end">
@@ -756,7 +757,13 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                     {ride.status === 'active' && (
                       <button 
                         onClick={() => handleStartRide(ride)}
-                        className="px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500/20 rounded-lg text-sm font-bold transition-colors"
+                        disabled={new Date() < new Date(ride.departure_time)}
+                        title={new Date() < new Date(ride.departure_time) ? "You can only start the ride once the departure time has been reached" : ""}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
+                          new Date() < new Date(ride.departure_time)
+                            ? 'bg-slate-100 text-slate-400 dark:bg-white/5 dark:text-slate-500 cursor-not-allowed'
+                            : 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500/20'
+                        }`}
                       >
                         Start Ride
                       </button>
