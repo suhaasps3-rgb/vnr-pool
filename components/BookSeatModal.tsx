@@ -3,7 +3,7 @@ import { X, AlertCircle, Loader2, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { DISTANCE_MAP } from "@/lib/locations";
-import { calculateFractionalPrice } from "@/lib/matchmaking";
+import { calculateFractionalPrice, ROUTES } from "@/lib/matchmaking";
 
 export default function BookSeatModal({ 
   ride, 
@@ -41,7 +41,16 @@ export default function BookSeatModal({
 
   if (!ride) return null;
 
-  const locations = Object.keys(DISTANCE_MAP);
+  // Determine valid locations based on the driver's chosen route
+  const validLocations = (ride.chosen_route_index !== null && ride.chosen_route_index !== undefined && ROUTES[ride.chosen_route_index])
+    ? ROUTES[ride.chosen_route_index]
+    : Object.keys(DISTANCE_MAP);
+
+  // Validate that at least one location is VNR
+  const isVnrPresent = pickup.toLowerCase().includes('vnr') || dropoff.toLowerCase().includes('vnr');
+  // Ensure the route is somewhat valid (different points)
+  const isSameLocation = pickup === dropoff;
+  const canSubmit = isVnrPresent && !isSameLocation && pickup && dropoff;
 
   return (
     <AnimatePresence>
@@ -59,19 +68,19 @@ export default function BookSeatModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative z-10 w-full max-w-md bg-white dark:bg-[#0F172A] rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden"
+            className="relative z-10 w-full max-w-md bg-white dark:bg-[#0F172A] rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 flex flex-col max-h-[90vh]"
           >
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Confirm Boarding</h3>
-                <button 
-                  onClick={!isProcessing ? onClose : undefined}
-                  className="p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors text-slate-500"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+            <div className="p-6 pb-4 border-b border-slate-100 dark:border-white/5 shrink-0 flex items-center justify-between">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Confirm Boarding</h3>
+              <button 
+                onClick={!isProcessing ? onClose : undefined}
+                className="p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors text-slate-500"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
+            <div className="p-6 overflow-y-auto">
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
                   <span className="text-slate-500 dark:text-slate-400 font-medium">Driver</span>
@@ -93,10 +102,10 @@ export default function BookSeatModal({
                       <select 
                         value={pickup} 
                         onChange={(e) => setPickup(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize"
                       >
-                        <option value={ride.origin}>{ride.origin} (Driver's Start)</option>
-                        {locations.filter(l => l !== ride.origin).map(loc => (
+                        {!validLocations.includes(ride.origin) && <option value={ride.origin}>{ride.origin} (Driver's Start)</option>}
+                        {validLocations.map(loc => (
                           <option key={loc} value={loc}>{loc}</option>
                         ))}
                       </select>
@@ -110,15 +119,26 @@ export default function BookSeatModal({
                       <select 
                         value={dropoff} 
                         onChange={(e) => setDropoff(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize"
                       >
-                        <option value={ride.destination}>{ride.destination} (Driver's End)</option>
-                        {locations.filter(l => l !== ride.destination).map(loc => (
+                        {!validLocations.includes(ride.destination) && <option value={ride.destination}>{ride.destination} (Driver's End)</option>}
+                        {validLocations.map(loc => (
                           <option key={loc} value={loc}>{loc}</option>
                         ))}
                       </select>
                     </div>
                   </div>
+                  
+                  {!isVnrPresent && (
+                    <div className="text-red-500 text-xs font-bold mt-2">
+                      * At least one location (Pickup or Dropoff) must be VNR VJIET.
+                    </div>
+                  )}
+                  {isSameLocation && (
+                    <div className="text-red-500 text-xs font-bold mt-2">
+                      * Pickup and Dropoff cannot be the same.
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex justify-between items-center p-4 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl border border-emerald-100 dark:border-emerald-500/20">
@@ -135,13 +155,15 @@ export default function BookSeatModal({
                   By confirming, you commit to paying your share of the fuel cost directly to the driver.
                 </p>
               </div>
+            </div>
 
+            <div className="p-6 pt-4 border-t border-slate-100 dark:border-white/5 shrink-0">
               <button
                 onClick={() => onConfirm(pickup, dropoff, calculatedPrice)}
-                disabled={isProcessing}
+                disabled={isProcessing || !canSubmit}
                 className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
-                  isProcessing 
-                    ? 'bg-blue-400 dark:bg-blue-600/50 cursor-not-allowed text-white' 
+                  isProcessing || !canSubmit
+                    ? 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed' 
                     : 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg hover:shadow-blue-500/25'
                 }`}
               >
