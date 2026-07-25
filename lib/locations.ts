@@ -98,7 +98,20 @@ export const DISTANCE_MAP: Record<string, number> = {
   "bvrit narsapur": 25, "narsapur": 28, "kphb phase 1": 11, "kphb phase 6": 12,
   "kphb phase 9": 10, "whisper valley": 8, "bollaram industrial area": 10,
   "bhel mig": 15, "rc puram": 16, "ramachandrapuram": 16, "beeramguda": 17,
-  "erragadda gokul theatre": 15
+  "erragadda gokul theatre": 15,
+  
+  // East Hyderabad Landmarks & Localities
+  "boduppal": 35, "peerzadiguda": 36, "medipally": 38, "ghatkesar": 45,
+  "pocharam": 45, "bhuvanagiri": 65, "bibi nagar": 55, "choutuppal": 60,
+  "kamineni hospital lb nagar": 34, "victoria memorial home": 33, 
+  "saroornagar lake": 34, "dilsukhnagar bus station": 30, "saidabad": 28,
+  "moosarambagh": 29, "amberpet": 27, "shivam road": 26, "nallakunta": 25,
+  
+  // Central Hyderabad Landmarks & Localities
+  "basheerbagh": 22, "secretariat": 21, "domalguda": 21, "ashok nagar": 22,
+  "gandhi hospital": 23, "park lane": 20, "sd road": 20, "sindhi colony": 19,
+  "rasoolpura": 19, "sanjeevaiah park": 20, "banjara hills road no 12": 19,
+  "banjara hills road no 10": 19, "banjara hills road no 1": 19
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
