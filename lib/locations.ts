@@ -88,7 +88,17 @@ export const DISTANCE_MAP: Record<string, number> = {
   "shah ali banda": 27, "santoshnagar": 32, "owaisi hospital": 32,
   "chandrayangutta x road": 35, "saroornagar": 34, "karmanghat": 35,
   "champapet": 34, "kanchanbagh": 33, "drdo township": 33, "midhani": 33,
-  "balapur": 36, "hardware park": 45, "fab city": 46, "raviryala": 45
+  "balapur": 36, "hardware park": 45, "fab city": 46, "raviryala": 45,
+  
+  // North-West Hyderabad Landmarks & Localities
+  "isnapur": 22, "muthangi": 24, "sangareddy": 35, "rudraram": 30,
+  "iit hyderabad": 32, "kandi": 33, "sultanpur": 10, "gowdavalli": 12,
+  "ida bolarum": 8, "kazipally": 7, "mallampet": 5, "bahadurpally": 4,
+  "tech mahindra bahadurpally": 4, "griet": 5, "gokaraju rangaraju": 5,
+  "bvrit narsapur": 25, "narsapur": 28, "kphb phase 1": 11, "kphb phase 6": 12,
+  "kphb phase 9": 10, "whisper valley": 8, "bollaram industrial area": 10,
+  "bhel mig": 15, "rc puram": 16, "ramachandrapuram": 16, "beeramguda": 17,
+  "erragadda gokul theatre": 15
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
