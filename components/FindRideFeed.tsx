@@ -424,11 +424,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         {/* FULL SCREEN OVERLAY LOCK FOR ACTIVE TRIPS */}
         {mode === "feed" && hasActiveTrip && (
           <div className="flex flex-col items-center justify-center py-12 px-6 animate-in fade-in duration-300">
-            <div className="bg-white dark:bg-[#1E293B] p-10 rounded-3xl shadow-lg border border-blue-200 dark:border-blue-500/20 max-w-md w-full text-center">
+            <div className="bg-white/90 dark:bg-[#1E293B] p-10 rounded-3xl shadow-2xl border border-blue-200 dark:border-blue-500/20 max-w-md w-full text-center backdrop-blur-xl">
               <div className="w-20 h-20 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner">
               🚗
             </div>
-            <h2 className="text-2xl font-black text-[#0F172A] dark:text-white mb-4">Ride Reserved / In Progress</h2>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-4">Ride Reserved / In Progress</h2>
             <p className="text-slate-600 dark:text-slate-400 font-medium mb-8">
               You are strictly restricted to one active ride or pending request at a time. You cannot view other rides or book new seats until your current ride is completed or cancelled.
             </p>
@@ -456,28 +456,28 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           )}
 
           {/* Functional Search Bar */}
-          <div className="hidden md:flex flex-wrap gap-2 p-3 bg-slate-50 dark:bg-[#0F172A] rounded-2xl border border-gray-200 dark:border-white/10 mb-4 items-center">
-            <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm focus-within:border-[#2563EB] transition-colors">
+          <div className="hidden md:flex flex-wrap gap-3 p-3 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-center shadow-sm">
+            <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group">
               <MapPin className="w-5 h-5 text-slate-400" />
               <input 
                 type="text" 
                 placeholder="Leaving from..." 
                 value={searchOrigin}
                 onChange={(e) => setSearchOrigin(e.target.value)}
-                className="bg-transparent outline-none w-full text-sm dark:text-white" 
+                className="bg-transparent outline-none w-full text-sm text-slate-900 dark:text-white placeholder-slate-400 group-focus-within:placeholder-slate-300" 
               />
             </div>
-            <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm focus-within:border-[#2563EB] transition-colors">
+            <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group">
               <MapPin className="w-5 h-5 text-slate-400" />
               <input 
                 type="text" 
                 placeholder="Going to..." 
                 value={searchDestination}
                 onChange={(e) => setSearchDestination(e.target.value)}
-                className="bg-transparent outline-none w-full text-sm dark:text-white" 
+                className="bg-transparent outline-none w-full text-sm text-slate-900 dark:text-white placeholder-slate-400 group-focus-within:placeholder-slate-300" 
               />
             </div>
-            <div className="flex-1 min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm focus-within:border-[#2563EB] transition-colors">
+            <div className="flex-1 min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300">
               <Calendar className="w-5 h-5 text-slate-400" />
               <input 
                 type="date"
@@ -489,9 +489,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           </div>
 
           {/* Filters Bar Redesign */}
-          <div className="flex flex-wrap gap-3 mb-6 bg-slate-50 dark:bg-[#0F172A] p-2 rounded-2xl border border-gray-200 dark:border-white/5">
+          <div className="flex flex-wrap gap-3 mb-6 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md p-3 rounded-2xl border border-slate-200 dark:border-white/5 shadow-sm">
         <select 
-          className="bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-[#2563EB] transition-colors shadow-sm"
+          className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-[#2563EB] hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 shadow-sm cursor-pointer"
           value={rideCategory}
           onChange={(e) => setRideCategory(e.target.value as any)}
         >
@@ -501,7 +501,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         </select>
 
         {userGender === 'female' && (
-          <label className="flex items-center gap-2 cursor-pointer bg-white dark:bg-[#1E293B] border border-pink-200 dark:border-pink-500/20 rounded-xl px-4 py-2 text-pink-700 dark:text-pink-400 shadow-sm transition-colors hover:bg-pink-50 dark:hover:bg-pink-500/10">
+          <label className="flex items-center gap-2 cursor-pointer bg-white dark:bg-[#1E293B] border border-pink-200 dark:border-pink-500/20 rounded-xl px-4 py-2 text-pink-700 dark:text-pink-400 shadow-sm transition-all duration-300 hover:shadow-md hover:border-pink-300 dark:hover:bg-pink-500/10">
             <input 
               type="checkbox"
               checked={womenOnly}

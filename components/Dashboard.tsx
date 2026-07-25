@@ -177,9 +177,10 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
       
-      {/* Ambient Lighting */}
-      <div className="absolute top-0 left-[20%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
-      <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
+      {/* Ambient Lighting - Dynamic based on theme */}
+      <div className="absolute top-0 left-[10%] w-[500px] h-[500px] bg-indigo-400/30 dark:bg-indigo-600/10 rounded-full blur-[100px] dark:blur-[120px] pointer-events-none opacity-60 dark:opacity-50 mix-blend-multiply dark:mix-blend-screen" />
+      <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-teal-300/30 dark:bg-teal-500/10 rounded-full blur-[100px] dark:blur-[120px] pointer-events-none opacity-60 dark:opacity-50 mix-blend-multiply dark:mix-blend-screen" />
+      <div className="absolute top-[40%] left-[-10%] w-[400px] h-[400px] bg-purple-300/20 dark:bg-purple-600/10 rounded-full blur-[100px] dark:blur-[120px] pointer-events-none opacity-50 mix-blend-multiply dark:mix-blend-screen" />
 
       {/* Modern Top Bar */}
       <header className="sticky top-0 z-50 w-full backdrop-blur-2xl bg-white/80 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800/80">
@@ -249,7 +250,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
             >
               
               {/* Tab Navigation */}
-              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-xl p-1.5 flex overflow-x-auto no-scrollbar shadow-sm">
+              <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-xl p-1.5 flex overflow-x-auto no-scrollbar shadow-sm">
                 {TABS.map((tab) => {
                   const isActive = activeTab === tab.id;
                   const Icon = tab.icon;
@@ -259,13 +260,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                       onClick={() => setActiveTab(tab.id as TabType)}
                       className={cn(
                         "relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex-shrink-0",
-                        isActive ? "text-white" : "text-slate-400 hover:text-slate-200"
+                        isActive ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
                       )}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="activeTabIndicator"
-                          className="absolute inset-0 bg-slate-800 rounded-lg shadow-sm border border-slate-700/50"
+                          className="absolute inset-0 bg-slate-100 dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700/50"
                           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                         />
                       )}
@@ -279,11 +280,11 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               </div>
 
               {/* Dynamic Workspace Container */}
-              <div className="bg-slate-900/40 backdrop-blur-2xl border border-slate-800/80 rounded-2xl p-1 shadow-2xl relative overflow-hidden group">
+              <div className="bg-white/80 dark:bg-slate-900/40 backdrop-blur-2xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-1 shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden group">
                 {/* Subtle border glow on hover */}
-                <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/0 via-indigo-500/0 to-indigo-500/0 group-hover:from-indigo-500/10 group-hover:via-transparent transition-all duration-500 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/5 via-transparent to-transparent dark:from-indigo-500/0 dark:via-indigo-500/0 dark:to-indigo-500/0 group-hover:from-indigo-500/15 dark:group-hover:from-indigo-500/10 transition-all duration-500 pointer-events-none" />
                 
-                <div className="bg-slate-950 rounded-xl p-4 sm:p-6 lg:p-8 min-h-[500px]">
+                <div className="bg-slate-50/80 dark:bg-slate-950 rounded-xl p-4 sm:p-6 lg:p-8 min-h-[500px] relative z-10">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}
@@ -312,8 +313,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
             >
               
               {/* Pickup Map Placeholder */}
-              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl overflow-hidden shadow-sm group">
-                <div className="h-32 bg-slate-800 relative flex items-center justify-center overflow-hidden">
+              <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm group">
+                <div className="h-32 bg-slate-100 dark:bg-slate-800 relative flex items-center justify-center overflow-hidden">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1)_0%,transparent_100%)]" />
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:16px_16px]" />
                   <MapPin className="w-8 h-8 text-indigo-400 relative z-10 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]" />
@@ -327,18 +328,18 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                     <path d="M 40,40 L 100,100 L 150,80" />
                   </svg>
                 </div>
-                <div className="p-4 border-t border-slate-800/80">
-                  <h3 className="text-sm font-bold text-white mb-1">Campus Hotspots</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                <div className="p-4 border-t border-slate-200 dark:border-slate-800/80">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Campus Hotspots</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                     High demand pickups at Kukatpally (JNTU), Pragathi Nagar, and Miyapur X Roads.
                   </p>
                 </div>
               </div>
 
               {/* Fuel Split Calculator */}
-              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-sm">
-                <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-                  <Wallet className="w-4 h-4 text-teal-400" />
+              <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Wallet className="w-4 h-4 text-teal-500 dark:text-teal-400" />
                   Quick Fare Splitter
                 </h3>
                 
@@ -346,13 +347,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   <div className="grid grid-cols-2 gap-2">
                     <button 
                       onClick={() => { setCalcVehicle("car"); setCalcPassengers(4); }}
-                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "car" ? "bg-teal-500 text-slate-950" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "car" ? "bg-teal-500 text-white dark:text-slate-950" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
                     >
                       Car
                     </button>
                     <button 
                       onClick={() => { setCalcVehicle("bike"); setCalcPassengers(1); }}
-                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "bike" ? "bg-teal-500 text-slate-950" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "bike" ? "bg-teal-500 text-white dark:text-slate-950" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
                     >
                       Bike
                     </button>
@@ -360,13 +361,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
 
                   {calcVehicle === "car" && (
                     <div>
-                      <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 block">Total Passengers (excluding you)</label>
+                      <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 block">Total Passengers (excluding you)</label>
                       <div className="flex gap-2">
                         {[1, 2, 3, 4].map(num => (
                           <button
                             key={num}
                             onClick={() => setCalcPassengers(num)}
-                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-colors ${calcPassengers === num ? "bg-indigo-500 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-colors ${calcPassengers === num ? "bg-indigo-500 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
                           >
                             {num}
                           </button>
@@ -387,41 +388,37 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                     />
                   </div>
                   
-                  <div className="pt-3 border-t border-slate-800/50 flex flex-col gap-3">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">Per seat</div>
-                        <div className="text-xl font-bold text-white flex items-start gap-0.5">
-                          <span className="text-xs text-slate-400 mt-1">₹</span>{recommendedSplit}
-                        </div>
-                      </div>
-                      
-                      <div className="h-8 w-px bg-slate-800/80"></div>
-                      
-                      <div className="text-right">
-                        <div className="text-[10px] text-teal-500/70 uppercase tracking-wider mb-0.5 font-bold">Total Recommended Fare</div>
-                        <div className="text-xl font-black text-teal-400 flex items-start gap-0.5 justify-end">
-                          <span className="text-xs text-teal-500/50 mt-1">₹</span>{totalEarnings}
-                        </div>
-                      </div>
-                    </div>
+                  <div className="bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden flex">
+                    <div className="bg-teal-500 h-full" style={{ width: `${(calcDistance / 50) * 100}%` }} />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-end gap-4 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800/80">
+                  <div className="flex-1">
+                    <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Per Seat</div>
+                    <div className="text-xl font-black text-slate-900 dark:text-white">₹{recommendedSplit}</div>
+                  </div>
+                  <div className="w-px h-10 bg-slate-200 dark:bg-slate-800" />
+                  <div className="flex-1 text-right">
+                    <div className="text-[10px] font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider mb-1">Total Recommended Fare</div>
+                    <div className="text-2xl font-black text-teal-500 dark:text-teal-400">₹{totalEarnings}</div>
                   </div>
                 </div>
               </div>
 
               {/* Safety Guidelines */}
-              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-sm">
-                <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+              <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
                   Safety Guidelines
                 </h3>
                 <ul className="space-y-3">
-                  <li className="flex items-start gap-2 text-xs text-slate-400">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                  <li className="flex items-start gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
                     Verify the driver's college ID before boarding.
                   </li>
-                  <li className="flex items-start gap-2 text-xs text-slate-400">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                  <li className="flex items-start gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
                     Share your live location with a friend via WhatsApp.
                   </li>
                   <li className="flex items-start gap-2 text-xs text-slate-400">
