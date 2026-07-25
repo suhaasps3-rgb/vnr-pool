@@ -26,12 +26,15 @@ export default function BookSeatModal({
   const [dropoff, setDropoff] = useState(initialDropoff || "");
   const [calculatedPrice, setCalculatedPrice] = useState(0);
 
+  const isToVnr = ride?.destination?.toLowerCase().includes('vnr');
+  const isFromVnr = ride?.origin?.toLowerCase().includes('vnr');
+
   useEffect(() => {
     if (ride) {
-      setPickup(initialPickup || ride.origin);
-      setDropoff(initialDropoff || ride.destination);
+      setPickup(isFromVnr ? ride.origin : (initialPickup || ride.origin));
+      setDropoff(isToVnr ? ride.destination : (initialDropoff || ride.destination));
     }
-  }, [ride, initialPickup, initialDropoff]);
+  }, [ride, initialPickup, initialDropoff, isToVnr, isFromVnr]);
 
   useEffect(() => {
     if (ride && pickup && dropoff) {
@@ -102,7 +105,8 @@ export default function BookSeatModal({
                       <select 
                         value={pickup} 
                         onChange={(e) => setPickup(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize"
+                        disabled={isFromVnr}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {!validLocations.includes(ride.origin) && <option value={ride.origin}>{ride.origin} (Driver's Start)</option>}
                         {validLocations.map(loc => (
@@ -110,6 +114,7 @@ export default function BookSeatModal({
                         ))}
                       </select>
                     </div>
+                    {isFromVnr && <p className="text-[10px] text-blue-600 dark:text-blue-400 mt-1 font-medium">* Pickup is locked to VNR VJIET for this route.</p>}
                   </div>
 
                   <div>
@@ -119,7 +124,8 @@ export default function BookSeatModal({
                       <select 
                         value={dropoff} 
                         onChange={(e) => setDropoff(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize"
+                        disabled={isToVnr}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {!validLocations.includes(ride.destination) && <option value={ride.destination}>{ride.destination} (Driver's End)</option>}
                         {validLocations.map(loc => (
@@ -127,6 +133,7 @@ export default function BookSeatModal({
                         ))}
                       </select>
                     </div>
+                    {isToVnr && <p className="text-[10px] text-blue-600 dark:text-blue-400 mt-1 font-medium">* Dropoff is locked to VNR VJIET for this route.</p>}
                   </div>
                   
                   {!isVnrPresent && (
