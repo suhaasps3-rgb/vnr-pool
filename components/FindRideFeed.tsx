@@ -53,11 +53,16 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           const data = await res.json();
           if (data && data.address) {
             let bestMatch = null;
+            let bestIndex = Infinity;
             if (data.display_name) {
               const displayLower = data.display_name.toLowerCase();
               for (const loc of COMMON_LOCATIONS) {
-                if (displayLower.includes(loc.toLowerCase())) {
-                  if (!bestMatch || loc.length > bestMatch.length) {
+                const idx = displayLower.indexOf(loc.toLowerCase());
+                if (idx !== -1) {
+                  if (idx < bestIndex) {
+                    bestIndex = idx;
+                    bestMatch = loc;
+                  } else if (idx === bestIndex && loc.length > (bestMatch?.length || 0)) {
                     bestMatch = loc;
                   }
                 }
