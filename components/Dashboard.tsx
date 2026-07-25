@@ -12,6 +12,7 @@ import BlockedUsersModal from "./BlockedUsersModal";
 import MyRides from "./MyRides";
 import Profile from "./Profile";
 import NotificationBell from "./NotificationBell";
+import ThemeToggle from "./ThemeToggle";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import ActiveRideView from "./ActiveRideView";
@@ -174,22 +175,22 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const totalEarnings = recommendedSplit * calcPassengers;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
       
       {/* Ambient Lighting */}
       <div className="absolute top-0 left-[20%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
       <div className="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
 
       {/* Modern Top Bar */}
-      <header className="sticky top-0 z-50 w-full backdrop-blur-2xl bg-slate-950/60 border-b border-slate-800/80">
+      <header className="sticky top-0 z-50 w-full backdrop-blur-2xl bg-white/80 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-9 h-9 bg-gradient-to-tr from-indigo-600 to-indigo-400 rounded-xl flex items-center justify-center font-black text-lg text-white shadow-lg shadow-indigo-600/20">
               V
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-tight text-white leading-none">VNR Pool Dashboard</h1>
-              <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-400 mt-1">
+              <h1 className="text-sm font-bold tracking-tight text-slate-900 dark:text-white leading-none">VNR Pool Dashboard</h1>
+              <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 mt-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Campus Network
               </span>
             </div>
@@ -201,6 +202,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               <UserX className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </button>
 
+            <ThemeToggle />
             <NotificationBell userId={userId} />
 
             <button onClick={onSignOut} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group" title="Sign Out">
@@ -227,13 +229,12 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
             className="w-full"
           >
-
-            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-center items-center text-center gap-3 relative overflow-hidden">
+            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 flex flex-col justify-center items-center text-center gap-3 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent" />
-              <ShieldCheck className="w-8 h-8 text-indigo-400 relative z-10" />
+              <ShieldCheck className="w-8 h-8 text-indigo-600 dark:text-indigo-400 relative z-10" />
               <div className="relative z-10">
-                <div className="text-sm font-bold text-white">Verified Student</div>
-                <div className="text-xs text-slate-400">VNR VJIET ID Authenticated</div>
+                <div className="text-sm font-bold text-slate-900 dark:text-white">Verified Student</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">VNR VJIET ID Authenticated</div>
               </div>
             </div>
           </motion.section>
