@@ -118,9 +118,9 @@ export default function Profile({ userId }: { userId: string }) {
     : "New";
 
   return (
-    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-white dark:bg-[#1E293B] rounded-3xl shadow-sm border border-gray-100 dark:border-white/5">
-      <div className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-100 dark:border-white/5">
-        <div className="w-20 h-20 bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-3xl font-black shadow-inner overflow-hidden relative flex-shrink-0">
+    <div className="max-w-2xl mx-auto p-3 md:p-6 bg-white dark:bg-[#1E293B] rounded-3xl shadow-sm border border-gray-100 dark:border-white/5">
+      <div className="flex items-center gap-4 mb-6 md:mb-8 pb-4 md:pb-6 border-b border-gray-100 dark:border-white/5">
+        <div className="w-14 h-14 md:w-20 md:h-20 bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-inner overflow-hidden relative flex-shrink-0">
           {user?.avatar_url ? (
             <img src={user.avatar_url} alt="Profile" className="w-full h-full object-cover" />
           ) : (
@@ -134,10 +134,10 @@ export default function Profile({ userId }: { userId: string }) {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Your Full Name"
-              className="text-2xl font-black text-gray-900 dark:text-white bg-transparent border-b-2 border-[#2563EB] outline-none w-full pb-1 mb-1"
+              className="text-xl md:text-2xl font-black text-gray-900 dark:text-white bg-transparent border-b-2 border-[#2563EB] outline-none w-full pb-1 mb-1"
             />
           ) : (
-            <h2 className="text-2xl font-black text-gray-900 dark:text-white">
+            <h2 className="text-xl md:text-2xl font-black text-gray-900 dark:text-white">
               {user?.full_name}
             </h2>
           )}
@@ -209,7 +209,7 @@ export default function Profile({ userId }: { userId: string }) {
               value={carNumber}
               onChange={(e) => setCarNumber(e.target.value.toUpperCase())}
               disabled={!isEditing}
-              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-3 py-2 md:px-4 md:py-3 rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium uppercase"
+              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-3 py-1.5 md:px-4 md:py-3 text-sm md:text-base rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium uppercase"
             />
           </div>
 
@@ -223,7 +223,7 @@ export default function Profile({ userId }: { userId: string }) {
               value={bikeNumber}
               onChange={(e) => setBikeNumber(e.target.value.toUpperCase())}
               disabled={!isEditing}
-              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-3 py-2 md:px-4 md:py-3 rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium uppercase"
+              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-3 py-1.5 md:px-4 md:py-3 text-sm md:text-base rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium uppercase"
             />
           </div>
         </div>

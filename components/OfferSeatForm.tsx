@@ -242,20 +242,20 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   };
 
   return (
-    <div className="ui-card p-4 md:p-10 mb-8 border-t-4 border-t-[#2563EB] dark:border-t-[#3B82F6]">
-      <div className="mb-8">
-        <h2 className="text-2xl font-extrabold text-[#0F172A] dark:text-white">Offer a Ride</h2>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">Fill in the details to share your journey with campus peers.</p>
+    <div className="ui-card p-3 md:p-10 mb-6 md:mb-8 border-t-4 border-t-[#2563EB] dark:border-t-[#3B82F6]">
+      <div className="mb-4 md:mb-8">
+        <h2 className="text-xl md:text-2xl font-extrabold text-[#0F172A] dark:text-white">Offer a Ride</h2>
+        <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mt-1">Fill in the details to share your journey with campus peers.</p>
       </div>
       
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
             <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Ride Category</label>
             <select 
               value={formData.ride_category}
               onChange={(e) => setFormData({...formData, ride_category: e.target.value})}
-              className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
+              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             >
               <option value="auto_split">Auto/Cab Fare Split</option>
               <option value="personal_vehicle">Student Vehicle Pool</option>
@@ -267,7 +267,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
             <select 
               value={formData.vehicle_type}
               onChange={(e) => setFormData({...formData, vehicle_type: e.target.value})}
-              className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
+              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             >
               {formData.ride_category === 'auto_split' && (
                 <option value="auto">Auto</option>
@@ -303,7 +303,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 setShowOriginDropdown(true);
               }}
               onFocus={() => setShowOriginDropdown(true)}
-              className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
+              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
             <div 
               className="absolute z-[100] w-full mt-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
@@ -338,7 +338,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 setShowDestDropdown(true);
               }}
               onFocus={() => setShowDestDropdown(true)}
-              className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
+              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
             <div 
               className="absolute z-[100] w-full mt-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
@@ -403,7 +403,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 min={new Date().toISOString().split('T')[0]}
                 value={formData.departure_date}
                 onChange={(e) => setFormData({...formData, departure_date: e.target.value})}
-                className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
+                className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
               />
             </div>
             <div>
@@ -414,7 +414,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 min={formData.departure_date === new Date().toISOString().split('T')[0] ? new Date().toTimeString().slice(0, 5) : undefined}
                 value={formData.departure_time}
                 onChange={(e) => setFormData({...formData, departure_time: e.target.value})}
-                className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
+                className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
               />
             </div>
           </div>
@@ -432,7 +432,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 if (val > maxSeats) return;
                 setFormData({...formData, total_seats: val});
               }}
-              className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
+              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
           </div>
 
@@ -444,7 +444,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
               min="0"
               value={formData.total_cost}
               onChange={(e) => setFormData({...formData, total_cost: Number(e.target.value)})}
-              className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
+              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
           </div>
 
@@ -474,7 +474,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                   <select 
                     value={vehicleEntryMode}
                     onChange={(e) => setVehicleEntryMode(e.target.value as 'profile' | 'manual')}
-                    className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all font-medium"
+                    className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all font-medium"
                   >
                     <option value="profile">{formData.vehicle_type === 'car' ? userCarNumber : userBikeNumber} (From Profile)</option>
                     <option value="manual">Use a different vehicle...</option>
@@ -486,7 +486,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                       placeholder="e.g. TS 08 AB 1234"
                       value={formData.vehicle_number}
                       onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
-                      className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
+                      className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
                     />
                   )}
                 </div>
@@ -496,7 +496,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                   placeholder="TS 08 AB 1234"
                   value={formData.vehicle_number}
                   onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
-                  className="w-full p-3 md:p-4 bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
+                  className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
                 />
               )}
             </div>
