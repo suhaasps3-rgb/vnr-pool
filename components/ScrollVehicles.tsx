@@ -16,9 +16,9 @@ export default function ScrollVehicles() {
   const bikeY = useTransform(smoothProgress, [0, 1], [50, -150]);
   const bikeRotate = useTransform(smoothProgress, [0, 0.5, 1], [10, -10, 10]);
 
-  // 🚙 Jeep - Scrolls left to right, slowly
-  const jeepX = useTransform(smoothProgress, [0, 1], ["-10vw", "90vw"]);
-  const jeepY = useTransform(smoothProgress, [0, 1], [300, -50]);
+  // 🛺 Auto - Scrolls left to right, slowly
+  const autoX = useTransform(smoothProgress, [0, 1], ["-10vw", "90vw"]);
+  const autoY = useTransform(smoothProgress, [0, 1], [300, -50]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
@@ -49,9 +49,9 @@ export default function ScrollVehicles() {
         🛵
       </motion.div>
 
-      {/* Jeep */}
+      {/* Auto */}
       <motion.div 
-        style={{ x: jeepX, y: jeepY }}
+        style={{ x: autoX, y: autoY }}
         className="absolute bottom-[25%] text-7xl drop-shadow-2xl"
         animate={{ 
           y: [0, -30, 0],
@@ -59,7 +59,7 @@ export default function ScrollVehicles() {
         }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       >
-        🚙
+        🛺
       </motion.div>
       
     </div>
