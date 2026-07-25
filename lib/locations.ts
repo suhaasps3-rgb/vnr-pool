@@ -50,7 +50,35 @@ export const DISTANCE_MAP: Record<string, number> = {
   "yusufguda": 18, "omc": 24, "esi hospital": 17, "narayanguda": 23,
   
   // Specific aliases requested by user
-  "vnr vjiet, bachupally": 0, "nexus mall, hyd": 13, "gvk one mall": 19, "gvk mall": 19
+  "vnr vjiet, bachupally": 0, "nexus mall, hyd": 13, "gvk one mall": 19, "gvk mall": 19,
+  
+  // Major Landmarks & Tech Parks
+  "golconda fort": 22, "hussain sagar": 20, "tank bund": 20, "salar jung museum": 25,
+  "ramoji film city": 60, "shilparamam": 17, "birla mandir": 21, "chowmahalla palace": 26,
+  "lumbini park": 21, "ntr gardens": 21, "qutb shahi tombs": 23, "kbr park": 19,
+  "necklace road": 20, "hitex exhibition center": 17, "inorbit mall": 18,
+  "forum sujana mall": 13, "durgam cheruvu": 18, "cable bridge": 18,
+  "botanical garden": 18, "wonderla": 55, "ocean park": 28, "snow world": 21,
+  "hyderabad public school": 18, "osmania university": 28, "secunderabad club": 22,
+  "falaknuma palace": 30, "nehru zoological park": 28,
+  
+  // Tech Parks & Corporate Campuses
+  "mindspace it park": 18, "cyber towers": 17, "dlf cyber city": 18, 
+  "tcs synergy park": 20, "amazon campus": 22, "google campus": 20, 
+  "microsoft campus": 22, "infosys pocharam": 45, "raheja mindspace": 18,
+  "t-hub": 18, "knowledge city": 18, "salarpuria sattva knowledge city": 18,
+  
+  // Major Hospitals
+  "apollo hospitals jubilee hills": 19, "yashoda hospital secunderabad": 22,
+  "yashoda hospital somajiguda": 19, "care hospitals banjara hills": 20,
+  "kim hospitals secunderabad": 22, "aig hospitals": 18, "sunshine hospitals": 20,
+  "nims": 19, "basavatarakam indo american cancer hospital": 19,
+  
+  // Major Transport Hubs
+  "rajiv gandhi international airport": 45, "secunderabad railway station": 22,
+  "nampally railway station": 21, "kacheguda railway station": 24,
+  "mahatma gandhi bus station": 25, "jubilee bus station": 20,
+  "shamshabad bus stop": 45, "lingampally railway station": 16
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
