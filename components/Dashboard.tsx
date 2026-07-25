@@ -186,7 +186,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const totalEarnings = recommendedSplit * calcPassengers;
 
   return (
-    <div className="dark min-h-screen bg-slate-950 text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 relative overflow-x-hidden font-sans selection:bg-teal-500/30">
       
       {/* Ambient Lighting */}
       <div className="absolute top-0 left-[10%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
@@ -194,14 +194,14 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
       <div className="absolute top-[40%] left-[-10%] w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none opacity-50 mix-blend-screen" />
 
       {/* 1. Integrated Top Bar (Glassmorphic) */}
-      <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80">
+      <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 border-b border-slate-200 dark:bg-slate-950/80 dark:border-slate-200 dark:border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-9 h-9 bg-gradient-to-tr from-indigo-600 to-indigo-400 rounded-xl flex items-center justify-center font-black text-lg text-white shadow-lg shadow-indigo-600/20">
+            <div className="w-9 h-9 bg-gradient-to-tr from-indigo-600 to-indigo-400 rounded-xl flex items-center justify-center font-black text-lg text-slate-900 dark:text-white shadow-lg shadow-indigo-600/20">
               V
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-tight text-white leading-none">Welcome back, {firstName}</h1>
+              <h1 className="text-sm font-bold tracking-tight text-slate-900 dark:text-white leading-none">Welcome back, {firstName}</h1>
               <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-400 mt-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active Campus Rides
               </span>
@@ -209,12 +209,12 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           </div>
 
           <div className="flex items-center gap-3">
-            <button onClick={() => setShowBlockedModal(true)} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group" title="Manage Blocked Users">
+            <button onClick={() => setShowBlockedModal(true)} className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:bg-slate-800 hover:text-slate-900 dark:text-white transition-colors group" title="Manage Blocked Users">
               <UserX className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </button>
             <ThemeToggle />
             <NotificationBell userId={userId} />
-            <button onClick={onSignOut} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group" title="Sign Out">
+            <button onClick={onSignOut} className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:bg-slate-800 hover:text-slate-900 dark:text-white transition-colors group" title="Sign Out">
               <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             </button>
           </div>
@@ -236,15 +236,15 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
             className="w-full"
           >
-            <div className="bg-slate-900/50 border border-slate-800/80 rounded-xl p-5 flex flex-col justify-center items-center text-center gap-3 relative overflow-hidden group">
+            <div className="bg-white dark:bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 rounded-xl p-5 flex flex-col justify-center items-center text-center gap-3 relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent pointer-events-none" />
               <ShieldCheck className="w-8 h-8 text-indigo-400 relative z-10" />
               <div className="relative z-10">
-                <div className="text-sm font-bold text-white flex items-center justify-center gap-1.5">
+                <div className="text-sm font-bold text-slate-900 dark:text-white flex items-center justify-center gap-1.5">
                   Verified VNRian
                   <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
                 </div>
-                <div className="text-xs text-slate-400 mt-0.5">VNR VJIET ID Authenticated</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">VNR VJIET ID Authenticated</div>
               </div>
             </div>
           </motion.section>
@@ -259,7 +259,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
             >
               
               {/* Tab Navigation (Framer Motion layoutId) */}
-              <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-xl p-1.5 flex overflow-x-auto no-scrollbar shadow-sm">
+              <div className="bg-slate-100/80 dark:bg-white dark:bg-slate-900/60 backdrop-blur-md border border-slate-200 dark:border-slate-800/80 rounded-xl p-1.5 flex overflow-x-auto no-scrollbar shadow-sm">
                 {TABS.map((tab) => {
                   const isActive = activeTab === tab.id;
                   const Icon = tab.icon;
@@ -269,13 +269,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                       onClick={() => setActiveTab(tab.id as TabType)}
                       className={cn(
                          "relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors flex-shrink-0",
-                        isActive ? "text-white" : "text-slate-400 hover:text-slate-200"
+                        isActive ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-200"
                       )}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="saasTabIndicator"
-                          className="absolute inset-0 bg-slate-800 rounded-lg shadow-sm border border-slate-700/50"
+                          className="absolute inset-0 bg-slate-200 dark:bg-slate-800 rounded-lg shadow-sm border border-slate-300 dark:border-slate-700/50"
                           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                         />
                       )}
@@ -289,7 +289,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               </div>
 
               {/* Dynamic Workspace Container */}
-              <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-1 shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 relative overflow-hidden group">
+              <div className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-1 shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/0 via-indigo-500/0 to-indigo-500/0 group-hover:from-indigo-500/10 transition-all duration-500 pointer-events-none" />
                 
                 <div className="bg-slate-950 rounded-xl p-4 sm:p-6 lg:p-8 min-h-[500px] relative z-10">
@@ -321,8 +321,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
             >
               
               {/* Fuel Split Calculator Micro-Widget */}
-              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-sm">
-                <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+              <div className="bg-slate-100/80 dark:bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                   <Wallet className="w-4 h-4 text-indigo-400" />
                   Quick Fare Splitter
                 </h3>
@@ -331,13 +331,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   <div className="grid grid-cols-2 gap-2">
                     <button 
                       onClick={() => { setCalcVehicle("car"); setCalcPassengers(4); }}
-                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "car" ? "bg-indigo-500 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "car" ? "bg-indigo-500 text-slate-900 dark:text-white" : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-700"}`}
                     >
                       Car
                     </button>
                     <button 
                       onClick={() => { setCalcVehicle("bike"); setCalcPassengers(1); }}
-                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "bike" ? "bg-indigo-500 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "bike" ? "bg-indigo-500 text-slate-900 dark:text-white" : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-700"}`}
                     >
                       Bike
                     </button>
@@ -345,13 +345,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
 
                   {calcVehicle === "car" && (
                     <div>
-                      <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 block">Total Passengers</label>
+                      <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 block">Total Passengers</label>
                       <div className="flex gap-2">
                         {[1, 2, 3, 4].map(num => (
                           <button
                             key={num}
                             onClick={() => setCalcPassengers(num)}
-                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-colors ${calcPassengers === num ? "bg-indigo-500 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-colors ${calcPassengers === num ? "bg-indigo-500 text-slate-900 dark:text-white" : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-700"}`}
                           >
                             {num}
                           </button>
@@ -361,24 +361,24 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   )}
 
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex justify-between">
+                    <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 flex justify-between">
                       <span>Distance (km)</span>
                       <span className="text-indigo-400">{calcDistance} km</span>
                     </label>
                     <input 
                       type="range" min="1" max="40" 
                       value={calcDistance} onChange={(e) => setCalcDistance(Number(e.target.value))}
-                      className="w-full h-1.5 bg-slate-800 rounded-full appearance-none accent-indigo-500 cursor-pointer"
+                      className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full appearance-none accent-indigo-500 cursor-pointer"
                     />
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-end gap-4 p-4 bg-slate-950 rounded-xl border border-slate-800/80">
+                <div className="mt-6 flex items-end gap-4 p-4 bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800/80">
                   <div className="flex-1">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Per Seat</div>
-                    <div className="text-xl font-black text-white">₹{recommendedSplit}</div>
+                    <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Per Seat</div>
+                    <div className="text-xl font-black text-slate-900 dark:text-white">₹{recommendedSplit}</div>
                   </div>
-                  <div className="w-px h-10 bg-slate-800" />
+                  <div className="w-px h-10 bg-slate-200 dark:bg-slate-800" />
                   <div className="flex-1 text-right">
                     <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-1">Total Fare</div>
                     <div className="text-2xl font-black text-indigo-400">₹{totalEarnings}</div>
@@ -387,26 +387,26 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               </div>
 
               {/* Safety Guidelines Accordion */}
-              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl overflow-hidden shadow-sm">
+              <div className="bg-slate-100/80 dark:bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm">
                 <details className="group" open>
-                  <summary className="text-sm font-bold text-white p-5 flex items-center justify-between cursor-pointer list-none select-none">
+                  <summary className="text-sm font-bold text-slate-900 dark:text-white p-5 flex items-center justify-between cursor-pointer list-none select-none">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 text-amber-500" />
                       Safety Guidelines
                     </div>
-                    <ChevronRight className="w-4 h-4 text-slate-400 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-4 h-4 text-slate-500 dark:text-slate-400 group-open:rotate-90 transition-transform" />
                   </summary>
                   <div className="px-5 pb-5">
                     <ul className="space-y-3">
-                      <li className="flex items-start gap-2 text-xs text-slate-400">
+                      <li className="flex items-start gap-2 text-xs text-slate-500 dark:text-slate-400">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                         Verify the driver's college ID before boarding.
                       </li>
-                      <li className="flex items-start gap-2 text-xs text-slate-400">
+                      <li className="flex items-start gap-2 text-xs text-slate-500 dark:text-slate-400">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                         Share your live location with a friend via WhatsApp.
                       </li>
-                      <li className="flex items-start gap-2 text-xs text-slate-400">
+                      <li className="flex items-start gap-2 text-xs text-slate-500 dark:text-slate-400">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                         Payments should only be made directly to the driver via UPI.
                       </li>
