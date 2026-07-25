@@ -360,7 +360,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
             </div>
           </div>
 
-          {possibleRoutes.length > 1 && (
+          {possibleRoutes.length > 0 && (
             <div className="col-span-1 md:col-span-2">
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
                 Select Your Exact Route
