@@ -209,7 +209,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   });
 
 
-  const handleRequestSeat = async (ride: any) => {
+  const handleRequestSeat = async (pickup: string, dropoff: string, finalPrice: number) => {
+    const ride = selectedRideForBooking?.ride;
+    if (!ride) return;
     if (isProcessing) return;
     setIsProcessing(true);
     try {
@@ -267,20 +269,12 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       // 3. Proceed with booking
       const existingBooking = ride.bookings?.find((b: any) => b.passenger_id === userId);
 
-      let finalPrice = ride.price_per_seat;
-      if (searchOrigin && searchDestination) {
-        finalPrice = calculateFractionalPrice(ride.origin, ride.destination, searchOrigin, searchDestination, ride.price_per_seat);
-      } else if (mode === "active_trip" || mode === "feed") {
-        // If they didn't explicitly search but just requested, default to full price
-        finalPrice = ride.price_per_seat;
-      }
-
       let error;
       if (existingBooking) {
         const { error: updateError } = await supabase.from('bookings').update({ 
           status: 'pending',
-          pickup_location: searchOrigin || ride.origin,
-          dropoff_location: searchDestination || ride.destination,
+          pickup_location: pickup,
+          dropoff_location: dropoff,
           calculated_price: finalPrice
         }).eq('id', existingBooking.id);
         error = updateError;
@@ -289,8 +283,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           ride_id: ride.id,
           passenger_id: userId,
           status: 'pending',
-          pickup_location: searchOrigin || ride.origin,
-          dropoff_location: searchDestination || ride.destination,
+          pickup_location: pickup,
+          dropoff_location: dropoff,
           calculated_price: finalPrice
         });
         error = insertError;
@@ -314,6 +308,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       queryClient.invalidateQueries({ queryKey: ["activeTripGlobal"] });
       queryClient.invalidateQueries({ queryKey: ["activeTrip"] });
       queryClient.invalidateQueries({ queryKey: ["rides"] });
+      setSelectedRideForBooking(null);
       refetch();
     } catch (err: any) {
       toast.error(err.message || "Failed to request seat.");
@@ -853,7 +848,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                               toast.error("You cannot book a new ride while you are in an active trip.");
                               return;
                             }
-                            handleRequestSeat(ride);
+                            setSelectedRideForBooking({ ride, price: displayPrice });
                           }}
                           className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${hasActiveTrip || isProcessing ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-slate-800 dark:text-slate-500' : 'ui-button-primary'}`}
                           disabled={hasActiveTrip || isProcessing}
@@ -1008,6 +1003,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           onClose={() => setSelectedDriverForModal(null)}
         />
       )}
+      <BookSeatModal
+        ride={selectedRideForBooking?.ride}
+        isOpen={!!selectedRideForBooking}
+        onClose={() => setSelectedRideForBooking(null)}
+        onConfirm={handleRequestSeat}
+        isProcessing={isProcessing}
+        initialPickup={searchOrigin || undefined}
+        initialDropoff={searchDestination || undefined}
+      />
     </div>
   );
 }

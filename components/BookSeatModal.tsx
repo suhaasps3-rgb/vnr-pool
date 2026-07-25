@@ -1,6 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, AlertCircle, Loader2 } from "lucide-react";
+import { X, AlertCircle, Loader2, MapPin } from "lucide-react";
 import { format } from "date-fns";
+import { useState, useEffect } from "react";
+import { DISTANCE_MAP } from "@/lib/locations";
+import { calculateFractionalPrice } from "@/lib/matchmaking";
 
 export default function BookSeatModal({ 
   ride, 
@@ -8,16 +11,37 @@ export default function BookSeatModal({
   onClose, 
   onConfirm, 
   isProcessing,
-  price
+  initialPickup,
+  initialDropoff
 }: { 
   ride: any, 
   isOpen: boolean, 
   onClose: () => void, 
-  onConfirm: () => void, 
+  onConfirm: (pickup: string, dropoff: string, price: number) => void, 
   isProcessing: boolean,
-  price: number
+  initialPickup?: string,
+  initialDropoff?: string
 }) {
+  const [pickup, setPickup] = useState(initialPickup || "");
+  const [dropoff, setDropoff] = useState(initialDropoff || "");
+  const [calculatedPrice, setCalculatedPrice] = useState(0);
+
+  useEffect(() => {
+    if (ride) {
+      setPickup(initialPickup || ride.origin);
+      setDropoff(initialDropoff || ride.destination);
+    }
+  }, [ride, initialPickup, initialDropoff]);
+
+  useEffect(() => {
+    if (ride && pickup && dropoff) {
+      setCalculatedPrice(calculateFractionalPrice(ride.origin, ride.destination, pickup, dropoff, ride.price_per_seat));
+    }
+  }, [ride, pickup, dropoff]);
+
   if (!ride) return null;
+
+  const locations = Object.keys(DISTANCE_MAP);
 
   return (
     <AnimatePresence>
@@ -39,7 +63,7 @@ export default function BookSeatModal({
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Confirm Booking</h3>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Confirm Boarding</h3>
                 <button 
                   onClick={!isProcessing ? onClose : undefined}
                   className="p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors text-slate-500"
@@ -48,23 +72,59 @@ export default function BookSeatModal({
                 </button>
               </div>
 
-              <div className="space-y-4 mb-8">
+              <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
                   <span className="text-slate-500 dark:text-slate-400 font-medium">Driver</span>
                   <span className="font-bold text-slate-900 dark:text-white">{ride.driver?.full_name}</span>
                 </div>
                 
                 <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">Departure Time</span>
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">Departure</span>
                   <span className="font-bold text-slate-900 dark:text-white">
                     {ride.departure_time ? format(new Date(ride.departure_time), "h:mm a, MMM d") : "N/A"}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center p-4 bg-blue-50 dark:bg-blue-500/10 rounded-xl border border-blue-100 dark:border-blue-500/20">
-                  <span className="text-blue-700 dark:text-blue-300 font-medium">Estimated Fuel Split</span>
-                  <span className="font-black text-xl text-blue-700 dark:text-blue-400">
-                    ₹{price}
+                <div className="bg-blue-50 dark:bg-blue-500/10 p-4 rounded-xl border border-blue-100 dark:border-blue-500/20 space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-2">Pickup Location</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
+                      <select 
+                        value={pickup} 
+                        onChange={(e) => setPickup(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value={ride.origin}>{ride.origin} (Driver's Start)</option>
+                        {locations.filter(l => l !== ride.origin).map(loc => (
+                          <option key={loc} value={loc}>{loc}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-2">Dropoff Location</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
+                      <select 
+                        value={dropoff} 
+                        onChange={(e) => setDropoff(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1E293B] border border-blue-200 dark:border-blue-500/30 rounded-lg text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value={ride.destination}>{ride.destination} (Driver's End)</option>
+                        {locations.filter(l => l !== ride.destination).map(loc => (
+                          <option key={loc} value={loc}>{loc}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center p-4 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl border border-emerald-100 dark:border-emerald-500/20">
+                  <span className="text-emerald-700 dark:text-emerald-300 font-medium">Fractional Price</span>
+                  <span className="font-black text-2xl text-emerald-700 dark:text-emerald-400">
+                    ₹{calculatedPrice}
                   </span>
                 </div>
               </div>
@@ -72,12 +132,12 @@ export default function BookSeatModal({
               <div className="flex items-start gap-3 p-4 bg-yellow-50 dark:bg-yellow-500/10 rounded-xl border border-yellow-200 dark:border-yellow-500/20 mb-6">
                 <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5" />
                 <p className="text-sm text-yellow-800 dark:text-yellow-400">
-                  By confirming, you commit to paying your share of the fuel cost directly to the driver upon completion of the ride.
+                  By confirming, you commit to paying your share of the fuel cost directly to the driver.
                 </p>
               </div>
 
               <button
-                onClick={onConfirm}
+                onClick={() => onConfirm(pickup, dropoff, calculatedPrice)}
                 disabled={isProcessing}
                 className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
                   isProcessing 
@@ -87,10 +147,10 @@ export default function BookSeatModal({
               >
                 {isProcessing ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" /> Processing...
+                    <Loader2 className="w-5 h-5 animate-spin" /> Sending Request...
                   </>
                 ) : (
-                  "Confirm Seat Booking"
+                  "Request Seat"
                 )}
               </button>
             </div>
