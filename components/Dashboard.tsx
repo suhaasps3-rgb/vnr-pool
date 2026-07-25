@@ -209,9 +209,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
 
           <div className="flex items-center gap-3">
             
+            <button onClick={() => setShowBlockedModal(true)} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group" title="Manage Blocked Users">
+              <UserX className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            </button>
+
             <NotificationBell userId={userId} />
 
-            <button onClick={onSignOut} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group">
+            <button onClick={onSignOut} className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors group" title="Sign Out">
               <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             </button>
           </div>
