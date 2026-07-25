@@ -56,8 +56,6 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         let query = supabase.from('rides').select(queryStr).eq('status', 'active');
         if (rideCategory !== "all") query = query.eq('ride_category', rideCategory);
         if (womenOnly) query = query.eq('is_women_only', true);
-        if (searchOrigin) query = query.ilike('origin', `%${searchOrigin}%`);
-        if (searchDestination) query = query.ilike('destination', `%${searchDestination}%`);
         if (searchDate) {
           const startOfDay = new Date(searchDate);
           startOfDay.setHours(0, 0, 0, 0);
@@ -71,7 +69,19 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         
         const { data, error } = await query;
         if (error) throw error;
-        return data;
+
+        let filteredData = data;
+        if (searchOrigin || searchDestination) {
+          filteredData = filteredData?.filter(ride => {
+            const matchesOrigin = !searchOrigin || ride.origin.toLowerCase().includes(searchOrigin.toLowerCase());
+            const matchesDest = !searchDestination || ride.destination.toLowerCase().includes(searchDestination.toLowerCase());
+            const exactMatch = matchesOrigin && matchesDest;
+            const aiMatch = isAIMatch(ride.origin, ride.destination, searchOrigin, searchDestination);
+            return exactMatch || aiMatch;
+          }) || [];
+        }
+
+        return filteredData;
       } else if (mode === "offered") {
         const { data, error } = await supabase.from('rides').select(queryStr).eq('driver_id', userId).order('created_at', { ascending: false });
         if (error) throw error;
