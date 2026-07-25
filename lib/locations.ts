@@ -136,7 +136,20 @@ export const DISTANCE_MAP: Record<string, number> = {
   "safilguda": 23, "yapral": 24, "dammaiguda": 26, "kushaiguda": 27,
   "cherlapally": 29, "mallapur": 30, "nacharam": 29, "temple alwal": 21,
   "kowkoor": 23, "hakimpet": 25, "thumkunta": 28, "keesara": 35,
-  "keesaragutta": 36, "yamnampet": 42
+  "keesaragutta": 36, "yamnampet": 42,
+  
+  // South-West Landmarks & Colleges
+  "cbit": 28, "chaitanya bharathi institute of technology": 28, "mgit": 28,
+  "vjit": 29, "vidya jyothi institute of technology": 29, "icfai business school": 32,
+  "moinabad": 32, "jbiet": 32, "shankerpally": 35, "appa junction": 26,
+  "kali mandir": 26, "sun city": 25, "bandlaguda jagir": 26, "chevella": 45,
+  "aziznagar": 30,
+  
+  // South-East Landmarks & Colleges
+  "mvsr engineering college": 40, "nadergul": 40, "cvr college of engineering": 48,
+  "gurunanak institutions": 50, "ibrahimpatnam": 50, "tkr college": 35,
+  "meerpet": 35, "badangpet": 36, "b n reddy nagar": 37, "hastinapuram": 36,
+  "turkayamjal": 42, "bonguloor": 45
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
