@@ -278,8 +278,8 @@ export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: st
           const dIndex = findLocIndex(route, rD);
           const pIndex = findLocIndex(route, sD);
           if (dIndex !== -1 && pIndex !== -1) {
-            // Driver travels to a higher index, Passenger travels to a lower/equal index
-            if (pIndex <= dIndex) {
+            // Driver travels to a lower/equal index (further away from VNR), Passenger travels to a higher/equal index (closer to VNR)
+            if (dIndex <= pIndex) {
               return true;
             }
           }
