@@ -31,7 +31,14 @@ export const DISTANCE_MAP: Record<string, number> = {
   "hcu": 17, "nallagandla fly over": 16, "uppal": 35, "himalaya book store": 21, "jbs": 20, "tadbund": 19,
   "ecil": 28, "radhika": 27, "neredmet x roads": 24, "thirumalgiri": 22, "bapuji nagar": 17, "suchitra": 15,
   "old alwal ig statue": 21, "father balaiah ngr": 19, "qutbullapur": 14, "chintal shapur signal": 12, "gajularamaram": 10,
-  "vnr vjiet": 0
+  "vnr vjiet": 0,
+  
+  // Extra locations from user request
+  "nampally": 21, "kachiguda": 24, "chikkadpally": 23,
+  "suraram": 16, "jeedimetla": 15, "chintal": 14, "shamshabad": 45,
+  "chandrayangutta": 35, "tellapur": 22, "nallagandla": 18, "madinaguda": 9,
+  "bachupally (vnr)": 0, "kukatpally": 12, "kphb": 11, "jntu": 10, "nizampet": 8,
+  "ameerpet": 18, "secunderabad": 22
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)

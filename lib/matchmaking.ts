@@ -24,7 +24,24 @@ export const ROUTES: string[][] = [
   // S41: ECIL TO VNRVJIET
   ["ecil", "radhika", "sainikpuri", "neredmet x roads", "thirumalgiri", "bowenpally", "bapuji nagar", "suchitra", "kompally", "vnr vjiet"],
   // S42: OLD ALWAL TO VNRVJIET
-  ["old alwal ig statue", "father balaiah ngr", "suchitra", "qutbullapur", "chintal shapur signal", "gajularamaram", "vnr vjiet"]
+  ["old alwal ig statue", "father balaiah ngr", "suchitra", "qutbullapur", "chintal shapur signal", "gajularamaram", "vnr vjiet"],
+  
+  // Custom Route 1: The NH65 Spine
+  ["lb nagar", "dilsukhnagar", "malakpet", "koti", "abids", "nampally", "lakdikapul", "khairatabad", "panjagutta", "ameerpet", "sr nagar", "erragadda", "moosapet", "kukatpally", "kphb", "jntu", "nizampet", "bachupally (vnr)", "vnr vjiet"],
+  // Custom Route 2: The Core City Hub
+  ["kachiguda", "rtc x roads", "chikkadpally", "musheerabad", "secunderabad", "begumpet", "ameerpet", "sr nagar", "erragadda", "moosapet", "kukatpally", "kphb", "jntu", "nizampet", "bachupally (vnr)", "vnr vjiet"],
+  // Custom Route 3: The East-West Connector
+  ["uppal", "tarnaka", "secunderabad", "bowenpally", "balanagar", "moosapet", "kukatpally", "kphb", "jntu", "nizampet", "bachupally (vnr)", "vnr vjiet"],
+  // Custom Route 4: The North-East Commute
+  ["ecil", "as rao nagar", "neredmet", "malkajgiri", "trimulgherry", "bowenpally", "balanagar", "moosapet", "kukatpally", "kphb", "jntu", "nizampet", "bachupally (vnr)", "vnr vjiet"],
+  // Custom Route 5: The ORR North Route
+  ["medchal", "kompally", "suchitra", "suraram", "jeedimetla", "chintal", "balanagar", "moosapet", "kukatpally", "kphb", "jntu", "nizampet", "bachupally (vnr)", "vnr vjiet"],
+  // Custom Route 6: The IT Corridor
+  ["shamshabad", "chandrayangutta", "attapur", "mehdipatnam", "tolichowki", "shaikpet", "lanco hills", "manikonda", "raidurg", "hitech city", "madhapur", "kondapur", "hafeezpet", "miyapur", "bachupally (vnr)", "vnr vjiet"],
+  // Custom Route 7: The Financial District Ring
+  ["tellapur", "nallagandla", "financial district", "gachibowli", "kondapur", "hafeezpet", "miyapur", "bachupally (vnr)", "vnr vjiet"],
+  // Custom Route 8: The Outer West Highway
+  ["patancheru", "bhel", "chanda nagar", "madinaguda", "miyapur", "bachupally (vnr)", "vnr vjiet"]
 ];
 
 export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string): boolean {
