@@ -795,7 +795,19 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 {ride.chosen_route_index !== null && ride.chosen_route_index !== undefined && ROUTES[ride.chosen_route_index] && (
                   <div className="mb-4 bg-slate-50 dark:bg-white/5 p-3 rounded-xl border border-slate-100 dark:border-white/10 text-xs text-slate-600 dark:text-slate-400 capitalize">
                     <span className="font-bold text-slate-800 dark:text-slate-200">Chosen Route: </span>
-                    {ROUTES[ride.chosen_route_index].join(' → ')}
+                    {(() => {
+                      const fullRoute = ROUTES[ride.chosen_route_index];
+                      if (!fullRoute) return null;
+                      
+                      let displayRoute = fullRoute;
+                      if (searchOrigin) {
+                        const startIndex = fullRoute.findIndex(loc => loc.toLowerCase() === searchOrigin.toLowerCase());
+                        if (startIndex !== -1) {
+                          displayRoute = fullRoute.slice(startIndex);
+                        }
+                      }
+                      return displayRoute.join(' → ');
+                    })()}
                   </div>
                 )}
 

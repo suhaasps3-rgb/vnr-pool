@@ -247,25 +247,54 @@ export function getPossibleRoutes(rideOrigin: string, rideDest: string): { index
 
   const validRoutes: { index: number, path: string[] }[] = [];
 
+  const addRoute = (index: number, route: string[], startIndex: number, endIndex: number) => {
+    validRoutes.push({ index, path: route });
+  };
+
   if (rD.includes("vnr") || rD.includes("campus")) {
     ROUTES.forEach((route, index) => {
       const dIndex = findLocIndex(route, rO);
-      const vnrIndex = findLocIndex(route, rD); // Ensure driver goes to VNR
+      const vnrIndex = findLocIndex(route, rD);
       if (dIndex !== -1 && vnrIndex !== -1 && dIndex <= vnrIndex) {
-        validRoutes.push({ index, path: route });
+        addRoute(index, route, dIndex, vnrIndex);
       }
     });
   } else if (rO.includes("vnr") || rO.includes("campus")) {
     ROUTES.forEach((route, index) => {
       const vnrIndex = findLocIndex(route, rO);
-      const dIndex = findLocIndex(route, rD); // Ensure driver goes to dest
+      const dIndex = findLocIndex(route, rD);
       if (dIndex !== -1 && vnrIndex !== -1 && vnrIndex <= dIndex) {
-        validRoutes.push({ index, path: route });
+        addRoute(index, route, vnrIndex, dIndex);
       }
     });
   }
 
-  return validRoutes;
+  // Deduplicate similar routes (remove subsets)
+  const filteredRoutes = validRoutes.filter((routeA, i) => {
+    const isSubset = validRoutes.some((routeB, j) => {
+      if (i === j) return false;
+      // Only compare if routeB is longer or equal
+      if (routeA.path.length <= routeB.path.length) {
+        // Count how many nodes of A are in B
+        let matches = 0;
+        routeA.path.forEach(nodeA => {
+          if (findLocIndex(routeB.path, nodeA) !== -1) matches++;
+        });
+        // If 75% or more of A's nodes are in B, consider it a subset and discard A
+        if (matches / routeA.path.length >= 0.75) {
+          // If they have the exact same length and high similarity, just keep the first one
+          if (routeA.path.length === routeB.path.length) {
+             return j < i; // keep the one that appears earlier
+          }
+          return true; // routeA is a subset of routeB
+        }
+      }
+      return false;
+    });
+    return !isSubset;
+  });
+
+  return filteredRoutes.slice(0, 5);
 }
 
 export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string, chosenRouteIndex: number | null = null): boolean {
