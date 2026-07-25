@@ -39,7 +39,7 @@ export const DISTANCE_MAP: Record<string, number> = {
   "chandrayangutta": 35, "tellapur": 22, "nallagandla": 18, "madinaguda": 9,
   "bachupally (vnr)": 0, "kukatpally": 12, "kphb": 11, "jntu": 10, "nizampet": 8,
   "ameerpet": 18, "secunderabad": 22, "orr": 15, "bachupally exit": 4, 
-  "narsingi": 25, "paradise": 20, "mindspace": 18, "gundlapochampally": 12,
+  "paradise": 20, "mindspace": 18, "gundlapochampally": 12,
   "dundigal": 15, "gandimaisamma": 10, "bowrampet": 6, "pragathi nagar": 5,
   "upperpally": 28, "esi": 17, "allwyn x roads": 9, "airport": 45, "rajendranagar": 30,
   "bharat nagar": 14, "khajaguda": 21, "assembly": 21, "gandhi bhavan": 22, 
