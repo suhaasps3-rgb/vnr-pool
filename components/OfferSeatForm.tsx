@@ -153,6 +153,12 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
     const o = formData.origin.toLowerCase().replace(/[^a-z]/g, '');
     const d = formData.destination.toLowerCase().replace(/[^a-z]/g, '');
 
+    if (o === d) {
+      toast.error("Origin and Destination cannot be the same location.");
+      setLoading(false);
+      return;
+    }
+
     if (!o.includes('vnr') && !d.includes('vnr')) {
       toast.error("This app is exclusively for VNR VJIET students. Either your Origin or Destination must be VNR VJIET.");
       setLoading(false);
