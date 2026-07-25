@@ -209,7 +209,7 @@ export default function Profile({ userId }: { userId: string }) {
               value={carNumber}
               onChange={(e) => setCarNumber(e.target.value.toUpperCase())}
               disabled={!isEditing}
-              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium uppercase"
+              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-3 py-2 md:px-4 md:py-3 rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium uppercase"
             />
           </div>
 
@@ -223,7 +223,7 @@ export default function Profile({ userId }: { userId: string }) {
               value={bikeNumber}
               onChange={(e) => setBikeNumber(e.target.value.toUpperCase())}
               disabled={!isEditing}
-              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium uppercase"
+              className="w-full bg-slate-50 dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-3 py-2 md:px-4 md:py-3 rounded-xl outline-none focus:border-[#2563EB] disabled:opacity-70 font-medium uppercase"
             />
           </div>
         </div>
