@@ -14,6 +14,7 @@ import BookSeatModal from "./BookSeatModal";
 import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
 import { isAIMatch } from "@/lib/matchmaking";
+import DynamicMap from "./DynamicMap";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", onSearchChange }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip", onSearchChange?: (origin: string, dest: string) => void }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
@@ -24,6 +25,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   const [timeFilter, setTimeFilter] = useState<"all" | "morning" | "afternoon" | "evening">("all");
   const [minSeats, setMinSeats] = useState<number>(1);
   const [selectedRideId, setSelectedRideId] = useState<string | null>(null);
+  const [activeMapId, setActiveMapId] = useState<string | null>(null);
   const [selectedRideForBooking, setSelectedRideForBooking] = useState<{ride: any, price: number} | null>(null);
   const [selectedDriverForModal, setSelectedDriverForModal] = useState<{driver: any, vehicleNumber: string} | null>(null);
   const [userGender, setUserGender] = useState<string | null>(null);
@@ -670,6 +672,26 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                       <p className="font-bold text-[#0F172A] dark:text-white">{ride.destination}</p>
                     </div>
                   </div>
+                </div>
+
+                {/* Route Map Toggle */}
+                <div className="mb-6">
+                  <button 
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      setActiveMapId(activeMapId === ride.id ? null : ride.id); 
+                    }}
+                    className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-2"
+                  >
+                    <MapPin className="w-4 h-4" />
+                    {activeMapId === ride.id ? "Hide Route Map" : "View Route Map"}
+                  </button>
+                  
+                  {activeMapId === ride.id && (
+                    <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-300" onClick={(e) => e.stopPropagation()}>
+                      <DynamicMap origin={ride.origin} destination={ride.destination} />
+                    </div>
+                  )}
                 </div>
 
                 {/* Co-Passengers List */}
