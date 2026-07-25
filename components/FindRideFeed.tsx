@@ -13,7 +13,7 @@ import RideCard from "./RideCard";
 import BookSeatModal from "./BookSeatModal";
 import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
-import { isAIMatch, ROUTES } from "@/lib/matchmaking";
+import { isAIMatch, ROUTES, calculateFractionalPrice } from "@/lib/matchmaking";
 import DynamicMap from "./DynamicMap";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", onSearchChange }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip", onSearchChange?: (origin: string, dest: string) => void }) {
@@ -266,16 +266,32 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
 
       // 3. Proceed with booking
       const existingBooking = ride.bookings?.find((b: any) => b.passenger_id === userId);
-      
+
+      let finalPrice = ride.price_per_seat;
+      if (searchOrigin && searchDestination) {
+        finalPrice = calculateFractionalPrice(ride.origin, ride.destination, searchOrigin, searchDestination, ride.price_per_seat);
+      } else if (mode === "active_trip" || mode === "feed") {
+        // If they didn't explicitly search but just requested, default to full price
+        finalPrice = ride.price_per_seat;
+      }
+
       let error;
       if (existingBooking) {
-        const { error: updateError } = await supabase.from('bookings').update({ status: 'pending' }).eq('id', existingBooking.id);
+        const { error: updateError } = await supabase.from('bookings').update({ 
+          status: 'pending',
+          pickup_location: searchOrigin || ride.origin,
+          dropoff_location: searchDestination || ride.destination,
+          calculated_price: finalPrice
+        }).eq('id', existingBooking.id);
         error = updateError;
       } else {
         const { error: insertError } = await supabase.from('bookings').insert({
           ride_id: ride.id,
           passenger_id: userId,
-          status: 'pending'
+          status: 'pending',
+          pickup_location: searchOrigin || ride.origin,
+          dropoff_location: searchDestination || ride.destination,
+          calculated_price: finalPrice
         });
         error = insertError;
       }
@@ -612,16 +628,24 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             let displayPrice = ride.price_per_seat;
             let dynamicPriceNote = "";
 
+            if (myBooking?.calculated_price) {
+              displayPrice = myBooking.calculated_price;
+              dynamicPriceNote = "Your fractional share";
+            } else if (searchOrigin && searchDestination) {
+              displayPrice = calculateFractionalPrice(ride.origin, ride.destination, searchOrigin, searchDestination, ride.price_per_seat);
+              dynamicPriceNote = "Your fractional share";
+            }
+
             if (ride.ride_category === 'auto_split') {
               const currentPeople = 1 + approvedPassengers.length;
               if (isApproved || ride.driver_id === userId) {
-                displayPrice = Math.ceil(impliedTotalCost / currentPeople);
+                displayPrice = myBooking?.calculated_price || Math.ceil(impliedTotalCost / currentPeople);
                 dynamicPriceNote = "Current split";
               } else if (ride.available_seats > 0) {
-                displayPrice = Math.ceil(impliedTotalCost / (currentPeople + 1));
+                displayPrice = (myBooking?.calculated_price) || Math.ceil(impliedTotalCost / (currentPeople + 1));
                 dynamicPriceNote = "If you join";
               } else {
-                displayPrice = Math.ceil(impliedTotalCost / currentPeople);
+                displayPrice = myBooking?.calculated_price || Math.ceil(impliedTotalCost / currentPeople);
                 dynamicPriceNote = "Final split";
               }
             }
@@ -757,17 +781,25 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                     </div>
                     <div className="flex flex-wrap gap-3">
                       {approvedPassengers.map((b: any) => (
-                        <div key={b.id} className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-100 dark:border-emerald-500/20">
-                          <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xs shadow-sm overflow-hidden border border-white dark:border-slate-800">
-                            {b.passenger?.avatar_url ? (
-                              <img src={b.passenger.avatar_url} alt={b.passenger.full_name || "Passenger"} className="w-full h-full object-cover" />
-                            ) : (
-                              b.passenger?.full_name?.charAt(0).toUpperCase()
-                            )}
+                        <div key={b.id} className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-100 dark:border-emerald-500/20 w-fit">
+                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xs shadow-sm overflow-hidden border border-white dark:border-slate-800">
+                              {b.passenger?.avatar_url ? (
+                                <img src={b.passenger.avatar_url} alt={b.passenger.full_name || "Passenger"} className="w-full h-full object-cover" />
+                              ) : (
+                                b.passenger?.full_name?.charAt(0).toUpperCase()
+                              )}
+                            </div>
+                            <span className="text-sm font-semibold text-[#0F172A] dark:text-slate-200">
+                              {b.passenger?.full_name?.split(' ')[0]}
+                              {b.calculated_price && <span className="ml-1 text-emerald-700 dark:text-emerald-400 font-black">₹{b.calculated_price}</span>}
+                            </span>
                           </div>
-                          <span className="text-sm font-semibold text-[#0F172A] dark:text-slate-200">
-                            {b.passenger?.full_name?.split(' ')[0]}
-                          </span>
+                          {b.pickup_location && b.dropoff_location && (
+                            <div className="w-full text-[10px] font-medium text-slate-500 pl-2 border-l-2 border-slate-200 dark:border-slate-700">
+                              Route: {b.pickup_location} → {b.dropoff_location}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

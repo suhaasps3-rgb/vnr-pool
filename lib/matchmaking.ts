@@ -332,3 +332,41 @@ export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: st
 
   return false;
 }
+
+export function calculateFractionalPrice(
+  driverOrigin: string,
+  driverDest: string,
+  paxOrigin: string,
+  paxDest: string,
+  driverPrice: number
+): number {
+  if (!paxOrigin || !paxDest) return driverPrice;
+
+  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const findDist = (loc: string) => {
+    const q = normalize(loc);
+    const matchedKey = Object.keys(DISTANCE_MAP).find(k => normalize(k) === q || normalize(k).includes(q) || q.includes(normalize(k)));
+    if (matchedKey) return DISTANCE_MAP[matchedKey];
+    return null;
+  };
+
+  const d1 = findDist(driverOrigin);
+  const d2 = findDist(driverDest);
+  const p1 = findDist(paxOrigin);
+  const p2 = findDist(paxDest);
+
+  if (d1 === null || d2 === null || p1 === null || p2 === null) {
+    return driverPrice;
+  }
+
+  const driverDistance = Math.abs(d1 - d2);
+  const paxDistance = Math.abs(p1 - p2);
+
+  if (driverDistance === 0) return driverPrice;
+
+  // Minimum fraction is 30% to account for base pickup overhead
+  const distanceFraction = paxDistance / driverDistance;
+  const fraction = Math.max(0.3, Math.min(1, distanceFraction));
+
+  return Math.ceil(driverPrice * fraction);
+}
