@@ -88,7 +88,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       const queryStr = `
         *,
         driver:users!driver_id(full_name, mobile_number, gender, branch, roll_no, avatar_url, rating_sum, rating_count),
-        bookings(id, passenger_id, status, passenger:users!passenger_id(full_name, gender, roll_no, avatar_url))
+        bookings(id, passenger_id, status, pickup_location, dropoff_location, calculated_price, passenger:users!passenger_id(full_name, gender, roll_no, avatar_url))
       `;
 
       if (mode === "feed") {
