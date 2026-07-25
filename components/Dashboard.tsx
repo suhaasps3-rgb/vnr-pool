@@ -339,7 +339,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               {/* Fuel Split Calculator */}
               <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm">
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                  <Wallet className="w-4 h-4 text-teal-500 dark:text-teal-400" />
+                  <Wallet className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                   Quick Fare Splitter
                 </h3>
                 
@@ -347,13 +347,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   <div className="grid grid-cols-2 gap-2">
                     <button 
                       onClick={() => { setCalcVehicle("car"); setCalcPassengers(4); }}
-                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "car" ? "bg-teal-500 text-white dark:text-slate-950" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "car" ? "bg-indigo-500 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
                     >
                       Car
                     </button>
                     <button 
                       onClick={() => { setCalcVehicle("bike"); setCalcPassengers(1); }}
-                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "bike" ? "bg-teal-500 text-white dark:text-slate-950" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
+                      className={`py-2 rounded-lg text-xs font-bold transition-colors ${calcVehicle === "bike" ? "bg-indigo-500 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
                     >
                       Bike
                     </button>
@@ -379,17 +379,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   <div>
                     <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex justify-between">
                       <span>Distance (km)</span>
-                      <span className="text-teal-400">{calcDistance} km</span>
+                      <span className="text-indigo-500 dark:text-indigo-400">{calcDistance} km</span>
                     </label>
                     <input 
                       type="range" min="1" max="40" 
                       value={calcDistance} onChange={(e) => setCalcDistance(Number(e.target.value))}
-                      className="w-full h-1.5 bg-slate-800 rounded-full appearance-none accent-teal-400"
+                      className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full appearance-none accent-indigo-500 cursor-pointer"
                     />
-                  </div>
-                  
-                  <div className="bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden flex">
-                    <div className="bg-teal-500 h-full" style={{ width: `${(calcDistance / 50) * 100}%` }} />
                   </div>
                 </div>
 
@@ -400,8 +396,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   </div>
                   <div className="w-px h-10 bg-slate-200 dark:bg-slate-800" />
                   <div className="flex-1 text-right">
-                    <div className="text-[10px] font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider mb-1">Total Recommended Fare</div>
-                    <div className="text-2xl font-black text-teal-500 dark:text-teal-400">₹{totalEarnings}</div>
+                    <div className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-1">Total Recommended Fare</div>
+                    <div className="text-2xl font-black text-indigo-500 dark:text-indigo-400">₹{totalEarnings}</div>
                   </div>
                 </div>
               </div>
