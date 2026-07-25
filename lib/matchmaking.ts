@@ -230,14 +230,52 @@ export const ROUTES: string[][] = [
   ["lb nagar", "dilsukhnagar", "mgbs", "ameerpet", "kukatpally", "jntu", "vnr vjiet"]
 ];
 
-export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string): boolean {
+export function getPossibleRoutes(rideOrigin: string, rideDest: string): { index: number, path: string[] }[] {
+  const rO = rideOrigin.toLowerCase();
+  const rD = rideDest.toLowerCase();
+  
+  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec');
+  
+  const findLocIndex = (route: string[], queryLoc: string) => {
+    const q = normalize(queryLoc);
+    if (!q) return -1;
+    return route.findIndex(node => {
+      const n = normalize(node);
+      return q.includes(n) || n.includes(q);
+    });
+  };
+
+  const validRoutes: { index: number, path: string[] }[] = [];
+
+  if (rD.includes("vnr") || rD.includes("campus")) {
+    ROUTES.forEach((route, index) => {
+      const dIndex = findLocIndex(route, rO);
+      const vnrIndex = findLocIndex(route, rD); // Ensure driver goes to VNR
+      if (dIndex !== -1 && vnrIndex !== -1 && dIndex <= vnrIndex) {
+        validRoutes.push({ index, path: route });
+      }
+    });
+  } else if (rO.includes("vnr") || rO.includes("campus")) {
+    ROUTES.forEach((route, index) => {
+      const vnrIndex = findLocIndex(route, rO);
+      const dIndex = findLocIndex(route, rD); // Ensure driver goes to dest
+      if (dIndex !== -1 && vnrIndex !== -1 && vnrIndex <= dIndex) {
+        validRoutes.push({ index, path: route });
+      }
+    });
+  }
+
+  return validRoutes;
+}
+
+export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string, chosenRouteIndex: number | null = null): boolean {
   if (!searchOrigin && !searchDest) return false;
   
   const rO = rideOrigin.toLowerCase();
   const rD = rideDest.toLowerCase();
   const sO = searchOrigin ? searchOrigin.toLowerCase() : "";
   const sD = searchDest ? searchDest.toLowerCase() : "";
-
+  
   const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec');
   
   // Helper to find index of a location in a route
@@ -250,13 +288,17 @@ export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: st
     });
   };
 
+  const routesToCheck = chosenRouteIndex !== null && chosenRouteIndex !== undefined && chosenRouteIndex >= 0 && chosenRouteIndex < ROUTES.length
+    ? [ROUTES[chosenRouteIndex]]
+    : ROUTES;
+
   // Case 1: Driver is coming TO VNR (rD is VNR)
   if (rD.includes("vnr") || rD.includes("campus")) {
     if (sD === "" || sD.includes("vnr") || sD.includes("campus")) {
       if (!sO) return true;
       
       // Find if there is any route where Driver Origin is before or equal to Passenger Origin
-      for (const route of ROUTES) {
+      for (const route of routesToCheck) {
         const dIndex = findLocIndex(route, rO);
         const pIndex = findLocIndex(route, sO);
         if (dIndex !== -1 && pIndex !== -1) {
@@ -275,7 +317,7 @@ export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: st
       if (!sD) return true;
       
       // Find if there is any route where Driver Dest is after or equal to Passenger Dest
-      for (const route of ROUTES) {
+      for (const route of routesToCheck) {
         const dIndex = findLocIndex(route, rD);
         const pIndex = findLocIndex(route, sD);
         if (dIndex !== -1 && pIndex !== -1) {

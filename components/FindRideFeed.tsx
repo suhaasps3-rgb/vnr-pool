@@ -13,7 +13,7 @@ import RideCard from "./RideCard";
 import BookSeatModal from "./BookSeatModal";
 import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
-import { isAIMatch } from "@/lib/matchmaking";
+import { isAIMatch, ROUTES } from "@/lib/matchmaking";
 import DynamicMap from "./DynamicMap";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", onSearchChange }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip", onSearchChange?: (origin: string, dest: string) => void }) {
@@ -606,7 +606,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   </div>
                 )}
                 
-                {mode === "feed" && isAIMatch(ride.origin, ride.destination, searchOrigin, searchDestination) && (
+                {mode === "feed" && isAIMatch(ride.origin, ride.destination, searchOrigin, searchDestination, ride.chosen_route_index) && (
                   <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-purple-700 dark:text-purple-300 px-4 py-1 rounded-full text-[10px] font-black tracking-widest border border-purple-500/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse z-10">
                     ✨ AI MATCH: PERFECT ROUTE OVERLAY
                   </div>
@@ -673,6 +673,13 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                     </div>
                   </div>
                 </div>
+
+                {ride.chosen_route_index !== null && ride.chosen_route_index !== undefined && ROUTES[ride.chosen_route_index] && (
+                  <div className="mb-4 bg-slate-50 dark:bg-white/5 p-3 rounded-xl border border-slate-100 dark:border-white/10 text-xs text-slate-600 dark:text-slate-400 capitalize">
+                    <span className="font-bold text-slate-800 dark:text-slate-200">Chosen Route: </span>
+                    {ROUTES[ride.chosen_route_index].join(' → ')}
+                  </div>
+                )}
 
                 {/* Route Map Toggle */}
                 <div className="mb-6">

@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { ALL_LOCATIONS as COMMON_LOCATIONS } from "@/lib/locations";
+import { getPossibleRoutes } from "@/lib/matchmaking";
 
 export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void }) {
   const queryClient = useQueryClient();
@@ -17,6 +18,8 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   const [vehicleEntryMode, setVehicleEntryMode] = useState<'profile' | 'manual'>('profile');
   const [showOriginDropdown, setShowOriginDropdown] = useState(false);
   const [showDestDropdown, setShowDestDropdown] = useState(false);
+  const [possibleRoutes, setPossibleRoutes] = useState<{index: number, path: string[]}[]>([]);
+  const [chosenRouteIndex, setChosenRouteIndex] = useState<number | null>(null);
 
 
   useEffect(() => {
@@ -70,6 +73,19 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('updateDistance', { detail: { origin: formData.origin, dest: formData.destination } }));
+    
+    if (formData.origin && formData.destination) {
+      const routes = getPossibleRoutes(formData.origin, formData.destination);
+      setPossibleRoutes(routes);
+      if (routes.length === 1) {
+        setChosenRouteIndex(routes[0].index);
+      } else {
+        setChosenRouteIndex(null);
+      }
+    } else {
+      setPossibleRoutes([]);
+      setChosenRouteIndex(null);
+    }
   }, [formData.origin, formData.destination]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -87,6 +103,12 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
     if (!o.includes('vnr') && !d.includes('vnr')) {
       toast.error("This app is exclusively for VNR VJIET students. Either your Origin or Destination must be VNR VJIET.");
+      setLoading(false);
+      return;
+    }
+
+    if (possibleRoutes.length > 0 && chosenRouteIndex === null) {
+      toast.error("Please explicitly select which route you will take so AI matchmaking can accurately overlay passengers.");
       setLoading(false);
       return;
     }
@@ -158,7 +180,8 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
         available_seats: Number(formData.total_seats),
         price_per_seat: Math.ceil(Number(formData.total_cost) / (formData.ride_category === 'auto_split' ? Number(formData.total_seats) + 1 : Number(formData.total_seats))),
         is_women_only: formData.is_women_only,
-        status: 'active'
+        status: 'active',
+        chosen_route_index: chosenRouteIndex
       });
 
       if (error) throw error;
@@ -287,6 +310,40 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
               ))}
             </div>
           </div>
+
+          {possibleRoutes.length > 1 && (
+            <div className="col-span-1 md:col-span-2">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+                Select Your Exact Route
+              </label>
+              <div className="space-y-3">
+                {possibleRoutes.map((r, idx) => (
+                  <label 
+                    key={r.index}
+                    className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
+                      chosenRouteIndex === r.index 
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10' 
+                        : 'border-slate-200 dark:border-white/10 hover:border-blue-300 dark:hover:border-blue-500/50'
+                    }`}
+                  >
+                    <input 
+                      type="radio"
+                      name="route"
+                      checked={chosenRouteIndex === r.index}
+                      onChange={() => setChosenRouteIndex(r.index)}
+                      className="mt-1 w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <div>
+                      <div className="font-bold text-slate-900 dark:text-white">Option {idx + 1}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize leading-relaxed">
+                        Via {r.path.join(' → ')}
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>
