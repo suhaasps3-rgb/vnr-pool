@@ -41,22 +41,43 @@ export default function MapComponent({ origin, destination }: MapComponentProps)
     async function fetchRoute() {
       try {
         setLoading(true);
-        // Geocode Origin
-        const oQuery = encodeURIComponent(`${origin} Hyderabad`);
-        const oRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${oQuery}`);
-        const oData = await oRes.json();
-        if (!oData || oData.length === 0) throw new Error(`Could not find location: ${origin}`);
+        // Helper to geocode with fallback
+        const geocode = async (locName: string) => {
+          // Hardcode VNR VJIET for 100% accuracy since it's the anchor of the app
+          if (locName.toLowerCase().includes("vnr") || locName.toLowerCase().includes("vjiet")) {
+            return { lat: 17.5388, lon: 78.3868 };
+          }
+          
+          let queries = [
+            `${locName} Hyderabad`,
+            `${locName.split(' ')[0]} Hyderabad`
+          ];
 
-        // Geocode Destination
-        const dQuery = encodeURIComponent(`${destination} Hyderabad`);
-        const dRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${dQuery}`);
-        const dData = await dRes.json();
-        if (!dData || dData.length === 0) throw new Error(`Could not find location: ${destination}`);
+          // If location has more than 2 words, try first two words
+          const words = locName.split(' ');
+          if (words.length > 2) {
+            queries.splice(1, 0, `${words[0]} ${words[1]} Hyderabad`);
+          }
 
-        const oLat = parseFloat(oData[0].lat);
-        const oLon = parseFloat(oData[0].lon);
-        const dLat = parseFloat(dData[0].lat);
-        const dLon = parseFloat(dData[0].lon);
+          for (const query of queries) {
+            const encoded = encodeURIComponent(query);
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encoded}`);
+            const data = await res.json();
+            if (data && data.length > 0) {
+              return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+            }
+          }
+          
+          throw new Error(`Could not find location: ${locName}`);
+        };
+
+        const oCoords = await geocode(origin);
+        const dCoords = await geocode(destination);
+
+        const oLat = oCoords.lat;
+        const oLon = oCoords.lon;
+        const dLat = dCoords.lat;
+        const dLon = dCoords.lon;
 
         // Fetch Route from OSRM
         const routeRes = await fetch(`https://router.project-osrm.org/route/v1/driving/${oLon},${oLat};${dLon},${dLat}?overview=full&geometries=geojson`);
