@@ -799,11 +799,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                       const fullRoute = ROUTES[ride.chosen_route_index];
                       if (!fullRoute) return null;
                       
-                      let displayRoute = fullRoute;
+                      const dIndex = fullRoute.findIndex(loc => loc.toLowerCase() === ride.origin.toLowerCase());
+                      const driverStart = dIndex !== -1 ? dIndex : 0;
+                      
+                      let displayRoute = fullRoute.slice(driverStart);
+                      
                       if (searchOrigin) {
-                        const startIndex = fullRoute.findIndex(loc => loc.toLowerCase() === searchOrigin.toLowerCase());
-                        if (startIndex !== -1) {
-                          displayRoute = fullRoute.slice(startIndex);
+                        const sIndex = displayRoute.findIndex(loc => loc.toLowerCase() === searchOrigin.toLowerCase());
+                        if (sIndex !== -1) {
+                          displayRoute = displayRoute.slice(sIndex);
                         }
                       }
                       return displayRoute.join(' → ');

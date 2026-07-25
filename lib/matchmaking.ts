@@ -248,7 +248,7 @@ export function getPossibleRoutes(rideOrigin: string, rideDest: string): { index
   const validRoutes: { index: number, path: string[] }[] = [];
 
   const addRoute = (index: number, route: string[], startIndex: number, endIndex: number) => {
-    validRoutes.push({ index, path: route });
+    validRoutes.push({ index, path: route.slice(startIndex, endIndex + 1) });
   };
 
   if (rD.includes("vnr") || rD.includes("campus")) {
