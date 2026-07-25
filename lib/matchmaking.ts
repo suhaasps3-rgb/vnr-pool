@@ -233,9 +233,7 @@ export const ROUTES: string[][] = [
 export function getPossibleRoutes(rideOrigin: string, rideDest: string): { index: number, path: string[] }[] {
   const rO = rideOrigin.toLowerCase();
   const rD = rideDest.toLowerCase();
-  
-  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec');
-  
+  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec').replace('balnagar', 'balanagar');
   const findLocIndex = (route: string[], queryLoc: string) => {
     const q = queryLoc.toLowerCase().trim();
     if (!q) return -1;
