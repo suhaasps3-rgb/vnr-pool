@@ -13,7 +13,7 @@ import RideCard from "./RideCard";
 import BookSeatModal from "./BookSeatModal";
 import DriverProfileModal from "./DriverProfileModal";
 
-export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip" }) {
+export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", onSearchChange }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip", onSearchChange?: (origin: string, dest: string) => void }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
   const [womenOnly, setWomenOnly] = useState(false);
   const [searchOrigin, setSearchOrigin] = useState("");
@@ -34,6 +34,10 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       if (data) setUserGender(data.gender);
     });
   }, [userId, supabase]);
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('updateDistance', { detail: { origin: searchOrigin, dest: searchDestination } }));
+  }, [searchOrigin, searchDestination]);
 
   const { data: rides, isLoading, refetch } = useQuery({
     queryKey: ["rides", rideCategory, womenOnly, mode, searchOrigin, searchDestination],

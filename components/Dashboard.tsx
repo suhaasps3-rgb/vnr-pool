@@ -31,6 +31,33 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
   const [calcVehicle, setCalcVehicle] = useState<"car" | "bike">("car");
   const [calcPassengers, setCalcPassengers] = useState<number>(4);
 
+  useEffect(() => {
+    const handleUpdateDistance = (e: any) => {
+      const { origin, dest } = e.detail;
+      const combined = `${origin} ${dest}`.toLowerCase();
+      
+      if (!combined.trim()) return;
+
+      // Smart distance estimator to VNR VJIET
+      let dist = 15; // default fallback
+      if (combined.match(/pragathi|bachupally/)) dist = 10;
+      else if (combined.match(/nizampet/)) dist = 11;
+      else if (combined.match(/miyapur|hafeezpet/)) dist = 12;
+      else if (combined.match(/kukatpally|jntu|kphb/)) dist = 15;
+      else if (combined.match(/bhel|chanda nagar|lingampally/)) dist = 20;
+      else if (combined.match(/gachibowli|hitech|kondapur|madhapur|jubilee/)) dist = 25;
+      else if (combined.match(/ameerpet|begumpet|erragadda|sr nagar/)) dist = 22;
+      else if (combined.match(/secunderabad|alwal|bowenpally/)) dist = 30;
+      else if (combined.match(/mehdipatnam|attapur|tolichowki/)) dist = 35;
+      else if (combined.match(/lb nagar|dilsukhnagar|uppal|kothapet/)) dist = 40;
+
+      setCalcDistance(dist);
+    };
+
+    window.addEventListener('updateDistance', handleUpdateDistance);
+    return () => window.removeEventListener('updateDistance', handleUpdateDistance);
+  }, []);
+
   // Real-time listener
   useEffect(() => {
     const channel = supabase.channel('dashboard-realtime')

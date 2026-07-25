@@ -142,6 +142,10 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
     onVehicleSelect(formData.vehicle_type as "car" | "auto" | "bike");
   }, [formData.vehicle_type, onVehicleSelect]);
 
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('updateDistance', { detail: { origin: formData.origin, dest: formData.destination } }));
+  }, [formData.origin, formData.destination]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
