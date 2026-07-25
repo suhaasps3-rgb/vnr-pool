@@ -516,7 +516,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           ))
         ) : rides?.length === 0 || (mode === "feed" && hasActiveTrip) ? (
           <div className="text-center py-12 text-neutral-500">
-            {mode === "active_trip" ? "No active trips found." : "No rides available. You are currently restricted to your active trip."}
+            {hasActiveTrip && mode === "feed" 
+              ? "You are currently restricted to your active trip."
+              : mode === "active_trip" 
+                ? "No active trips found." 
+                : "No rides available at the moment. Try adjusting your filters!"}
           </div>
         ) : (
           <motion.div
