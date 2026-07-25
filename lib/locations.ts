@@ -78,7 +78,17 @@ export const DISTANCE_MAP: Record<string, number> = {
   "rajiv gandhi international airport": 45, "secunderabad railway station": 22,
   "nampally railway station": 21, "kacheguda railway station": 24,
   "mahatma gandhi bus station": 25, "jubilee bus station": 20,
-  "shamshabad bus stop": 45, "lingampally railway station": 16
+  "shamshabad bus stop": 45, "lingampally railway station": 16,
+  
+  // South Hyderabad Landmarks & Localities
+  "barkas": 33, "pahadi sharif": 40, "tukkuguda": 42, "srisailam highway": 45,
+  "adibatla": 48, "tcs adibatla": 48, "maheshwaram": 50, "himayat sagar": 30,
+  "osman sagar": 28, "gandipet": 28, "mrugavani national park": 32,
+  "chilkur balaji temple": 35, "pvnr expressway": 25, "sivarampalli": 30,
+  "shah ali banda": 27, "santoshnagar": 32, "owaisi hospital": 32,
+  "chandrayangutta x road": 35, "saroornagar": 34, "karmanghat": 35,
+  "champapet": 34, "kanchanbagh": 33, "drdo township": 33, "midhani": 33,
+  "balapur": 36, "hardware park": 45, "fab city": 46, "raviryala": 45
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
