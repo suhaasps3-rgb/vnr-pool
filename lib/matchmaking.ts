@@ -283,24 +283,26 @@ export function getPossibleRoutes(rideOrigin: string, rideDest: string): { index
     });
   }
 
-  // Deduplicate similar routes (remove subsets)
+  // Strict Deduplication Logic (only remove if 100% subset)
   const filteredRoutes = validRoutes.filter((routeA, i) => {
     const isSubset = validRoutes.some((routeB, j) => {
       if (i === j) return false;
-      // Only compare if routeB is longer or equal
+      // Is Route A completely contained within Route B with no extra stops?
       if (routeA.path.length <= routeB.path.length) {
-        // Count how many nodes of A are in B
-        let matches = 0;
-        routeA.path.forEach(nodeA => {
-          if (findLocIndex(routeB.path, nodeA) !== -1) matches++;
-        });
-        // If 75% or more of A's nodes are in B, consider it a subset and discard A
-        if (matches / routeA.path.length >= 0.75) {
-          // If they have the exact same length and high similarity, just keep the first one
-          if (routeA.path.length === routeB.path.length) {
-             return j < i; // keep the one that appears earlier
-          }
-          return true; // routeA is a subset of routeB
+        let allInB = true;
+        for (const nodeA of routeA.path) {
+            if (findLocIndex(routeB.path, nodeA) === -1) {
+                allInB = false;
+                break;
+            }
+        }
+        
+        if (allInB) {
+            // A is a strict subset of B (or exactly equal)
+            if (routeA.path.length === routeB.path.length) {
+                return j < i; // keep the one that appears earlier
+            }
+            return true; // Discard A, it's a strict subset of B
         }
       }
       return false;
