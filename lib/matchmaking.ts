@@ -1,41 +1,30 @@
+import { DISTANCE_MAP } from './locations';
+
 export const ROUTES: string[][] = [
-  // Route 1: Uppal -> Tarnaka -> Secunderabad -> Bowenpally -> Balnagar -> Kukatpally -> JNTU -> Nizampet -> Bachupally
-  ["dsl virtue mall uppal", "uppal x roads", "habsiguda", "tarnaka", "secunderabad station", "bowenpally", "balnagar", "moosapet", "kukatpally metro", "nexus mall kukatpally", "kphb colony", "jntu metro", "nizampet x roads", "bachupally x roads"],
-  
-  // Route 2: LB Nagar -> Dilsukhnagar -> Ameerpet -> Kukatpally -> JNTU
-  ["vanastalipuram", "lb nagar", "kothapet", "dilsukhnagar", "mahatma gandhi bus station (mgbs)", "koti", "abids", "nampally station", "lakdikapul", "khairatabad", "panjagutta", "ameerpet metro", "sr nagar", "sanjeeva reddy nagar", "erragadda", "moosapet", "kukatpally metro", "nexus mall kukatpally", "kphb colony", "jntu metro", "nizampet x roads", "bachupally x roads"],
-
-  // Route 3: Patancheru -> Miyapur
-  ["patancheru", "bhel", "chanda nagar", "lingampally", "miyapur x roads", "bachupally x roads"],
-
-  // Route 4: Shamshabad -> Mehdipatnam -> Hitech City -> Miyapur
-  ["shamshabad airport", "attapur", "mehdipatnam", "tolichowki", "shaikpet", "raidurg", "inorbit mall madhapur", "madhapur", "hi-tech city", "kondapur", "sarath city capital mall", "hafeezpet", "miyapur x roads", "bachupally x roads"],
-
-  // Route 5: Financial District -> Gachibowli -> Kondapur
-  ["kokapet", "financial district", "nanakramguda", "gachibowli wipro circle", "gachibowli", "kondapur", "sarath city capital mall", "hafeezpet", "miyapur x roads", "bachupally x roads"],
-
-  // Route 6: ECIL -> Secunderabad -> Balnagar
-  ["ecil x roads", "as rao nagar", "sainikpuri", "malkajgiri", "secunderabad station", "bowenpally", "balnagar", "moosapet", "kukatpally metro", "nexus mall kukatpally", "kphb colony", "jntu metro", "nizampet x roads", "bachupally x roads"],
-
-  // Route 7: Medchal -> Kompally -> Bowenpally -> Balnagar
-  ["medchal", "kompally", "bolarum", "suchitra junction", "bowenpally", "balnagar", "moosapet", "kukatpally metro", "nexus mall kukatpally", "kphb colony", "jntu metro", "nizampet x roads", "bachupally x roads"],
-
-  // Route 8: Nagole -> Ramanthapur -> Tarnaka
-  ["nagole", "ramanthapur", "habsiguda", "tarnaka", "secunderabad station", "bowenpally", "balnagar", "moosapet", "kukatpally metro", "nexus mall kukatpally", "kphb colony", "jntu metro", "nizampet x roads", "bachupally x roads"],
-
-  // Route 9: Banjara Hills -> Jubilee Hills -> Hitech City
-  ["banjara hills", "jubilee hills checkpost", "madhapur", "hi-tech city", "kondapur", "sarath city capital mall", "hafeezpet", "miyapur x roads", "bachupally x roads"],
-
-  // Route 10: Somajiguda -> Begumpet -> Balnagar
-  ["somajiguda", "begumpet", "balnagar", "moosapet", "kukatpally metro", "nexus mall kukatpally", "kphb colony", "jntu metro", "nizampet x roads", "bachupally x roads"],
-
-  // Route 11: Manikonda -> Shaikpet -> Hitech
-  ["manikonda", "shaikpet", "raidurg", "inorbit mall madhapur", "madhapur", "hi-tech city", "kondapur", "sarath city capital mall", "hafeezpet", "miyapur x roads", "bachupally x roads"],
-
-  // Route 12: Pragathi Nagar fork
-  ["kukatpally metro", "nexus mall kukatpally", "kphb colony", "jntu metro", "pragathi nagar kaman", "bachupally x roads"],
-  ["secunderabad station", "bowenpally", "balnagar", "moosapet", "kukatpally metro", "nexus mall kukatpally", "kphb colony", "jntu metro", "pragathi nagar kaman", "bachupally x roads"],
-  ["ameerpet metro", "sr nagar", "sanjeeva reddy nagar", "erragadda", "moosapet", "kukatpally metro", "nexus mall kukatpally", "kphb colony", "jntu metro", "pragathi nagar kaman", "bachupally x roads"]
+  // S1: PATANCHERU TO VNRVJIET
+  ["patancheru", "beeramguda kaman", "bhel", "chandanagar", "miyapur", "vnr vjiet"],
+  // S2: LB NAGAR TO VNRVJIET
+  ["lb nagar", "dilsukhnagar", "malakpet", "koti", "abids", "lakdi ka pool", "khairatabad", "vnr vjiet"],
+  // S3: YUSUFGOUDA TO VNRVJIET
+  ["yusufguda temple", "yusufguda check post", "jubilee check post", "madapur", "hi-tech city", "kothaguda", "kondapur", "hafeezpet", "miyapur x roads", "vnr vjiet"],
+  // S5: ATTAPUR TO VNRVJIET
+  ["attapur", "retibowli", "mehdipatnam", "masab tank", "banjara hills", "punjagutta", "ameerpet", "sr nagar", "erragadda", "vnr vjiet"],
+  // S6: ANANDBAGH TO VNRVJIET
+  ["anandbagh", "malkajgiri", "mettuguda", "chilkalguda x rds", "musheerabad", "rtc x rds", "narayanguda fly over", "himayat nagar", "liberty", "khairatabad", "vnr vjiet"],
+  // S7: MOTHINAGAR TO VNRVJIET
+  ["mothinagar signal", "pr nagar", "bharathnagar fly over", "moosapet", "rainbow vista", "lodha bellezza", "brand factory", "road no 1", "kphb", "jntu", "addagutta", "pragathi nagar", "vnr vjiet"],
+  // S9: KUKATPALLY TO VNRVJIET
+  ["kukatpally", "ramdev hosp", "vasanth nagar kaman", "miyapur metro", "nizampet x roads", "sanghamithra", "hanuman temple", "hill county", "bachupally", "vnr vjiet"],
+  // S10: MANIKONDA TO VNRVJIET
+  ["manikonda marri chettu", "lanco hills", "khazaguda", "gachibowli", "bio diversity park", "ikea", "hi-tech city rly stn fly over", "nexus mall", "manjeera mall", "vnr vjiet"],
+  // S11: MASJIDBANDA TO VNRVJIET
+  ["masjidbanda", "hcu", "nallagandla fly over", "bhel", "miyapur x roads", "bachupally", "vnr vjiet"],
+  // S12: NAGOLE TO VNRVJIET
+  ["nagole", "uppal", "tarnaka", "secunderabad", "himalaya book store", "jbs", "tadbund", "bowenpally", "balanagar", "vnr vjiet"],
+  // S41: ECIL TO VNRVJIET
+  ["ecil", "radhika", "sainikpuri", "neredmet x roads", "thirumalgiri", "bowenpally", "bapuji nagar", "suchitra", "kompally", "vnr vjiet"],
+  // S42: OLD ALWAL TO VNRVJIET
+  ["old alwal ig statue", "father balaiah ngr", "suchitra", "qutbullapur", "chintal shapur signal", "gajularamaram", "vnr vjiet"]
 ];
 
 export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string): boolean {

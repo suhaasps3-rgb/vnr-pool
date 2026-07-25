@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { ALL_LOCATIONS as COMMON_LOCATIONS } from "@/lib/locations";
 
 export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void }) {
   const queryClient = useQueryClient();
@@ -17,81 +18,6 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   const [showOriginDropdown, setShowOriginDropdown] = useState(false);
   const [showDestDropdown, setShowDestDropdown] = useState(false);
 
-  const COMMON_LOCATIONS = [
-    "Abids",
-    "Alwal",
-    "Ameerpet Metro",
-    "AS Rao Nagar",
-    "Attapur",
-    "Bachupally X Roads",
-    "Balnagar",
-    "Banjara Hills",
-    "Begumpet",
-    "BHEL",
-    "Bolarum",
-    "Bowenpally",
-    "Chanda Nagar",
-    "Charminar",
-    "Dilsukhnagar",
-    "DSL Virtue Mall Uppal",
-    "ECIL X Roads",
-    "Erragadda",
-    "Financial District",
-    "Gachibowli",
-    "Gachibowli Wipro Circle",
-    "Habsiguda",
-    "Hafeezpet",
-    "Hi-Tech City",
-    "Inorbit Mall Madhapur",
-    "JNTU Metro",
-    "Jubilee Hills Checkpost",
-    "Kacheguda Station",
-    "Khairatabad",
-    "Kokapet",
-    "Kompally",
-    "Kondapur",
-    "Kothapet",
-    "Koti",
-    "KPHB Colony",
-    "Kukatpally Metro",
-    "Lakdikapul",
-    "LB Nagar",
-    "Lingampally",
-    "Madhapur",
-    "Mahatma Gandhi Bus Station (MGBS)",
-    "Malkajgiri",
-    "Manikonda",
-    "Medchal",
-    "Mehdipatnam",
-    "Miyapur X Roads",
-    "Moosapet",
-    "Nagole",
-    "Nampally Station",
-    "Nanakramguda",
-    "Narsingi",
-    "Nexus Mall Kukatpally",
-    "Nizampet X Roads",
-    "Panjagutta",
-    "Patancheru",
-    "Pragathi Nagar Kaman",
-    "Raidurg",
-    "Ramanthapur",
-    "Sainikpuri",
-    "Sanjeeva Reddy Nagar",
-    "Sarath City Capital Mall",
-    "Secunderabad Station",
-    "Shaikpet",
-    "Shamshabad Airport",
-    "Somajiguda",
-    "SR Nagar",
-    "Suchitra Junction",
-    "Tarnaka",
-    "Tolichowki",
-    "Uppal X Roads",
-    "Vanastalipuram",
-    "VNR VJIET Campus Gate 1",
-    "VNR VJIET Campus Gate 2"
-  ];
 
   useEffect(() => {
     const supabase = createClient();
