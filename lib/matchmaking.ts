@@ -253,16 +253,16 @@ export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: st
   // Case 1: Driver is coming TO VNR (rD is VNR)
   if (rD.includes("vnr") || rD.includes("campus")) {
     if (sD === "" || sD.includes("vnr") || sD.includes("campus")) {
-      if (sO) {
-        // Find if there is any route where Driver Origin is before or equal to Passenger Origin
-        for (const route of ROUTES) {
-          const dIndex = findLocIndex(route, rO);
-          const pIndex = findLocIndex(route, sO);
-          if (dIndex !== -1 && pIndex !== -1) {
-            // Driver is further away from VNR (lower index), passenger is closer to VNR (higher index)
-            if (dIndex <= pIndex) {
-              return true;
-            }
+      if (!sO) return true;
+      
+      // Find if there is any route where Driver Origin is before or equal to Passenger Origin
+      for (const route of ROUTES) {
+        const dIndex = findLocIndex(route, rO);
+        const pIndex = findLocIndex(route, sO);
+        if (dIndex !== -1 && pIndex !== -1) {
+          // Driver travels to a lower index (further away from VNR), Passenger travels to a higher index (closer to VNR)
+          if (dIndex <= pIndex) {
+            return true;
           }
         }
       }
@@ -272,16 +272,16 @@ export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: st
   // Case 2: Driver is leaving FROM VNR (rO is VNR)
   if (rO.includes("vnr") || rO.includes("campus")) {
     if (sO === "" || sO.includes("vnr") || sO.includes("campus")) {
-      if (sD) {
-        // Find if there is any route where Driver Dest is after or equal to Passenger Dest
-        for (const route of ROUTES) {
-          const dIndex = findLocIndex(route, rD);
-          const pIndex = findLocIndex(route, sD);
-          if (dIndex !== -1 && pIndex !== -1) {
-            // Driver travels to a lower/equal index (further away from VNR), Passenger travels to a higher/equal index (closer to VNR)
-            if (dIndex <= pIndex) {
-              return true;
-            }
+      if (!sD) return true;
+      
+      // Find if there is any route where Driver Dest is after or equal to Passenger Dest
+      for (const route of ROUTES) {
+        const dIndex = findLocIndex(route, rD);
+        const pIndex = findLocIndex(route, sD);
+        if (dIndex !== -1 && pIndex !== -1) {
+          // Driver travels to a lower/equal index (further away from VNR), Passenger travels to a higher/equal index (closer to VNR)
+          if (dIndex <= pIndex) {
+            return true;
           }
         }
       }
