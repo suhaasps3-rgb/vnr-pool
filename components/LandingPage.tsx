@@ -6,6 +6,7 @@ import { ShieldCheck, MapPin, Zap, Users, Search, ArrowRight, Shield, Clock, X }
 import AuthScreen from "./AuthScreen";
 import { VNRCarPoolWaveHero } from "./carpool-hero-wave";
 import IsoLevelWarp from "@/components/ui/isometric-wave-grid-background";
+import ScrollVehicles from "./ScrollVehicles";
 
 export default function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -28,6 +29,8 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
           speed={1.2}
         />
       </div>
+
+      <ScrollVehicles />
       
       {/* Top Navigation */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto">
