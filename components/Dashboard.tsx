@@ -148,6 +148,18 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
     });
   }, [hasActiveTrip]);
 
+  // Fetch User Profile for Personalized Greeting
+  const { data: userProfile } = useQuery({
+    queryKey: ["profile", userId],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('users').select('full_name').eq('id', userId).single();
+      if (error) throw error;
+      return data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+  
+  const firstName = userProfile?.full_name?.split(' ')[0] || "VNRian";
 
   // Tab Configuration
   const TABS = [
@@ -191,7 +203,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               V
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-tight text-white leading-none">VNR Pool Dashboard</h1>
+              <h1 className="text-sm font-bold tracking-tight text-white leading-none">Welcome back, {firstName}</h1>
               <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-400 mt-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active Campus Rides
               </span>
