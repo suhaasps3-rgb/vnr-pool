@@ -481,6 +481,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               <Calendar className="w-5 h-5 text-slate-400" />
               <input 
                 type="date"
+                min={new Date().toISOString().split('T')[0]}
                 value={searchDate}
                 onChange={(e) => setSearchDate(e.target.value)}
                 className="bg-transparent outline-none w-full text-sm text-slate-700 dark:text-white [color-scheme:light] dark:[color-scheme:dark]" 
