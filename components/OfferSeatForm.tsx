@@ -203,6 +203,43 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
     }
   };
 
+  const [gettingLocation, setGettingLocation] = useState(false);
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+    
+    setGettingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await res.json();
+          if (data && data.address) {
+            // Prefer suburb, then neighbourhood, then city_district
+            const locName = data.address.suburb || data.address.neighbourhood || data.address.city_district || data.name || "Unknown Location";
+            setFormData(prev => ({...prev, origin: locName}));
+            toast.success(`Location found: ${locName}`);
+          } else {
+            toast.error("Could not resolve location name");
+          }
+        } catch (error) {
+          console.error("Geocoding error", error);
+          toast.error("Failed to get location details");
+        } finally {
+          setGettingLocation(false);
+        }
+      },
+      (error) => {
+        setGettingLocation(false);
+        toast.error("Location access denied or failed.");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  };
+
   return (
     <div className="ui-card p-6 md:p-10 mb-8 border-t-4 border-t-[#2563EB] dark:border-t-[#3B82F6]">
       <div className="mb-8">
@@ -242,9 +279,20 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           </div>
 
           <div className="relative z-[100]">
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
-              Origin {showOriginDropdown ? "(OPEN)" : "(CLOSED)"}
-            </label>
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                Origin {showOriginDropdown ? "(OPEN)" : "(CLOSED)"}
+              </label>
+              <button
+                type="button"
+                onClick={handleGetLocation}
+                disabled={gettingLocation}
+                className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1 bg-blue-50 dark:bg-blue-500/10 px-2 py-1 rounded-md transition-colors disabled:opacity-50"
+              >
+                {gettingLocation ? <Loader2 className="w-3 h-3 animate-spin" /> : "📍"}
+                {gettingLocation ? "Locating..." : "Use Current Location"}
+              </button>
+            </div>
             <input 
               required
               placeholder="e.g. JNTU Metro"

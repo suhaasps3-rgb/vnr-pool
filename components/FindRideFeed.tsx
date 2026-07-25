@@ -34,6 +34,43 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   const supabase = createClient();
   const queryClient = useQueryClient();
 
+  const [gettingLocation, setGettingLocation] = useState(false);
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+    
+    setGettingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await res.json();
+          if (data && data.address) {
+            // Prefer suburb, then neighbourhood, then city_district
+            const locName = data.address.suburb || data.address.neighbourhood || data.address.city_district || data.name || "Unknown Location";
+            setSearchOrigin(locName);
+            toast.success(`Location found: ${locName}`);
+          } else {
+            toast.error("Could not resolve location name");
+          }
+        } catch (error) {
+          console.error("Geocoding error", error);
+          toast.error("Failed to get location details");
+        } finally {
+          setGettingLocation(false);
+        }
+      },
+      (error) => {
+        setGettingLocation(false);
+        toast.error("Location access denied or failed.");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  };
+
   useEffect(() => {
     supabase.from('users').select('gender').eq('id', userId).single().then(({ data }) => {
       if (data) setUserGender(data.gender);
@@ -468,6 +505,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 onChange={(e) => setSearchOrigin(e.target.value)}
                 className="bg-transparent outline-none w-full text-sm text-slate-900 dark:text-white placeholder-slate-400 group-focus-within:placeholder-slate-300" 
               />
+              <button
+                type="button"
+                onClick={handleGetLocation}
+                disabled={gettingLocation}
+                title="Use Current Location"
+                className="p-1.5 rounded-lg text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/20 transition-colors disabled:opacity-50 flex items-center justify-center shrink-0"
+              >
+                {gettingLocation ? <Loader2 className="w-4 h-4 animate-spin" /> : "📍"}
+              </button>
             </div>
             <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group">
               <MapPin className="w-5 h-5 text-slate-400" />
