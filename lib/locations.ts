@@ -120,7 +120,23 @@ export const DISTANCE_MAP: Record<string, number> = {
   "hussaini alam": 26, "bahadurpura": 28, "kishan bagh": 29, "mir alam tank": 29,
   "aliabad": 28, "moghalpura": 26, "khilwat": 26, "moazzam jahi market": 22,
   "begum bazaar": 23, "mangalhat": 24, "dhoolpet": 24, "goshamahal": 23,
-  "mallepally": 22, "madina": 24
+  "mallepally": 22, "madina": 24,
+  
+  // Prominent Colleges & Educational Hubs (NW & NE)
+  "mlrit": 9, "iare": 9, "cmr group of institutions": 11, "kandlakoya": 12,
+  "mrec": 14, "malla reddy engineering college": 14, "maisammaguda": 14,
+  "bits pilani hyderabad": 28, "shamirpet": 30, "nalsar university": 29,
+  "anurag university": 42, "snist": 43, "sreenidhi institute of science and technology": 43,
+  
+  // More North-West Additions
+  "shapur nagar": 12, "balanagar x roads": 13, "moosapet y junction": 14,
+  "ayodhya nagar": 11, "suraram x roads": 15,
+  
+  // North-East Hyderabad Landmarks & Localities
+  "safilguda": 23, "yapral": 24, "dammaiguda": 26, "kushaiguda": 27,
+  "cherlapally": 29, "mallapur": 30, "nacharam": 29, "temple alwal": 21,
+  "kowkoor": 23, "hakimpet": 25, "thumkunta": 28, "keesara": 35,
+  "keesaragutta": 36, "yamnampet": 42
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
