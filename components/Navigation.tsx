@@ -180,31 +180,60 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                       </button>
                     )}
                   </div>
-                  <div className="max-h-[300px] overflow-y-auto">
+                  <div className="max-h-[300px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/50">
                     {notifications?.length === 0 ? (
-                      <div className="p-6 text-center text-sm text-slate-500 dark:text-slate-400">
-                        No new notifications.
+                      <div className="p-8 text-center flex flex-col items-center justify-center">
+                        <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3">
+                          <Bell className="w-6 h-6 text-slate-400" />
+                        </div>
+                        <p className="text-slate-500 dark:text-slate-400 font-medium">You're all caught up!</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">No new notifications.</p>
                       </div>
                     ) : (
                       notifications?.map((notification) => (
                         <div 
                           key={notification.id} 
                           onClick={() => !notification.is_read && markAsRead(notification.id)}
-                          className={`p-4 border-b border-gray-50 dark:border-white/5 last:border-0 cursor-pointer transition-colors ${notification.is_read ? 'opacity-60' : 'bg-[#2563EB]/5 dark:bg-[#3B82F6]/5 hover:bg-[#2563EB]/10 dark:hover:bg-[#3B82F6]/10'}`}
+                          className={`p-4 transition-colors cursor-pointer flex gap-3 ${
+                            notification.is_read 
+                              ? 'bg-white dark:bg-[#1E293B] opacity-75' 
+                              : 'bg-blue-50/50 dark:bg-blue-900/10 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                          }`}
                         >
-                          <div className="flex gap-3">
-                            <div className="mt-0.5">
-                              {notification.is_read ? (
-                                <Check className="w-4 h-4 text-slate-400" />
-                              ) : (
-                                <div className="w-2 h-2 rounded-full bg-[#2563EB] dark:bg-[#3B82F6] mt-1.5" />
-                              )}
-                            </div>
-                            <div>
-                              <p className="text-sm text-[#0F172A] dark:text-slate-200 leading-snug">{notification.message}</p>
-                              <p className="text-xs text-slate-400 mt-1">{new Date(notification.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
-                            </div>
+                          <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                            notification.is_read 
+                              ? 'bg-slate-100 dark:bg-slate-800' 
+                              : 'bg-white dark:bg-[#0F172A] shadow-sm border border-slate-100 dark:border-slate-700'
+                          }`}>
+                            {notification.type === 'booking_request' ? <User className="w-5 h-5 text-blue-500" /> :
+                             notification.type === 'booking_approved' ? <Check className="w-5 h-5 text-emerald-500" /> :
+                             notification.type === 'ride_reminder' ? <Car className="w-5 h-5 text-yellow-500" /> :
+                             <Bell className="w-5 h-5 text-slate-500" />}
                           </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-start mb-1">
+                              <h4 className={`text-sm font-semibold truncate ${
+                                notification.is_read ? 'text-slate-700 dark:text-slate-300' : 'text-slate-900 dark:text-white'
+                              }`}>
+                                {notification.title}
+                              </h4>
+                            </div>
+                            <p className={`text-xs line-clamp-2 ${
+                              notification.is_read ? 'text-slate-500' : 'text-slate-600 dark:text-slate-300 font-medium'
+                            }`}>
+                              {notification.message}
+                            </p>
+                            <p className="text-[10px] font-medium text-slate-400 mt-1.5">
+                              {new Date(notification.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </p>
+                          </div>
+                          
+                          {!notification.is_read && (
+                            <div className="shrink-0 flex items-center">
+                              <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                            </div>
+                          )}
                         </div>
                       ))
                     )}

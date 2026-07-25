@@ -242,7 +242,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
 
       await supabase.from('notifications').insert({
         user_id: ride.driver_id,
-        message: `Someone requested to join your ride from ${ride.origin} to ${ride.destination}!`
+        title: "New Booking Request",
+        message: `Someone requested to join your ride from ${ride.origin} to ${ride.destination}!`,
+        type: "booking_request"
       });
 
       toast.success("Seat requested! Waiting for driver approval.");
@@ -275,7 +277,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed" }:
       // Send Notification to Passenger
       await supabase.from('notifications').insert({
         user_id: passengerId,
-        message: `Your seat request for ${ride.origin} to ${ride.destination} has been ${status}!`
+        title: status === 'approved' ? "Seat Approved!" : "Seat Rejected",
+        message: `Your seat request for ${ride.origin} to ${ride.destination} has been ${status}!`,
+        type: status === 'approved' ? 'booking_approved' : 'booking_rejected'
       });
 
       toast.success(`Request ${status}!`);
