@@ -732,10 +732,10 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 
                 {/* Driver Info Header */}
                 <div className="flex justify-between items-start mb-6">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-start md:items-center gap-3 md:gap-4 flex-1 min-w-0">
                     <div 
                       onClick={() => setSelectedDriverForModal({ driver: ride.driver, vehicleNumber: ride.vehicle_number })}
-                      className="cursor-pointer w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xl overflow-hidden shadow-sm hover:scale-105 transition-transform border-2 border-transparent hover:border-indigo-400"
+                      className="shrink-0 cursor-pointer w-10 h-10 md:w-12 md:h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-lg md:text-xl overflow-hidden shadow-sm hover:scale-105 transition-transform border-2 border-transparent hover:border-indigo-400"
                     >
                       {ride.driver?.avatar_url ? (
                         <img src={ride.driver.avatar_url} alt={ride.driver.full_name || "Driver"} className="w-full h-full object-cover" />
@@ -743,14 +743,14 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                         ride.driver?.full_name?.charAt(0).toUpperCase()
                       )}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-[#0F172A] dark:text-white text-lg">{ride.driver?.full_name}</h3>
-                        <span className="bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 text-xs px-2 py-0.5 rounded-full font-semibold flex items-center gap-1 border border-blue-200 dark:border-blue-500/20">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-bold text-[#0F172A] dark:text-white text-base md:text-lg leading-tight">{ride.driver?.full_name}</h3>
+                        <span className="shrink-0 bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 text-[10px] md:text-xs px-2 py-0.5 rounded-full font-semibold flex items-center gap-1 border border-blue-200 dark:border-blue-500/20">
                           ✓ Verified
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                      <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1 flex-wrap">
                         <span className="flex items-center text-yellow-500 font-medium">
                           ★ {ride.driver?.rating_count > 0 ? (ride.driver.rating_sum / ride.driver.rating_count).toFixed(1) : "New"} 
                           <span className="text-slate-400 dark:text-slate-500 ml-1 font-normal">({ride.driver?.rating_count || 0})</span>
