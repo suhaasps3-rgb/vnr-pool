@@ -49,8 +49,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           const res = await fetch(`/api/geocode?lat=${latitude}&lon=${longitude}`);
           const data = await res.json();
           if (data && data.address) {
-            // Prefer suburb, then neighbourhood, then city_district
-            const locName = data.address.suburb || data.address.neighbourhood || data.address.city_district || data.name || "Unknown Location";
+            // Prefer smaller localities first
+            const addr = data.address;
+            const locName = addr.neighbourhood || addr.suburb || addr.residential || addr.village || addr.town || addr.city_district || addr.county || addr.road || addr.city || data.name || "Unknown Location";
             setSearchOrigin(locName);
             toast.success(`Location found: ${locName}`);
           } else {
