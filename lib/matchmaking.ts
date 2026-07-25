@@ -97,7 +97,69 @@ export const ROUTES: string[][] = [
   // Extended Route 35: Western Corridor
   ["patancheru", "beeramguda", "bhel", "lingampally", "chanda nagar", "madinaguda", "miyapur", "allwyn x roads", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
   // Extended Route 36: Short VNR Corridor
-  ["kukatpally", "kphb", "jntu", "miyapur", "allwyn x roads", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"]
+  ["kukatpally", "kphb", "jntu", "miyapur", "allwyn x roads", "nizampet", "pragathi nagar", "bachupally", "vnr vjiet"],
+  // Img Route 1: Gachibowli
+  ["gachibowli", "kondapur", "kphb", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 2: Miyapur
+  ["miyapur", "hafeezpet", "allwyn x roads", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 3: KPHB Colony
+  ["kphb", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 4: LB Nagar
+  ["lb nagar", "dilsukhnagar", "malakpet", "nampally", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 5: Uppal
+  ["uppal", "tarnaka", "secunderabad", "paradise", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 6: Shamshabad Airport
+  ["airport", "outer ring road", "bachupally exit", "vnr vjiet"],
+  // Img Route 7: Tarnaka
+  ["tarnaka", "habsiguda", "secunderabad", "paradise", "kukatpally", "jntu", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 8: Dilsukhnagar
+  ["dilsukhnagar", "chaderghat", "nampally", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 9: Mehdipatnam
+  ["mehdipatnam", "masab tank", "punjagutta", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 10: Attapur
+  ["attapur", "mehdipatnam", "punjagutta", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 11: Tolichowki
+  ["tolichowki", "gachibowli", "kondapur", "kphb", "jntu", "vnr vjiet"],
+  // Img Route 12: Manikonda
+  ["manikonda", "khajaguda", "gachibowli", "kondapur", "kphb", "jntu", "vnr vjiet"],
+  // Img Route 13: Kompally
+  ["kompally", "suchitra", "jeedimetla", "suraram", "bachupally", "vnr vjiet"],
+  // Img Route 14: Alwal
+  ["alwal", "suchitra", "jeedimetla", "suraram", "bachupally", "vnr vjiet"],
+  // Img Route 15: ECIL
+  ["ecil", "as rao nagar", "malkajgiri", "bowenpally", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 16: Kapra
+  ["kapra", "ecil", "malkajgiri", "bowenpally", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 17: Sainikpuri
+  ["sainikpuri", "as rao nagar", "ecil", "bowenpally", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 18: Neredmet
+  ["neredmet", "malkajgiri", "bowenpally", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 19: Beeramguda
+  ["beeramguda", "bhel", "chanda nagar", "miyapur", "nizampet", "vnr vjiet"],
+  // Img Route 20: Lingampally
+  ["lingampally", "chanda nagar", "miyapur", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 21: BHEL
+  ["bhel", "madinaguda", "miyapur", "nizampet", "pragathi nagar", "vnr vjiet"],
+  // Img Route 22: Patancheru
+  ["patancheru", "bhel", "chanda nagar", "miyapur", "vnr vjiet"],
+  // Img Route 23: Medchal
+  ["medchal", "kompally", "suchitra", "suraram", "bachupally", "vnr vjiet"],
+  // Img Route 24: Dundigal
+  ["dundigal", "gandimaisamma", "bachupally", "vnr vjiet"],
+  // Img Route 25: Quthbullapur
+  ["quthbullapur", "suraram", "bachupally", "vnr vjiet"],
+  // Img Route 26: Nagole
+  ["nagole", "uppal", "tarnaka", "secunderabad", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 27: Hayathnagar
+  ["hayathnagar", "lb nagar", "dilsukhnagar", "ameerpet", "kukatpally", "jntu", "vnr vjiet"],
+  // Img Route 28: Financial District
+  ["financial district", "nanakramguda", "gachibowli", "kondapur", "kphb", "jntu", "vnr vjiet"],
+  // Img Route 29: Kokapet
+  ["kokapet", "narsingi", "gachibowli", "kondapur", "jntu", "vnr vjiet"],
+  // Img Route 30: Narsingi
+  ["narsingi", "gachibowli", "kondapur", "kphb", "jntu", "vnr vjiet"],
+  // Img Route 31: Rajendranagar
+  ["rajendranagar", "attapur", "mehdipatnam", "ameerpet", "kukatpally", "vnr vjiet"]
 ];
 
 export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: string, searchDest: string): boolean {

@@ -46,7 +46,7 @@ export const DISTANCE_MAP: Record<string, number> = {
   "sultan bazar": 23, "mgbs": 25, "chaderghat": 26, "hayathnagar": 40, 
   "secunderabad east": 22, "parade ground": 21, "stadium": 34, "ngri": 33, 
   "kapra": 27, "quthbullapur": 14, "shamshabad orr": 45, "gachibowli orr": 20, 
-  "aramghar": 32
+  "aramghar": 32, "outer ring road": 15
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
