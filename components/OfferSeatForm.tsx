@@ -303,6 +303,19 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 setShowOriginDropdown(true);
               }}
               onFocus={() => setShowOriginDropdown(true)}
+              onBlur={() => setTimeout(() => setShowOriginDropdown(false), 150)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  if (showOriginDropdown) {
+                    const matches = formData.origin ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.origin.toLowerCase())) : COMMON_LOCATIONS;
+                    if (matches.length > 0) {
+                      setFormData({...formData, origin: matches[0]});
+                    }
+                    setShowOriginDropdown(false);
+                  }
+                }
+              }}
               className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
             <div 
@@ -338,6 +351,19 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 setShowDestDropdown(true);
               }}
               onFocus={() => setShowDestDropdown(true)}
+              onBlur={() => setTimeout(() => setShowDestDropdown(false), 150)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  if (showDestDropdown) {
+                    const matches = formData.destination ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.destination.toLowerCase())) : COMMON_LOCATIONS;
+                    if (matches.length > 0) {
+                      setFormData({...formData, destination: matches[0]});
+                    }
+                    setShowDestDropdown(false);
+                  }
+                }
+              }}
               className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
             />
             <div 

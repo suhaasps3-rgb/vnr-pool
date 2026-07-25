@@ -524,6 +524,18 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 }}
                 onFocus={() => setShowOriginDropdown(true)}
                 onBlur={() => setTimeout(() => setShowOriginDropdown(false), 150)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (showOriginDropdown) {
+                      const matches = searchOrigin ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(searchOrigin.toLowerCase())) : COMMON_LOCATIONS;
+                      if (matches.length > 0) {
+                        setSearchOrigin(matches[0]);
+                      }
+                      setShowOriginDropdown(false);
+                    }
+                  }
+                }}
                 className="bg-transparent outline-none w-full text-sm text-slate-900 dark:text-white placeholder-slate-400 group-focus-within:placeholder-slate-300" 
               />
               <button
@@ -567,6 +579,18 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 }}
                 onFocus={() => setShowDestDropdown(true)}
                 onBlur={() => setTimeout(() => setShowDestDropdown(false), 150)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (showDestDropdown) {
+                      const matches = searchDestination ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(searchDestination.toLowerCase())) : COMMON_LOCATIONS;
+                      if (matches.length > 0) {
+                        setSearchDestination(matches[0]);
+                      }
+                      setShowDestDropdown(false);
+                    }
+                  }
+                }}
                 className="bg-transparent outline-none w-full text-sm text-slate-900 dark:text-white placeholder-slate-400 group-focus-within:placeholder-slate-300" 
               />
               <div 
