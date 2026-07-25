@@ -238,9 +238,16 @@ export function isAIMatch(rideOrigin: string, rideDest: string, searchOrigin: st
   const sO = searchOrigin ? searchOrigin.toLowerCase() : "";
   const sD = searchDest ? searchDest.toLowerCase() : "";
 
+  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec');
+  
   // Helper to find index of a location in a route
   const findLocIndex = (route: string[], queryLoc: string) => {
-    return route.findIndex(node => queryLoc.includes(node) || node.includes(queryLoc));
+    const q = normalize(queryLoc);
+    if (!q) return -1;
+    return route.findIndex(node => {
+      const n = normalize(node);
+      return q.includes(n) || n.includes(q);
+    });
   };
 
   // Case 1: Driver is coming TO VNR (rD is VNR)
