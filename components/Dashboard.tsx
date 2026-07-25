@@ -404,7 +404,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                       <div className="h-8 w-px bg-slate-800/80"></div>
                       
                       <div className="text-right">
-                        <div className="text-[10px] text-teal-500/70 uppercase tracking-wider mb-0.5 font-bold">Total Fare</div>
+                        <div className="text-[10px] text-teal-500/70 uppercase tracking-wider mb-0.5 font-bold">Total Recommended Fare</div>
                         <div className="text-xl font-black text-teal-400 flex items-start gap-0.5 justify-end">
                           <span className="text-xs text-teal-500/50 mt-1">₹</span>{totalEarnings}
                         </div>
