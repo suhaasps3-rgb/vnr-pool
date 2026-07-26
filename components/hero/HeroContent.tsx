@@ -44,7 +44,10 @@ export default function HeroContent({ onJoin }: HeroContentProps) {
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </button>
         
-        <button className="group flex items-center justify-center gap-2 bg-white dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all w-full sm:w-auto backdrop-blur-md">
+        <button 
+          onClick={() => window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' })}
+          className="group flex items-center justify-center gap-2 bg-white dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all w-full sm:w-auto backdrop-blur-md"
+        >
           <PlayCircle className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors" />
           See How It Works
         </button>
