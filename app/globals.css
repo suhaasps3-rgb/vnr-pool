@@ -36,3 +36,6 @@
 .dark {
   color-scheme: dark;
 }
+
+@import './DesignTokens.css';
+

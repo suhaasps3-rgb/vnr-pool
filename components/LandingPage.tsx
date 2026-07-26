@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ShieldCheck, MapPin, Zap, Users, Search, ArrowRight, Shield, Clock, X } from "lucide-react";
 import AuthScreen from "./AuthScreen";
-import { VNRCarPoolWaveHero } from "./carpool-hero-wave";
+import HeroSection from "./hero/HeroSection";
 import IsoLevelWarp from "@/components/ui/isometric-wave-grid-background";
 import ScrollVehicles from "./ScrollVehicles";
 
@@ -55,11 +55,11 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
         </motion.button>
       </nav>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-32">
-        
-        <div className="mb-24 mt-8">
-          <VNRCarPoolWaveHero onAction={() => setShowAuthModal(true)} />
-        </div>
+      <div className="w-full relative z-10">
+        <HeroSection onJoin={() => setShowAuthModal(true)} />
+      </div>
+
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-32">
 
         {/* INTERACTIVE SEARCH BAR (MOCK) */}
         <motion.div 
