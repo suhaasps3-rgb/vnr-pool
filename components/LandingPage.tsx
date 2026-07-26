@@ -218,10 +218,10 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative z-10 w-full max-w-md"
             >
-              <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative">
+              <div className="bg-white dark:bg-[#0B0E14] rounded-3xl shadow-2xl border border-slate-100 dark:border-white/10 overflow-hidden relative">
                 <button 
                   onClick={() => setShowAuthModal(false)}
-                  className="absolute top-4 right-4 z-20 p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors text-slate-600"
+                  className="absolute top-4 right-4 z-20 p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors text-slate-600 dark:text-slate-400"
                 >
                   <X className="w-4 h-4" />
                 </button>
