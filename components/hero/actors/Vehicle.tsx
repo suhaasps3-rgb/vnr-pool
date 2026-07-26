@@ -13,27 +13,32 @@ if (typeof window !== "undefined") {
 export default function Vehicle() {
   const { route, phase } = useJourney();
   const vehicleRef = useRef<SVGGElement>(null);
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     if (!route || !vehicleRef.current) return;
 
-    // Reset vehicle position to start
-    gsap.set(vehicleRef.current, {
-      x: route.startPos.x,
-      y: route.startPos.y,
-      opacity: 0,
-      scale: 0.5,
-    });
+    if (phase === "INITIAL" || phase === "SEARCHING") {
+      if (tlRef.current) tlRef.current.kill();
+      gsap.set(vehicleRef.current, {
+        x: route.startPos.x,
+        y: route.startPos.y,
+        opacity: 0,
+        scale: 0.5,
+      });
+      return;
+    }
 
-    if (phase === "JOURNEY_BEGINS") {
+    if (phase === "JOURNEY_BEGINS" && !tlRef.current?.isActive()) {
       // Vehicle forms and starts driving
       const tl = gsap.timeline();
+      tlRef.current = tl;
 
       // 1. Orb -> Outline -> Fill (Spawn animation)
       tl.to(vehicleRef.current, {
         opacity: 1,
         scale: 1,
-        duration: 0.8,
+        duration: 0.6,
         ease: "back.out(1.5)",
       });
 
@@ -45,13 +50,17 @@ export default function Vehicle() {
           alignOrigin: [0.5, 0.5],
           autoRotate: true,
         },
-        duration: 5,
-        ease: "power3.inOut"
+        duration: 4.2, // Faster to finish before the phase reaches DESTINATION (which is 4.8s)
+        ease: "power2.inOut"
       });
 
-      return () => {
-        tl.kill();
-      };
+      // 3. Sink smoothly into the destination building
+      tl.to(vehicleRef.current, {
+        scale: 0,
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.in"
+      }, "+=0.1");
     }
   }, [route, phase]);
 

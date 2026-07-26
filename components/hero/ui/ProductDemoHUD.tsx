@@ -2,13 +2,13 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useJourney } from "../core/JourneyEngine";
-import { Search, CheckCircle2, Route, ArrowRightCircle } from "lucide-react";
+import { Search, CheckCircle2, Route, ArrowRightCircle, MapPin } from "lucide-react";
 
 export default function ProductDemoHUD() {
   const { phase, passengers } = useJourney();
 
-  // Hide the HUD completely once the journey actually begins or when revealing the network
-  if (phase === "JOURNEY_BEGINS" || phase === "PICKUP" || phase === "DESTINATION" || phase === "NETWORK_REVEAL") {
+  // Hide the HUD completely during the driving phase so the user can watch the car
+  if (phase === "JOURNEY_BEGINS" || phase === "PICKUP") {
     return null;
   }
 
@@ -128,6 +128,25 @@ export default function ProductDemoHUD() {
 
         {/* PAUSE_2 is intentionally empty for cinematic beat before journey begins */}
         {phase === "PAUSE_2" && <div key="pause2"></div>}
+
+        {(phase === "DESTINATION" || phase === "NETWORK_REVEAL") && (
+          <motion.div
+            key="destination"
+            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: -15 }}
+            transition={springTransition}
+            className="bg-[var(--hero-glass-bg)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col items-center gap-4 text-center"
+          >
+            <div className="w-12 h-12 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-full flex items-center justify-center">
+              <MapPin className="w-6 h-6 text-yellow-500" />
+            </div>
+            <div>
+              <h3 className="text-slate-900 dark:text-white font-bold text-lg">Destination Reached</h3>
+              <p className="text-yellow-600 dark:text-yellow-400 text-sm font-bold mt-1">₹120 Split • 4kg CO₂ Saved</p>
+            </div>
+          </motion.div>
+        )}
 
       </AnimatePresence>
     </div>
