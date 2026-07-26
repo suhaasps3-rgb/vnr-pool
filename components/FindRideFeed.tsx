@@ -146,7 +146,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         if (error) throw error;
         return data;
       } else if (mode === "booked") {
-        const { data: bookingData, error: bError } = await supabase.from('ride_requests').select('ride_id').eq('user_id', userId).eq('status', 'approved');
+        const { data: bookingData, error: bError } = await supabase.from('bookings').select('ride_id').eq('passenger_id', userId);
         if (bError) throw bError;
         const rideIds = bookingData.map((b: any) => b.ride_id);
         
@@ -719,8 +719,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             {
               const basePassengers = approvedPassengers.map((b: any) => ({
                 id: b.passenger_id,
-                pickup: b.pickup_location,
-                dropoff: b.dropoff_location
+                pickup: b.pickup_location || ride.origin,
+                dropoff: b.dropoff_location || ride.destination
               }));
               
               baseDynamicSplit = calculateDynamicOverlappingSplit(
@@ -1116,7 +1116,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                                 if (booking.status === 'approved') {
                                   renderPrice = baseDynamicSplit.passengerShares[booking.passenger_id] || renderPrice;
                                 } else if (booking.status === 'pending' && booking.pickup_location) {
-                                  const basePass = approvedPassengers.map((b: any) => ({id: b.passenger_id, pickup: b.pickup_location, dropoff: b.dropoff_location}));
+                                  const basePass = approvedPassengers.map((b: any) => ({id: b.passenger_id, pickup: b.pickup_location || ride.origin, dropoff: b.dropoff_location || ride.destination}));
                                   const pSplit = calculateDynamicOverlappingSplit(ride.origin, ride.destination, ride.price_per_seat, ride.total_seats, isAuto, [...basePass, {id: booking.passenger_id, pickup: booking.pickup_location, dropoff: booking.dropoff_location}]);
                                   renderPrice = pSplit?.passengerShares[booking.passenger_id] || renderPrice;
                                 }
