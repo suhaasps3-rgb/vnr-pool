@@ -22,7 +22,7 @@ export default function Destination() {
 
   if (phase === "INITIAL" || phase === "SEARCHING") return null;
 
-  const isComplete = phase === "DESTINATION";
+  const isComplete = phase === "DESTINATION" || phase === "NETWORK_REVEAL";
 
   return (
     <g transform={`translate(${position.x}, ${position.y})`} className="will-change-transform">

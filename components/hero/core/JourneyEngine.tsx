@@ -56,18 +56,17 @@ export function JourneyProvider({ children }: { children: React.ReactNode }) {
   const [co2Reduced, setCo2Reduced] = useState(0);
 
   // Derive Phase from Scroll Progress
-  // The user controls the pacing entirely with their scroll wheel.
   useEffect(() => {
     if (!route) return;
 
-    if (scrollProgress < 0.05) setPhase("SEARCHING"); // 0 - 5%
-    else if (scrollProgress < 0.1) setPhase("PAUSE_1"); // 5 - 10%
-    else if (scrollProgress < 0.2) setPhase("MATCHED"); // 10 - 20%
-    else if (scrollProgress < 0.3) setPhase("BRANCHING"); // 20 - 30%
-    else if (scrollProgress < 0.4) setPhase("OPTIMISING_CHOICE"); // 30 - 40%
-    else if (scrollProgress < 0.5) setPhase("OPTIMISED"); // 40 - 50%
-    else if (scrollProgress < 0.55) setPhase("PAUSE_2"); // 50 - 55%
-    else if (scrollProgress < 0.9) setPhase("JOURNEY_BEGINS"); // 55 - 90% (Vehicle animation takes over)
+    if (scrollProgress < 0.02) setPhase("SEARCHING"); // 0 - 2% (Very fast)
+    else if (scrollProgress < 0.06) setPhase("PAUSE_1"); // 2 - 6%
+    else if (scrollProgress < 0.15) setPhase("MATCHED"); // 6 - 15%
+    else if (scrollProgress < 0.25) setPhase("BRANCHING"); // 15 - 25%
+    else if (scrollProgress < 0.35) setPhase("OPTIMISING_CHOICE"); // 25 - 35%
+    else if (scrollProgress < 0.45) setPhase("OPTIMISED"); // 35 - 45%
+    else if (scrollProgress < 0.50) setPhase("PAUSE_2"); // 45 - 50%
+    else if (scrollProgress < 0.90) setPhase("JOURNEY_BEGINS"); // 50 - 90% (Vehicle animation takes over)
     else if (scrollProgress < 0.95) setPhase("DESTINATION"); // 90 - 95%
     else setPhase("NETWORK_REVEAL"); // 95 - 100%
 
