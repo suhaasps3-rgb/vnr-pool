@@ -68,15 +68,15 @@ export default function HeroSection({ onJoin }: { onJoin: () => void }) {
         
         {/* Sticky container bounds the layout to the viewport while scrolling the 250vh */}
         <div className="sticky top-0 w-full h-screen overflow-hidden">
-          <div className="w-full h-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 px-4 sm:px-6 relative">
-            {/* Left Column (50%) - Content */}
-            <div className="col-start-1 row-start-1 md:col-start-1 md:row-auto w-full h-full flex flex-col justify-center relative z-30 pointer-events-auto">
+          <div className="w-full h-full max-w-7xl mx-auto grid grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-2 md:grid-rows-1 px-4 sm:px-6 relative">
+            {/* Left Column - Content (Top on mobile, Left on desktop) */}
+            <div className="w-full h-auto md:h-full flex flex-col justify-end md:justify-center relative z-30 pointer-events-auto pt-24 pb-8 md:pt-0 md:pb-0">
               <HeroContent onJoin={onJoin} />
             </div>
 
-            {/* Right Column (50%) - Cinematic Route Animation */}
+            {/* Right Column - Cinematic Route Animation (Bottom on mobile, Right on desktop) */}
             {/* We offset this column slightly to the left on large screens to tighten the composition */}
-            <div className="col-start-1 row-start-1 md:col-start-2 md:row-auto w-full h-full relative z-20 flex items-center justify-center lg:-ml-12 xl:-ml-24 pointer-events-none opacity-30 md:opacity-100">
+            <div className="w-full h-full min-h-[300px] relative z-20 flex items-center justify-center lg:-ml-12 xl:-ml-24 pointer-events-none">
               <AmbientLife />
               <ProductDemoHUD />
               <RouteScene />
