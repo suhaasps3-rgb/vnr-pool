@@ -1,15 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, PlayCircle } from "lucide-react";
+import HowItWorksModal from "./HowItWorksModal";
 
 interface HeroContentProps {
   onJoin: () => void;
 }
 
 export default function HeroContent({ onJoin }: HeroContentProps) {
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+
   return (
-    <div className="flex flex-col justify-center h-full max-w-xl z-20 relative px-6 md:px-12">
+    <>
+      <HowItWorksModal isOpen={showHowItWorks} onClose={() => setShowHowItWorks(false)} />
+      <div className="flex flex-col justify-center h-full max-w-xl z-20 relative px-6 md:px-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -45,7 +51,7 @@ export default function HeroContent({ onJoin }: HeroContentProps) {
         </button>
         
         <button 
-          onClick={() => window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' })}
+          onClick={() => setShowHowItWorks(true)}
           className="group flex items-center justify-center gap-2 bg-white dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all w-full sm:w-auto backdrop-blur-md"
         >
           <PlayCircle className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors" />
@@ -67,6 +73,7 @@ export default function HeroContent({ onJoin }: HeroContentProps) {
         </div>
         <p>Over <span className="text-slate-900 dark:text-white font-bold">1,200</span> students ride daily.</p>
       </motion.div>
-    </div>
+      </div>
+    </>
   );
 }
