@@ -3,7 +3,7 @@ import { X, AlertCircle, Loader2, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { DISTANCE_MAP } from "@/lib/locations";
-import { calculateFractionalPrice, ROUTES } from "@/lib/matchmaking";
+import { calculateFractionalPrice, calculateDynamicOverlappingSplit, ROUTES, findLocIndex } from "@/lib/matchmaking";
 
 export default function BookSeatModal({ 
   ride, 
@@ -38,16 +38,49 @@ export default function BookSeatModal({
 
   useEffect(() => {
     if (ride && pickup && dropoff) {
-      setCalculatedPrice(calculateFractionalPrice(ride.origin, ride.destination, pickup, dropoff, ride.price_per_seat));
+      if (ride.ride_category === 'auto_split') {
+        // Build list of already-approved passengers from the ride's bookings
+        const approvedPassengers = (ride.bookings || [])
+          .filter((b: any) => b.status === 'approved')
+          .map((b: any) => ({ id: b.passenger_id, pickup: b.pickup_location, dropoff: b.dropoff_location }))
+          .filter((b: any) => b.pickup && b.dropoff);
+
+        // Simulate this user joining on top of existing passengers
+        const isAuto = ride.ride_category === 'auto_split';
+        const split = calculateDynamicOverlappingSplit(
+          ride.origin, ride.destination, ride.price_per_seat, ride.total_seats, isAuto,
+          [...approvedPassengers, { id: '__me__', pickup, dropoff }]
+        );
+
+        if (split && split.passengerShares['__me__']) {
+          setCalculatedPrice(split.passengerShares['__me__']);
+        } else {
+          // Fallback to fractional if location not found in distance map
+          setCalculatedPrice(calculateFractionalPrice(ride.origin, ride.destination, pickup, dropoff, ride.price_per_seat));
+        }
+      } else {
+        setCalculatedPrice(calculateFractionalPrice(ride.origin, ride.destination, pickup, dropoff, ride.price_per_seat));
+      }
     }
   }, [ride, pickup, dropoff]);
 
   if (!ride) return null;
 
   // Determine valid locations based on the driver's chosen route
-  const validLocations = (ride.chosen_route_index !== null && ride.chosen_route_index !== undefined && ROUTES[ride.chosen_route_index])
-    ? ROUTES[ride.chosen_route_index]
-    : Object.keys(DISTANCE_MAP);
+  let validLocations = Object.keys(DISTANCE_MAP);
+  if (ride.chosen_route_index !== null && ride.chosen_route_index !== undefined && ROUTES[ride.chosen_route_index]) {
+    const fullRoute = ROUTES[ride.chosen_route_index];
+    const dStart = findLocIndex(fullRoute, ride.origin);
+    const dEnd = findLocIndex(fullRoute, ride.destination);
+    
+    if (dStart !== -1 && dEnd !== -1) {
+      const minIdx = Math.min(dStart, dEnd);
+      const maxIdx = Math.max(dStart, dEnd);
+      validLocations = fullRoute.slice(minIdx, maxIdx + 1);
+    } else {
+      validLocations = fullRoute;
+    }
+  }
 
   // Validate that at least one location is VNR
   const isVnrPresent = pickup.toLowerCase().includes('vnr') || dropoff.toLowerCase().includes('vnr');
@@ -163,7 +196,10 @@ export default function BookSeatModal({
                 </div>
 
                 <div className="flex justify-between items-center p-4 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl border border-emerald-100 dark:border-emerald-500/20">
-                  <span className="text-emerald-700 dark:text-emerald-300 font-medium">Fractional Price</span>
+                  <div>
+                    <span className="text-emerald-700 dark:text-emerald-300 font-medium">Dynamic Split Price</span>
+                    <p className="text-[10px] text-emerald-600 dark:text-emerald-500 mt-0.5">Based on your route segment & co-passengers</p>
+                  </div>
                   <span className="font-black text-2xl text-emerald-700 dark:text-emerald-400">
                     ₹{calculatedPrice}
                   </span>

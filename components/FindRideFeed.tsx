@@ -13,7 +13,7 @@ import RideCard from "./RideCard";
 import BookSeatModal from "./BookSeatModal";
 import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
-import { isAIMatch, ROUTES, calculateFractionalPrice, findLocIndex } from "@/lib/matchmaking";
+import { isAIMatch, ROUTES, calculateFractionalPrice, findLocIndex, calculateDynamicOverlappingSplit } from "@/lib/matchmaking";
 import { ALL_LOCATIONS as COMMON_LOCATIONS } from "@/lib/locations";
 import DynamicMap from "./DynamicMap";
 
@@ -711,29 +711,65 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             const hasRequested = !!myBooking;
             const approvedPassengers = ride.bookings.filter((b: any) => b.status === 'approved');
 
-            const impliedTotalCost = ride.price_per_seat * (ride.ride_category === 'auto_split' ? ride.total_seats + 1 : ride.total_seats);
+            const isAuto = ride.ride_category === 'auto_split';
             let displayPrice = ride.price_per_seat;
             let dynamicPriceNote = "";
+            let baseDynamicSplit: any = null;
 
-            if (myBooking?.calculated_price) {
-              displayPrice = myBooking.calculated_price;
-              dynamicPriceNote = "Your fractional share";
-            } else if (searchOrigin && searchDestination) {
-              displayPrice = calculateFractionalPrice(ride.origin, ride.destination, searchOrigin, searchDestination, ride.price_per_seat);
-              dynamicPriceNote = "Your fractional share";
-            }
+            {
+              const basePassengers = approvedPassengers.map((b: any) => ({
+                id: b.passenger_id,
+                pickup: b.pickup_location,
+                dropoff: b.dropoff_location
+              }));
+              
+              baseDynamicSplit = calculateDynamicOverlappingSplit(
+                ride.origin, ride.destination, ride.price_per_seat, ride.total_seats, isAuto, basePassengers
+              );
 
-            if (ride.ride_category === 'auto_split') {
-              const currentPeople = 1 + approvedPassengers.length;
-              if (isApproved || ride.driver_id === userId) {
-                displayPrice = myBooking?.calculated_price || Math.ceil(impliedTotalCost / currentPeople);
-                dynamicPriceNote = "Current split";
-              } else if (ride.available_seats > 0) {
-                displayPrice = (myBooking?.calculated_price) || Math.ceil(impliedTotalCost / (currentPeople + 1));
-                dynamicPriceNote = "If you join";
+              let isSimulated = false;
+              let simulatedSplit = baseDynamicSplit;
+
+              if (ride.driver_id !== userId && !isApproved && searchOrigin && searchDestination) {
+                simulatedSplit = calculateDynamicOverlappingSplit(
+                  ride.origin, ride.destination, ride.price_per_seat, ride.total_seats, isAuto,
+                  [...basePassengers, { id: userId, pickup: searchOrigin, dropoff: searchDestination }]
+                );
+                isSimulated = true;
+              }
+
+              if (simulatedSplit) {
+                if (ride.driver_id === userId) {
+                  displayPrice = simulatedSplit.driverShare;
+                  dynamicPriceNote = isAuto ? "Your cab split" : "Your fuel share";
+                } else if (isSimulated) {
+                  displayPrice = simulatedSplit.passengerShares[userId] || 0;
+                  dynamicPriceNote = "If you join";
+                } else if (isApproved) {
+                  displayPrice = simulatedSplit.passengerShares[userId] || 0;
+                  dynamicPriceNote = "Current split";
+                } else {
+                  if (hasRequested && myBooking?.pickup_location) {
+                    const pendingSplit = calculateDynamicOverlappingSplit(
+                      ride.origin, ride.destination, ride.price_per_seat, ride.total_seats, isAuto,
+                      [...basePassengers, { id: userId, pickup: myBooking.pickup_location, dropoff: myBooking.dropoff_location }]
+                    );
+                    displayPrice = pendingSplit?.passengerShares[userId] || 0;
+                    dynamicPriceNote = "If approved";
+                  } else {
+                    displayPrice = calculateFractionalPrice(ride.origin, ride.destination, searchOrigin || ride.origin, searchDestination || ride.destination, ride.price_per_seat);
+                    dynamicPriceNote = "Est. share";
+                  }
+                }
               } else {
-                displayPrice = myBooking?.calculated_price || Math.ceil(impliedTotalCost / currentPeople);
-                dynamicPriceNote = "Final split";
+                // Fallback: location not in distance map
+                if (myBooking?.calculated_price) {
+                  displayPrice = myBooking.calculated_price;
+                  dynamicPriceNote = "Your share";
+                } else if (searchOrigin && searchDestination) {
+                  displayPrice = calculateFractionalPrice(ride.origin, ride.destination, searchOrigin, searchDestination, ride.price_per_seat);
+                  dynamicPriceNote = "Est. share";
+                }
               }
             }
 
@@ -906,7 +942,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                             </div>
                             <span className="text-sm font-semibold text-[#0F172A] dark:text-slate-200">
                               {b.passenger?.full_name?.split(' ')[0]}
-                              {b.calculated_price && <span className="ml-1 text-emerald-700 dark:text-emerald-400 font-black">₹{b.calculated_price}</span>}
+                              {b.calculated_price && <span className="ml-1 text-emerald-700 dark:text-emerald-400 font-black">₹{ride.ride_category === 'auto_split' && baseDynamicSplit ? baseDynamicSplit.passengerShares[b.passenger_id] : b.calculated_price}</span>}
                             </span>
                           </div>
                           {b.pickup_location && b.dropoff_location && (
@@ -1074,7 +1110,19 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-gray-900 dark:text-white">{booking.passenger?.full_name}</span>
                             <span className="text-xs text-gray-500 dark:text-gray-400">({booking.passenger?.roll_no})</span>
-                            {booking.calculated_price && <span className="text-emerald-600 dark:text-emerald-400 font-black text-xs ml-auto pr-4">₹{booking.calculated_price}</span>}
+                            {(() => {
+                              let renderPrice = booking.calculated_price;
+                              if (baseDynamicSplit) {
+                                if (booking.status === 'approved') {
+                                  renderPrice = baseDynamicSplit.passengerShares[booking.passenger_id] || renderPrice;
+                                } else if (booking.status === 'pending' && booking.pickup_location) {
+                                  const basePass = approvedPassengers.map((b: any) => ({id: b.passenger_id, pickup: b.pickup_location, dropoff: b.dropoff_location}));
+                                  const pSplit = calculateDynamicOverlappingSplit(ride.origin, ride.destination, ride.price_per_seat, ride.total_seats, isAuto, [...basePass, {id: booking.passenger_id, pickup: booking.pickup_location, dropoff: booking.dropoff_location}]);
+                                  renderPrice = pSplit?.passengerShares[booking.passenger_id] || renderPrice;
+                                }
+                              }
+                              return renderPrice ? <span className="text-emerald-600 dark:text-emerald-400 font-black text-xs ml-auto pr-4">₹{renderPrice}</span> : null;
+                            })()}
                           </div>
                           {booking.pickup_location && booking.dropoff_location && (
                             <div className="text-[10px] font-medium text-slate-500 mt-1">

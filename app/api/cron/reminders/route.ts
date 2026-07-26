@@ -82,7 +82,7 @@ export async function GET(request: Request) {
     // actually we DO want to alert them, it's just a departure reminder!
 
     // Get the driver's phone
-    const driverPhone = ride.profiles?.mobile_number;
+    const driverPhone = (ride.profiles as any)?.mobile_number || (ride.profiles as any)?.[0]?.mobile_number;
     if (driverPhone) {
       const msg = `VNR Pool: Your ride from ${ride.origin} to ${ride.destination} departs in 15 minutes! Get ready to drive.`;
       await sendTwilioSMS(driverPhone, msg);
@@ -100,7 +100,7 @@ export async function GET(request: Request) {
 
     if (passengers && passengers.length > 0) {
       for (const pass of passengers) {
-        const passPhone = pass.profiles?.mobile_number;
+        const passPhone = (pass.profiles as any)?.mobile_number || (pass.profiles as any)?.[0]?.mobile_number;
         if (passPhone) {
           const msg = `VNR Pool: Your ride from ${ride.origin} to ${ride.destination} departs in 15 minutes! Head to the pickup location.`;
           await sendTwilioSMS(passPhone, msg);
