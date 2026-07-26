@@ -197,8 +197,9 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
       </main>
 
       {/* FOOTER */}
-      <footer className="relative z-10 border-t border-slate-200/60 dark:border-slate-800 bg-[var(--hero-bg)] py-12 text-center text-slate-500 dark:text-slate-400 font-medium text-sm">
+      <footer className="relative z-10 border-t border-slate-200/60 dark:border-slate-800 bg-[var(--hero-bg)] py-12 text-center text-slate-500 dark:text-slate-400 font-medium text-sm flex flex-col gap-2">
         <p>&copy; {new Date().getFullYear()} VNR Pool. For VNR VJIET Students.</p>
+        <p>Contact: <a href="mailto:support.vnrpool2@gmail.com" className="hover:text-[var(--hero-accent)] transition-colors">support.vnrpool2@gmail.com</a></p>
       </footer>
 
       {/* AUTH MODAL OVERLAY */}
