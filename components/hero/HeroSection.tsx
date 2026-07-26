@@ -67,17 +67,19 @@ export default function HeroSection({ onJoin }: { onJoin: () => void }) {
         <HeroScrollController containerRef={containerRef} />
         
         {/* Sticky container bounds the layout to the viewport while scrolling the 250vh */}
-        <div className="sticky top-0 w-full h-screen flex flex-col md:flex-row">
-          
-          {/* Left Column (40%) - Content */}
-          <div className="w-full md:w-[40%] h-full flex items-center bg-[var(--hero-bg)] relative z-30">
-            <HeroContent onJoin={onJoin} />
-          </div>
+        <div className="sticky top-0 w-full h-screen">
+          <div className="w-full h-full max-w-7xl mx-auto flex flex-col md:flex-row px-4 sm:px-6">
+            {/* Left Column (40%) - Content */}
+            <div className="w-full md:w-[40%] h-full flex items-center bg-[var(--hero-bg)] relative z-30">
+              <HeroContent onJoin={onJoin} />
+            </div>
 
-          <div className="w-full md:w-[60%] h-full relative z-20">
-            <AmbientLife />
-            <ProductDemoHUD />
-            <RouteScene />
+            {/* Right Column (60%) - Cinematic Route Animation */}
+            <div className="w-full md:w-[60%] h-full relative z-20 flex items-center justify-center">
+              <AmbientLife />
+              <ProductDemoHUD />
+              <RouteScene />
+            </div>
           </div>
         </div>
       </JourneyProvider>
