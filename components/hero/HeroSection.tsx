@@ -68,19 +68,25 @@ export default function HeroSection({ onJoin }: { onJoin: () => void }) {
         
         {/* Sticky container bounds the layout to the viewport while scrolling the 250vh */}
         <div className="sticky top-0 w-full h-screen">
-          <div className="w-full h-full max-w-7xl mx-auto flex flex-col md:flex-row px-4 sm:px-6">
-            {/* Left Column (40%) - Content */}
-            <div className="w-full md:w-[40%] h-full flex items-center bg-[var(--hero-bg)] relative z-30">
-              <HeroContent onJoin={onJoin} />
-            </div>
-
-            {/* Right Column (60%) - Cinematic Route Animation */}
-            <div className="w-full md:w-[60%] h-full relative z-20 flex items-center justify-center">
-              <AmbientLife />
+          
+          {/* Cinematic Route Animation - Centered on the entire screen */}
+          <div className="absolute inset-0 w-full h-full z-10 flex items-center justify-center overflow-hidden">
+            <AmbientLife />
+            <div className="relative w-full max-w-5xl h-full flex items-center justify-center">
               <ProductDemoHUD />
               <RouteScene />
             </div>
           </div>
+
+          {/* Foreground Content - Positioned on the left */}
+          <div className="absolute inset-0 w-full h-full z-30 pointer-events-none flex items-center">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pointer-events-auto">
+              <div className="w-full md:w-[50%] lg:w-[45%]">
+                <HeroContent onJoin={onJoin} />
+              </div>
+            </div>
+          </div>
+          
         </div>
       </JourneyProvider>
     </section>
