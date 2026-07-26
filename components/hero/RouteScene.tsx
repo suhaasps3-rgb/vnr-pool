@@ -51,7 +51,7 @@ export default function RouteScene() {
       <motion.svg
         ref={svgRef}
         viewBox="0 0 800 800"
-        className="w-[110%] h-[110%] md:w-[100%] md:h-[100%] opacity-90 will-change-transform"
+        className="w-full h-full md:w-[100%] md:h-[100%] opacity-90 will-change-transform"
         style={{
           scale,
           x: xOffset,

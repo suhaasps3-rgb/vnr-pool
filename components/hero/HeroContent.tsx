@@ -64,7 +64,7 @@ export default function HeroContent({ onJoin }: HeroContentProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.6 }}
-        className="mt-16 flex items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400 transition-colors"
+        className="hidden md:flex mt-16 items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400 transition-colors"
       >
         <div className="flex -space-x-2">
           <div className="w-8 h-8 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600">S</div>
