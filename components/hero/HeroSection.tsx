@@ -28,9 +28,11 @@ function HeroScrollController({ containerRef }: { containerRef: React.RefObject<
 
     lenis.on('scroll', ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
+    const raf = (time: number) => {
       lenis.raf(time * 1000);
-    });
+    };
+
+    gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
     const st = ScrollTrigger.create({
@@ -46,7 +48,7 @@ function HeroScrollController({ containerRef }: { containerRef: React.RefObject<
     return () => {
       st.kill();
       lenis.destroy();
-      gsap.ticker.remove((time) => lenis.raf(time * 1000));
+      gsap.ticker.remove(raf);
     };
   }, [containerRef, setScrollProgress]);
 
