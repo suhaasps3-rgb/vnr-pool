@@ -62,7 +62,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            className="max-w-4xl mx-auto mb-32 -mt-12 md:-mt-16 relative z-30"
+            className="max-w-4xl mx-auto mb-32 mt-4 md:-mt-16 relative z-30"
           >
           <div className="bg-white md:bg-white/70 dark:bg-slate-900 md:dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 p-4 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col md:flex-row items-center gap-4">
             <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 dark:bg-slate-800/80 px-6 py-4 rounded-2xl border border-slate-100 dark:border-slate-700">
