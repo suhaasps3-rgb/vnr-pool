@@ -42,7 +42,6 @@ export default function Vehicle() {
     tl.to(vehicleRef.current, {
       motionPath: {
         path: route.path,
-        align: route.path,
         alignOrigin: [0.5, 0.5],
         autoRotate: true,
       },
