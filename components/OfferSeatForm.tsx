@@ -120,6 +120,23 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
       return;
     }
 
+    let finalVehicleNumber = formData.vehicle_number;
+    if (formData.ride_category === 'personal_vehicle') {
+      const hasProfileNumber = (formData.vehicle_type === 'car' && userCarNumber) || (formData.vehicle_type === 'bike' && userBikeNumber);
+      if (hasProfileNumber && vehicleEntryMode === 'profile') {
+        finalVehicleNumber = (formData.vehicle_type === 'car' ? userCarNumber : userBikeNumber) as string;
+      }
+      
+      if (finalVehicleNumber) {
+        const vehicleRegex = /^[A-Za-z]{2}\s?[0-9]{2}\s?[A-Za-z]{1,2}\s?[0-9]{4}$/;
+        if (!vehicleRegex.test(finalVehicleNumber.trim())) {
+          toast.error("Invalid vehicle number format. Please enter a valid Indian vehicle number (e.g., TS 08 AB 1234).");
+          setLoading(false);
+          return;
+        }
+      }
+    }
+
     const supabase = createClient();
 
     try {

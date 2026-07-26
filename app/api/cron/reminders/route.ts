@@ -42,10 +42,12 @@ export async function GET(request: Request) {
   }
 
   const now = new Date();
-  const targetStart15 = new Date(now.getTime() + 12 * 60000);
-  const targetEnd15 = new Date(now.getTime() + 19 * 60000);
+  
+  // Generous 10-minute windows to guarantee we never miss a GitHub Action delay
+  const targetStart15 = new Date(now.getTime() + 10 * 60000);
+  const targetEnd15 = new Date(now.getTime() + 20 * 60000);
 
-  const targetStart5 = new Date(now.getTime() + 2 * 60000);
+  const targetStart5 = new Date(now.getTime() + 0 * 60000);
   const targetEnd5 = new Date(now.getTime() + 9 * 60000);
 
   const { data: rides, error } = await supabase
@@ -67,7 +69,11 @@ export async function GET(request: Request) {
     let is15Min = depTime >= targetStart15 && depTime <= targetEnd15;
     let is5Min = depTime >= targetStart5 && depTime <= targetEnd5;
 
+    // Skip if not in any window
     if (!is15Min && !is5Min) continue;
+    
+    // 15-minute takes precedence if it overlaps (though they shouldn't with these windows)
+    if (is15Min && is5Min) is5Min = false;
 
     const title = is15Min ? 'Departure Reminder' : 'Arriving Now';
     const msgDriver = is15Min 
@@ -76,6 +82,26 @@ export async function GET(request: Request) {
     const msgPass = is15Min 
       ? `Your ride to ${ride.destination} departs in 15 minutes! Head to the pickup location.` 
       : `Your ride to ${ride.destination} departs in 5 minutes! The driver is arriving.`;
+
+    // Deduplication check: Have we already sent this exact type of reminder to the driver recently?
+    const searchString = is15Min ? '%departs in 15 minutes%' : '%departs in 5 minutes%';
+    const { data: existingNotifs } = await supabase
+      .from('notifications')
+      .select('id')
+      .eq('user_id', ride.driver_id)
+      .ilike('message', searchString)
+      .gte('created_at', new Date(now.getTime() - 30 * 60000).toISOString());
+
+    if (existingNotifs && existingNotifs.length > 0) {
+      // Already sent this reminder type for this ride
+      continue;
+    }
+
+    // Insert a record so we don't send it again
+    await supabase.from('notifications').insert({
+      user_id: ride.driver_id,
+      message: msgDriver
+    });
 
     // Notify Driver
     const sentDriver = await sendWebPush(ride.driver_id, title, msgDriver);
@@ -89,6 +115,12 @@ export async function GET(request: Request) {
       .eq('status', 'approved');
 
     if (passengers && passengers.length > 0) {
+      const passengerNotifications = passengers.map(p => ({
+        user_id: p.passenger_id,
+        message: msgPass
+      }));
+      await supabase.from('notifications').insert(passengerNotifications);
+      
       for (const pass of passengers) {
         const sentPass = await sendWebPush(pass.passenger_id, title, msgPass);
         if (sentPass) totalPushSent++;
@@ -96,5 +128,5 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.json({ message: 'Reminders processed via Web Push', totalPushSent });
+  return NextResponse.json({ message: 'Reminders processed', totalPushSent });
 }
