@@ -37,11 +37,11 @@ export default function RouteScene() {
     [0, isMirrored ? -50 : 50]
   );
 
-  // Depth of field blur shift during the "Network Reveal" to blur the main route slightly
-  const blur = useTransform(
+  // Fade out slightly during the "Network Reveal" instead of blurring to prevent GPU lag
+  const fadeOpacity = useTransform(
     smoothedProgress,
     [0.9, 0.95, 1],
-    ["blur(0px)", "blur(0px)", "blur(2px)"]
+    [1, 1, 0.5]
   );
 
   if (!route) return null;
@@ -55,7 +55,7 @@ export default function RouteScene() {
         style={{
           scale,
           x: xOffset,
-          filter: blur
+          opacity: fadeOpacity
         }}
         preserveAspectRatio="xMidYMid meet"
       >

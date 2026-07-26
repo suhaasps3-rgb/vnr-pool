@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion, useTransform, useSpring } from "framer-motion";
 import { useJourney } from "../core/JourneyEngine";
 
@@ -18,6 +19,26 @@ export default function AmbientLife() {
   const opacityGroup2 = useTransform(smoothedProgress, [0.96, 0.98], [0, 0.08]);
   // Group 3: Far network
   const opacityGroup3 = useTransform(smoothedProgress, [0.98, 1], [0, 0.05]);
+
+  // Memoize random values so they don't re-calculate 60fps on scroll
+  const randomPaths = useMemo(() => {
+    return [...Array(8)].map((_, i) => {
+      const p = () => Math.random() * 2000;
+      return `M ${p()},${p()} C ${p()},${p()} ${p()},${p()} ${p()},${p()}`;
+    });
+  }, []);
+
+  const randomParticles = useMemo(() => {
+    if (typeof window === "undefined") return [];
+    return [...Array(10)].map((_, i) => ({
+      id: i,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      targetY: Math.random() * -100 - 50,
+      opacityTarget: Math.random() * 0.4,
+      duration: Math.random() * 5 + 8
+    }));
+  }, []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 mix-blend-overlay">
@@ -54,10 +75,10 @@ export default function AmbientLife() {
 
           {/* GROUP 3: Far regional connections */}
           <motion.g style={{ opacity: opacityGroup3 }}>
-            {[...Array(8)].map((_, i) => (
+            {randomPaths.map((d, i) => (
               <path 
                 key={i}
-                d={`M ${Math.random() * 2000},${Math.random() * 2000} C ${Math.random() * 2000},${Math.random() * 2000} ${Math.random() * 2000},${Math.random() * 2000} ${Math.random() * 2000},${Math.random() * 2000}`} 
+                d={d} 
                 fill="none" 
                 stroke="var(--hero-road)" 
                 strokeWidth="0.5" 
@@ -69,23 +90,23 @@ export default function AmbientLife() {
       )}
       
       {/* Ambient background particles only appear during the reveal for emotional impact */}
-      {scrollProgress > 0.95 && [...Array(10)].map((_, i) => (
+      {scrollProgress > 0.95 && randomParticles.map((p) => (
         <motion.div
-          key={i}
+          key={p.id}
           className="absolute w-2 h-2 rounded-full bg-[var(--hero-glow)] blur-lg"
           initial={{ 
-            x: Math.random() * window.innerWidth, 
-            y: Math.random() * window.innerHeight,
+            x: p.x, 
+            y: p.y,
             opacity: 0,
             scale: 0.5
           }}
           animate={{
-            y: [null, Math.random() * -100 - 50],
-            opacity: [0, Math.random() * 0.4, 0],
+            y: [null, p.targetY],
+            opacity: [0, p.opacityTarget, 0],
             scale: [0.5, 1.5, 0.5]
           }}
           transition={{
-            duration: Math.random() * 5 + 8, // Very slow, calm
+            duration: p.duration, // Very slow, calm
             repeat: Infinity,
             ease: "easeInOut"
           }}
