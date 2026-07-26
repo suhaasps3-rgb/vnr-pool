@@ -107,30 +107,30 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className="bg-white/60 backdrop-blur-xl border border-slate-200/60 hover:border-[var(--hero-accent)]/30 p-6 rounded-3xl transition-all shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(79,124,255,0.1)] group"
+                className="bg-white/60 dark:bg-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 hover:border-[var(--hero-accent)]/30 dark:hover:border-[var(--hero-accent)]/50 p-6 rounded-3xl transition-all shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(79,124,255,0.1)] dark:hover:shadow-[0_20px_40px_-15px_rgba(79,124,255,0.3)] group"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-lg text-slate-700">
+                  <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 flex items-center justify-center font-bold text-lg text-slate-700 dark:text-slate-200">
                     {ride.driver}
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-black text-slate-900">₹{ride.price}</p>
-                    <p className="text-xs text-slate-500 font-medium">per seat</p>
+                    <p className="text-2xl font-black text-slate-900 dark:text-white">₹{ride.price}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">per seat</p>
                   </div>
                 </div>
                 <div className="space-y-4 mb-6">
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-slate-400" />
-                    <span className="font-medium text-slate-600">{ride.origin}</span>
+                    <MapPin className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                    <span className="font-medium text-slate-600 dark:text-slate-300">{ride.origin}</span>
                   </div>
-                  <div className="w-px h-4 bg-slate-200 ml-2"></div>
+                  <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 ml-2"></div>
                   <div className="flex items-center gap-3">
                     <MapPin className="w-4 h-4 text-[var(--hero-accent)]" />
-                    <span className="font-bold text-slate-800">{ride.dest}</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100">{ride.dest}</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between border-t border-slate-100 pt-4">
-                  <div className="flex items-center gap-1.5 text-sm text-slate-500 font-medium">
+                <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-700/50 pt-4">
+                  <div className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 font-medium">
                     <Clock className="w-4 h-4" /> {ride.time}
                   </div>
                   <div className="flex items-center gap-1.5 text-sm text-[var(--hero-accent)] font-bold bg-[var(--hero-accent)]/10 px-3 py-1 rounded-full">
@@ -150,11 +150,11 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="md:col-span-2 bg-gradient-to-br from-indigo-50/50 to-white/60 backdrop-blur-xl border border-slate-200/60 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
+              className="md:col-span-2 bg-gradient-to-br from-indigo-50/50 dark:from-indigo-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
             >
               <Shield className="w-10 h-10 text-[var(--hero-accent)] mb-6" />
-              <h4 className="text-2xl font-bold text-slate-900 mb-2">100% Verified Identity</h4>
-              <p className="text-slate-600 font-medium">Every user must register with a valid @vnrvjiet.in email address. No outsiders allowed.</p>
+              <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">100% Verified Identity</h4>
+              <p className="text-slate-600 dark:text-slate-300 font-medium">Every user must register with a valid @vnrvjiet.in email address. No outsiders allowed.</p>
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[var(--hero-accent)]/10 blur-3xl rounded-full group-hover:bg-[var(--hero-accent)]/20 transition-colors"></div>
             </motion.div>
 
@@ -163,11 +163,11 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="md:col-span-2 bg-gradient-to-br from-purple-50/50 to-white/60 backdrop-blur-xl border border-slate-200/60 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
+              className="md:col-span-2 bg-gradient-to-br from-purple-50/50 dark:from-purple-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
             >
               <Users className="w-10 h-10 text-purple-500 mb-6" />
-              <h4 className="text-2xl font-bold text-slate-900 mb-2">Female-Only Rides</h4>
-              <p className="text-slate-600 font-medium">Dedicated filters to find and offer rides exclusively for female students for maximum comfort.</p>
+              <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Female-Only Rides</h4>
+              <p className="text-slate-600 dark:text-slate-300 font-medium">Dedicated filters to find and offer rides exclusively for female students for maximum comfort.</p>
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/10 blur-3xl rounded-full group-hover:bg-purple-500/20 transition-colors"></div>
             </motion.div>
 
@@ -176,16 +176,16 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="md:col-span-4 bg-white/60 backdrop-blur-xl border border-slate-200/60 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm"
+              className="md:col-span-4 bg-white/60 dark:bg-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm"
             >
               <div>
                 <Zap className="w-10 h-10 text-amber-500 mb-6" />
-                <h4 className="text-2xl font-bold text-slate-900 mb-2">Instant Fuel Split</h4>
-                <p className="text-slate-600 font-medium max-w-lg">No more awkward money conversations. The app automatically calculates a fair fuel split based on the route and number of passengers.</p>
+                <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Instant Fuel Split</h4>
+                <p className="text-slate-600 dark:text-slate-300 font-medium max-w-lg">No more awkward money conversations. The app automatically calculates a fair fuel split based on the route and number of passengers.</p>
               </div>
               <button 
                 onClick={() => setShowAuthModal(true)}
-                className="px-8 py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-colors shrink-0 shadow-xl shadow-slate-900/20"
+                className="px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-2xl hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors shrink-0 shadow-xl shadow-slate-900/20 dark:shadow-white/10"
               >
                 Join the Network
               </button>
@@ -196,7 +196,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
       </main>
 
       {/* FOOTER */}
-      <footer className="relative z-10 border-t border-slate-200/60 bg-[var(--hero-bg)] py-12 text-center text-slate-500 font-medium text-sm">
+      <footer className="relative z-10 border-t border-slate-200/60 dark:border-slate-800 bg-[var(--hero-bg)] py-12 text-center text-slate-500 dark:text-slate-400 font-medium text-sm">
         <p>&copy; {new Date().getFullYear()} VNR Pool. For VNR VJIET Students.</p>
       </footer>
 
