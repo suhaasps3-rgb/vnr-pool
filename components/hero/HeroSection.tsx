@@ -76,7 +76,7 @@ export default function HeroSection({ onJoin }: { onJoin: () => void }) {
 
             {/* Right Column - Cinematic Route Animation (Bottom on mobile, Right on desktop) */}
             {/* We offset this column slightly to the left on large screens to tighten the composition */}
-            <div className="w-full h-full min-h-[300px] relative z-20 flex items-center justify-center lg:-ml-12 xl:-ml-24 pointer-events-none">
+            <div className="w-full h-full min-h-[300px] relative z-20 flex items-center justify-center lg:-ml-12 xl:-ml-24 pointer-events-none overflow-hidden">
               <AmbientLife />
               <ProductDemoHUD />
               <RouteScene />
