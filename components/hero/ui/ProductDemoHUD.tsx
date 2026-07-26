@@ -36,8 +36,8 @@ export default function ProductDemoHUD() {
               <Search className="w-5 h-5 text-[var(--hero-accent)]" />
             </motion.div>
             <div>
-              <h3 className="text-slate-900 font-bold text-lg">Looking for riders</h3>
-              <p className="text-slate-500 text-sm font-medium mt-1">Scanning local routes</p>
+              <h3 className="text-slate-900 dark:text-white font-bold text-lg">Looking for riders</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mt-1">Scanning local routes</p>
             </div>
           </motion.div>
         )}
@@ -56,12 +56,12 @@ export default function ProductDemoHUD() {
           >
             <div className="flex items-center gap-3 mb-2">
               <CheckCircle2 className="w-6 h-6 text-[var(--hero-success)] drop-shadow-[0_0_8px_rgba(52,199,89,0.4)]" />
-              <h3 className="text-slate-900 font-bold text-lg">{passengers.length} compatible riders</h3>
+              <h3 className="text-slate-900 dark:text-white font-bold text-lg">{passengers.length} compatible riders</h3>
             </div>
             
             <div className="space-y-3">
               <div className="flex items-center justify-between text-sm">
-                <span className="font-semibold text-slate-700">Driver</span>
+                <span className="font-semibold text-slate-700 dark:text-slate-200">Driver</span>
                 <span className="text-[var(--hero-accent)] font-bold">100% Match</span>
               </div>
               
@@ -73,7 +73,7 @@ export default function ProductDemoHUD() {
                   transition={{ delay: i * 0.1, ...springTransition }}
                   className="flex items-center justify-between text-sm"
                 >
-                  <span className="font-semibold text-slate-600 flex items-center gap-2">
+                  <span className="font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-[var(--hero-success)] shadow-[0_0_5px_rgba(52,199,89,0.5)]"></span>
                     {p.name}
                   </span>
@@ -101,8 +101,8 @@ export default function ProductDemoHUD() {
               <Route className="w-6 h-6 text-indigo-500" />
             </motion.div>
             <div>
-              <h3 className="text-slate-900 font-bold text-lg">Evaluating alternatives</h3>
-              <p className="text-slate-500 text-sm font-medium mt-1">Comparing 2 route options</p>
+              <h3 className="text-slate-900 dark:text-white font-bold text-lg">Evaluating alternatives</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mt-1">Comparing 2 route options</p>
             </div>
           </motion.div>
         )}
@@ -120,7 +120,7 @@ export default function ProductDemoHUD() {
               <ArrowRightCircle className="w-6 h-6 text-[var(--hero-success)]" />
             </div>
             <div>
-              <h3 className="text-slate-900 font-bold text-lg">Optimal Route Selected</h3>
+              <h3 className="text-slate-900 dark:text-white font-bold text-lg">Optimal Route Selected</h3>
               <p className="text-[var(--hero-success)] text-sm font-bold mt-1">12 minutes saved</p>
             </div>
           </motion.div>
