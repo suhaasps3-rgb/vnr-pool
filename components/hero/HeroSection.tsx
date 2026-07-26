@@ -34,7 +34,7 @@ function HeroAutoController() {
 
 export default function HeroSection({ onJoin }: { onJoin: () => void }) {
   return (
-    <section className="relative w-full h-[100svh] min-h-[600px] bg-[var(--hero-bg)] text-slate-900 font-sans">
+    <section className="relative w-full h-auto min-h-[100svh] md:h-[100svh] md:min-h-[600px] bg-[var(--hero-bg)] text-slate-900 font-sans pb-8 md:pb-0">
       <JourneyProvider>
         <HeroAutoController />
         
@@ -46,7 +46,7 @@ export default function HeroSection({ onJoin }: { onJoin: () => void }) {
             </div>
 
             {/* Right Column - Cinematic Route Animation (Bottom on mobile, Right on desktop) */}
-            <div className="w-full h-full min-h-[300px] relative z-20 flex items-start md:items-center justify-center lg:-ml-12 xl:-ml-24 pointer-events-none overflow-hidden">
+            <div className="w-full h-full min-h-[450px] md:min-h-0 relative z-20 flex items-center justify-center lg:-ml-12 xl:-ml-24 pointer-events-none overflow-hidden">
               <AmbientLife />
               <ProductDemoHUD />
               <RouteScene />
