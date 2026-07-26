@@ -17,7 +17,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--hero-bg)] text-slate-900 relative overflow-hidden font-sans selection:bg-[var(--hero-accent)]/30">
+    <div className="min-h-screen bg-[var(--hero-bg)] text-slate-900 relative overflow-x-clip font-sans selection:bg-[var(--hero-accent)]/30">
       
 
 
