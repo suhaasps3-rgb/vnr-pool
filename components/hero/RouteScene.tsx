@@ -16,8 +16,6 @@ export default function RouteScene() {
     initializeJourney();
   }, [initializeJourney]);
 
-  if (!route) return null;
-
   // Advanced Virtual Camera (Cinematography)
   // Instead of static sizes, the camera slowly breathes and shifts focus.
   
@@ -45,6 +43,8 @@ export default function RouteScene() {
     [0.9, 0.95, 1],
     ["blur(0px)", "blur(0px)", "blur(2px)"]
   );
+
+  if (!route) return null;
 
   return (
     <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
