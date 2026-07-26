@@ -6,11 +6,13 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-webpush.setVapidDetails(
+export const dynamic = 'force-dynamic';
+
+try { webpush.setVapidDetails(
   'mailto:support@vnrpool.com',
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '',
   process.env.VAPID_PRIVATE_KEY || ''
-);
+); } catch (e) { console.warn('VAPID keys missing during build'); }
 
 async function sendWebPush(userId: string, title: string, body: string) {
   try {
