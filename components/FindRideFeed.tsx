@@ -476,9 +476,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       if (approvedPassengers.length > 0) {
         const notifications = approvedPassengers.map((b: any) => ({
           user_id: b.passenger_id,
-          message: `The ride from ${ride.origin} to ${ride.destination} has been cancelled by the driver.`
+          title: "Ride Cancelled",
+          message: `The ride from ${ride.origin} to ${ride.destination} has been cancelled by the driver.`,
+          type: "ride_cancelled"
         }));
         await supabase.from('notifications').insert(notifications);
+        
+        for (const b of approvedPassengers) {
+          notifyUser(b.passenger_id, "Ride Cancelled", `The ride to ${ride.destination} has been cancelled by the driver.`);
+        }
       }
 
       toast.success("Ride removed successfully.");
