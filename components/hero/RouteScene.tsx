@@ -8,7 +8,7 @@ import Passenger from "./actors/Passenger";
 import Destination from "./actors/Destination";
 
 export default function RouteScene() {
-  const { route, isMirrored, initializeJourney, phase } = useJourney();
+  const { route, isMirrored, initializeJourney, phase, passengers } = useJourney();
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
