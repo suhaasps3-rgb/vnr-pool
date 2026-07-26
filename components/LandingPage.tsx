@@ -54,7 +54,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-32">
 
         {/* The SVG Route Continuation Backbone */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-gradient-to-b from-[var(--hero-accent)]/20 via-[var(--hero-accent)]/10 to-transparent -z-10"></div>
+        <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-gradient-to-b from-[var(--hero-accent)]/20 via-[var(--hero-accent)]/10 to-transparent -z-10"></div>
 
         {/* INTERACTIVE SEARCH BAR */}
         <motion.div 

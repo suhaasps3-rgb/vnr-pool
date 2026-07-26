@@ -21,7 +21,7 @@ export default function HeroContent({ onJoin }: HeroContentProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6 transition-colors">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-4 sm:mb-6 transition-colors">
           Every Empty Seat Is An <span className="text-[#4F7CFF] dark:text-[#638fff] drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(79,124,255,0.4)]">Opportunity.</span>
         </h1>
       </motion.div>
