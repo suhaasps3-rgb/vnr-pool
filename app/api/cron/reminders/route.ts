@@ -42,10 +42,10 @@ export async function GET(request: Request) {
   }
 
   const now = new Date();
-  const targetStart15 = new Date(now.getTime() + 14 * 60000);
+  const targetStart15 = new Date(now.getTime() + 12 * 60000);
   const targetEnd15 = new Date(now.getTime() + 19 * 60000);
 
-  const targetStart5 = new Date(now.getTime() + 4 * 60000);
+  const targetStart5 = new Date(now.getTime() + 2 * 60000);
   const targetEnd5 = new Date(now.getTime() + 9 * 60000);
 
   const { data: rides, error } = await supabase
