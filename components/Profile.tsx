@@ -83,6 +83,15 @@ export default function Profile({ userId }: { userId: string }) {
 
   const updateProfile = useMutation({
     mutationFn: async () => {
+      const vehicleRegex = /^[A-Za-z]{2}\s?[0-9]{2}\s?[A-Za-z]{1,2}\s?[0-9]{4}$/;
+      
+      if (carNumber && !vehicleRegex.test(carNumber.trim())) {
+        throw new Error("Invalid Car number format (e.g., TS 08 AB 1234).");
+      }
+      
+      if (bikeNumber && !vehicleRegex.test(bikeNumber.trim())) {
+        throw new Error("Invalid Bike number format (e.g., TS 08 AB 1234).");
+      }
       const { error } = await supabase
         .from('users')
         .update({
