@@ -37,6 +37,20 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   const supabase = createClient();
   const queryClient = useQueryClient();
 
+  const notifyUser = async (targetUserId: string, title: string, message: string) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      await fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+        body: JSON.stringify({ targetUserId, title, message })
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const [gettingLocation, setGettingLocation] = useState(false);
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -317,6 +331,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         message: `Someone requested to join your ride from ${ride.origin} to ${ride.destination}!`,
         type: "booking_request"
       });
+      notifyUser(ride.driver_id, "New Seat Request", `Someone requested to join your ride to ${ride.destination}!`);
 
       toast.success("Seat requested! Waiting for driver approval.");
       confetti({
@@ -353,6 +368,10 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         message: `Your seat request for ${ride.origin} to ${ride.destination} has been ${status}!`,
         type: status === 'approved' ? 'booking_approved' : 'booking_rejected'
       });
+
+      if (status === 'approved') {
+        notifyUser(passengerId, "Seat Approved!", `Your seat request to ${ride.destination} was approved by the driver!`);
+      }
 
       toast.success(`Request ${status}!`);
       refetch();
