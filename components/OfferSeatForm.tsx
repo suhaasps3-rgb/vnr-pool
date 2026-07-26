@@ -128,7 +128,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
       }
       
       if (finalVehicleNumber) {
-        const vehicleRegex = /^[A-Za-z]{2}\s?[0-9]{2}\s?[A-Za-z]{1,2}\s?[0-9]{4}$/;
+        const vehicleRegex = /^(AP|AR|AS|BR|CG|GA|GJ|HR|HP|JH|KA|KL|MP|MH|MN|ML|MZ|NL|OD|OR|PB|RJ|SK|TN|TS|TG|TR|UP|UK|WB|AN|CH|DD|DN|DL|JK|LA|LD|PY)\s?[0-9]{2}\s?[A-Z]{1,2}\s?[0-9]{4}$/i;
         if (!vehicleRegex.test(finalVehicleNumber.trim())) {
           toast.error("Invalid vehicle number format. Please enter a valid Indian vehicle number (e.g., TS 08 AB 1234).");
           setLoading(false);

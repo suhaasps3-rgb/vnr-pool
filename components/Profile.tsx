@@ -83,7 +83,7 @@ export default function Profile({ userId }: { userId: string }) {
 
   const updateProfile = useMutation({
     mutationFn: async () => {
-      const vehicleRegex = /^[A-Za-z]{2}\s?[0-9]{2}\s?[A-Za-z]{1,2}\s?[0-9]{4}$/;
+      const vehicleRegex = /^(AP|AR|AS|BR|CG|GA|GJ|HR|HP|JH|KA|KL|MP|MH|MN|ML|MZ|NL|OD|OR|PB|RJ|SK|TN|TS|TG|TR|UP|UK|WB|AN|CH|DD|DN|DL|JK|LA|LD|PY)\s?[0-9]{2}\s?[A-Z]{1,2}\s?[0-9]{4}$/i;
       
       if (carNumber && !vehicleRegex.test(carNumber.trim())) {
         throw new Error("Invalid Car number format (e.g., TS 08 AB 1234).");
