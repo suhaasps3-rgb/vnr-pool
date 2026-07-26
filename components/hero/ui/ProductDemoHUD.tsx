@@ -13,7 +13,7 @@ export default function ProductDemoHUD() {
   }
 
   // Define spring transitions for glass UI to feel incredibly snappy but smooth
-  const springTransition = { type: "spring", stiffness: 350, damping: 25 };
+  const springTransition = { type: "spring", stiffness: 350, damping: 25 } as const;
 
   return (
     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none w-[320px]">

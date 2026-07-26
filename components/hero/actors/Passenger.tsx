@@ -30,7 +30,7 @@ export default function Passenger({ data }: { data: PassengerData }) {
   }, [route, data.tValue]);
 
   // Determine visibility based on phase
-  const isVisible = (phase === "MATCHED" || phase === "OPTIMISING" || phase === "JOURNEY_BEGINS" || phase === "PICKUP");
+  const isVisible = (phase === "MATCHED" || phase === "BRANCHING" || phase === "OPTIMISING_CHOICE" || phase === "OPTIMISED" || phase === "PAUSE_2" || phase === "JOURNEY_BEGINS" || phase === "PICKUP");
   const isPickedUp = data.status === "picked_up";
 
   if (!isVisible || isPickedUp) return null;

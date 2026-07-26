@@ -11,7 +11,7 @@ if (typeof window !== "undefined") {
 }
 
 export default function Vehicle() {
-  const { route, phase, setPhase } = useJourney();
+  const { route, phase } = useJourney();
   const vehicleRef = useRef<SVGGElement>(null);
 
   useEffect(() => {
@@ -46,17 +46,14 @@ export default function Vehicle() {
           autoRotate: true,
         },
         duration: 5,
-        ease: "power3.inOut",
-        onComplete: () => {
-          setPhase("DESTINATION");
-        }
+        ease: "power3.inOut"
       });
 
       return () => {
         tl.kill();
       };
     }
-  }, [route, phase, setPhase]);
+  }, [route, phase]);
 
   return (
     <g ref={vehicleRef} className="will-change-transform" style={{ opacity: 0 }}>
