@@ -7,11 +7,55 @@ import { createClient } from "@/lib/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 
+const urlBase64ToUint8Array = (base64String: string) => {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+};
+
 export default function NotificationBell({ userId }: { userId: string }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [pushEnabled, setPushEnabled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      navigator.serviceWorker.register('/sw.js').then(reg => {
+        reg.pushManager.getSubscription().then(sub => {
+          setPushEnabled(!!sub);
+        });
+      });
+    }
+  }, []);
+
+  const handleSubscribe = async () => {
+    if (!('serviceWorker' in navigator)) return;
+    setIsSubscribing(true);
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!)
+      });
+      
+      // Save to Supabase auth metadata!
+      await supabase.auth.updateUser({
+        data: { push_subscription: JSON.stringify(sub) }
+      });
+      setPushEnabled(true);
+    } catch (e) {
+      console.error(e);
+    }
+    setIsSubscribing(false);
+  };
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -97,14 +141,21 @@ export default function NotificationBell({ userId }: { userId: string }) {
           >
             <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/50 backdrop-blur-md">
               <h3 className="font-bold text-white">Notifications</h3>
-              {unreadCount > 0 && (
-                <button 
-                  onClick={handleMarkAllAsRead}
-                  className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
-                >
-                  <Check className="w-3 h-3" /> Mark all read
-                </button>
-              )}
+              <div className="flex items-center gap-3">
+                {!pushEnabled && (
+                  <button onClick={handleSubscribe} disabled={isSubscribing} className="text-xs font-bold text-white bg-indigo-500 hover:bg-indigo-600 px-2 py-1 rounded-md transition-colors">
+                    {isSubscribing ? '...' : 'Enable Alerts'}
+                  </button>
+                )}
+                {unreadCount > 0 && (
+                  <button 
+                    onClick={handleMarkAllAsRead}
+                    className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
+                  >
+                    <Check className="w-3 h-3" /> Mark all read
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="max-h-[400px] overflow-y-auto">
