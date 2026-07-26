@@ -44,10 +44,10 @@ export default function Destination() {
         />
 
         {/* The Building Icon (Premium minimal SVG) */}
-        <motion.rect 
+        <rect 
           x="-16" y="-20" width="32" height="40" rx="4" 
-          animate={{ fill: isComplete ? "var(--hero-destination)" : "var(--hero-road)" }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          fill={isComplete ? "var(--hero-destination)" : "var(--hero-road)"}
+          style={{ transition: "fill 1s ease-in-out" }}
         />
         
         {/* Windows */}

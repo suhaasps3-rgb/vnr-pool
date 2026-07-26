@@ -58,6 +58,7 @@ export default function Vehicle() {
       tl.to(vehicleRef.current, {
         scale: 0,
         opacity: 0,
+        transformOrigin: "50% 50%",
         duration: 0.4,
         ease: "power2.in"
       }, "+=0.1");

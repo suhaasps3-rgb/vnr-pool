@@ -143,7 +143,7 @@ export default function ProductDemoHUD() {
             </div>
             <div>
               <h3 className="text-slate-900 dark:text-white font-bold text-lg">Destination Reached</h3>
-              <p className="text-yellow-600 dark:text-yellow-400 text-sm font-bold mt-1">₹120 Split • 4kg CO₂ Saved</p>
+              <p className="text-yellow-600 dark:text-yellow-400 text-sm font-bold mt-1">4kg CO₂ Saved</p>
             </div>
           </motion.div>
         )}
