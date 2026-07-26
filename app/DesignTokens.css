@@ -18,3 +18,17 @@
   --anim-spring: cubic-bezier(0.22, 1, 0.36, 1);
   --anim-ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.dark {
+  --hero-bg: #0B0E14;
+  --hero-road: #475569;
+  --hero-accent: #4F7CFF;
+  --hero-glow: rgba(79, 124, 255, 0.7);
+  --hero-success: #34C759;
+  --hero-destination: #FFD84D;
+  --hero-glass-bg: rgba(15, 23, 42, 0.6);
+  --hero-glass-border: rgba(255, 255, 255, 0.08);
+  
+  --shadow-soft: 0 4px 24px -4px rgba(0, 0, 0, 0.3);
+  --shadow-large: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+}

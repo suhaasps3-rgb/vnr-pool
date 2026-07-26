@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ShieldCheck, MapPin, Zap, Users, Search, ArrowRight, Shield, Clock, X } from "lucide-react";
 import AuthScreen from "./AuthScreen";
 import HeroSection from "./hero/HeroSection";
+import ThemeToggle from "./ThemeToggle";
 
 export default function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -31,17 +32,19 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
           <div className="w-10 h-10 bg-[var(--hero-accent)] rounded-xl flex items-center justify-center font-black text-xl text-white shadow-[0_0_20px_rgba(79,124,255,0.3)]">
             V
           </div>
-          <span className="text-xl font-extrabold tracking-tight text-slate-900">VNR Pool</span>
+          <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">VNR Pool</span>
         </motion.div>
-        
-        <motion.button
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          onClick={() => setShowAuthModal(true)}
-          className="px-6 py-2.5 rounded-full font-semibold text-sm bg-white/50 border border-slate-200 hover:bg-white transition-colors backdrop-blur-md shadow-sm text-slate-800"
-        >
-          Student Login
-        </motion.button>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <motion.button
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            onClick={() => setShowAuthModal(true)}
+            className="px-6 py-2.5 rounded-full font-semibold text-sm bg-white/50 dark:bg-white/10 border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/20 transition-colors backdrop-blur-md shadow-sm text-slate-800 dark:text-slate-100"
+          >
+            Student Login
+          </motion.button>
+        </div>
       </nav>
 
       <div className="w-full relative z-10">
@@ -60,22 +63,22 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
           viewport={{ once: true, margin: "-100px" }}
           className="max-w-4xl mx-auto mb-32 -mt-10 relative z-20"
         >
-          <div className="bg-white/70 backdrop-blur-2xl border border-slate-200/60 p-4 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col md:flex-row items-center gap-4">
-            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 px-6 py-4 rounded-2xl border border-slate-100">
+          <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 p-4 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col md:flex-row items-center gap-4">
+            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 dark:bg-slate-800/80 px-6 py-4 rounded-2xl border border-slate-100 dark:border-slate-700">
               <MapPin className="w-5 h-5 text-slate-400" />
               <div className="flex flex-col">
                 <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">From</span>
-                <span className="text-slate-700 font-bold">Kukatpally (JNTU)</span>
+                <span className="text-slate-700 dark:text-slate-200 font-bold">Kukatpally (JNTU)</span>
               </div>
             </div>
             <div className="hidden md:flex text-slate-300">
               <ArrowRight className="w-5 h-5" />
             </div>
-            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 px-6 py-4 rounded-2xl border border-slate-100">
+            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 dark:bg-slate-800/80 px-6 py-4 rounded-2xl border border-slate-100 dark:border-slate-700">
               <MapPin className="w-5 h-5 text-[var(--hero-accent)]" />
               <div className="flex flex-col">
                 <span className="text-[10px] font-bold tracking-wider text-[var(--hero-accent)]/70 uppercase">To</span>
-                <span className="text-slate-700 font-bold">VNR VJIET Gate 1</span>
+                <span className="text-slate-700 dark:text-slate-200 font-bold">VNR VJIET Gate 1</span>
               </div>
             </div>
             <button 
@@ -90,7 +93,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
         {/* LIVE RIDE FEED GRID */}
         <div className="mb-32">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight">Live Rides Right Now</h3>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Live Rides Right Now</h3>
             <span className="flex items-center gap-2 text-sm font-semibold text-[var(--hero-success)] bg-[var(--hero-success)]/10 px-4 py-2 rounded-full border border-[var(--hero-success)]/20">
               <span className="w-2 h-2 rounded-full bg-[var(--hero-success)] animate-pulse"></span> Active Network
             </span>
@@ -141,7 +144,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
 
         {/* BENTO GRID */}
         <div>
-          <h3 className="text-2xl font-black text-slate-900 mb-8 text-center tracking-tight">Built for VNR Students</h3>
+          <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-8 text-center tracking-tight">Built for VNR Students</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
