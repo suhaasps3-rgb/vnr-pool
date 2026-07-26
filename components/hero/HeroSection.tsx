@@ -61,13 +61,13 @@ export default function HeroSection({ onJoin }: { onJoin: () => void }) {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full h-[250vh] bg-[var(--hero-bg)] text-slate-900 overflow-hidden font-sans"
+      className="relative w-full h-[250vh] bg-[var(--hero-bg)] text-slate-900 font-sans"
     >
       <JourneyProvider>
         <HeroScrollController containerRef={containerRef} />
         
         {/* Sticky container bounds the layout to the viewport while scrolling the 250vh */}
-        <div className="sticky top-0 w-full h-screen">
+        <div className="sticky top-0 w-full h-screen overflow-hidden">
           <div className="w-full h-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 px-4 sm:px-6 relative">
             
             {/* Left Column (50%) - Content */}
