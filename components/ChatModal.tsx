@@ -13,6 +13,20 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
+  
+  const notifyUser = async (targetUserId: string, title: string, message: string) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      await fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+        body: JSON.stringify({ targetUserId, title, message })
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     fetchMessages();
@@ -97,11 +111,17 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
 
       const notifications = Array.from(participants).map(pid => ({
         user_id: pid,
-        message: `New message from ${senderName}: "${text.length > 30 ? text.substring(0,30)+'...' : text}"`
+        title: `Message from ${senderName}`,
+        message: `New message from ${senderName}: "${text.length > 30 ? text.substring(0,30)+'...' : text}"`,
+        type: "chat_message"
       }));
 
       if (notifications.length > 0) {
         await supabase.from('notifications').insert(notifications);
+        
+        for (const pid of participants) {
+          notifyUser(pid, `Message from ${senderName}`, `"${text.length > 30 ? text.substring(0,30)+'...' : text}"`);
+        }
       }
     }
   };
