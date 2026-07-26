@@ -51,18 +51,19 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
         <HeroSection onJoin={() => setShowAuthModal(true)} />
       </div>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-32">
+      <div className="relative z-20 w-full bg-[var(--hero-bg)]">
+        <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-32 border-t border-transparent">
 
         {/* The SVG Route Continuation Backbone */}
         <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-gradient-to-b from-[var(--hero-accent)]/20 via-[var(--hero-accent)]/10 to-transparent -z-10"></div>
 
         {/* INTERACTIVE SEARCH BAR */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-4xl mx-auto mb-32 mt-8 md:-mt-10 relative z-20"
-        >
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="max-w-4xl mx-auto mb-32 -mt-12 md:-mt-16 relative z-30"
+          >
           <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 p-4 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col md:flex-row items-center gap-4">
             <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 dark:bg-slate-800/80 px-6 py-4 rounded-2xl border border-slate-100 dark:border-slate-700">
               <MapPin className="w-5 h-5 text-slate-400" />
@@ -231,6 +232,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
           </div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }
