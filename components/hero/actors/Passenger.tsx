@@ -50,9 +50,16 @@ export default function Passenger({ data }: { data: PassengerData }) {
         {/* Pin Body */}
         <circle cx="0" cy="0" r="16" fill="white" stroke="var(--hero-accent)" strokeWidth="3" />
         
-        {/* Simple Avatar Representation (Monochrome with accent ring) */}
-        <path d="M -8 6 C -8 2 8 2 8 6" fill="var(--hero-road)" opacity="0.6" />
-        <circle cx="0" cy="-3" r="4" fill="var(--hero-road)" opacity="0.6" />
+        {/* Curated Archetypes (Student, Office Worker, Designer) */}
+        {data.role === "office" && (
+          <path d="M-6,-2 h12 v10 h-12 z M-3,-4 h6 v2 h-6 z" fill="var(--hero-road)" opacity="0.7" />
+        )}
+        {data.role === "student" && (
+          <path d="M-5,-4 h10 v12 c0,2 -10,2 -10,0 z M-3,-6 h6 v2 h-6 z" fill="var(--hero-road)" opacity="0.7" />
+        )}
+        {data.role === "designer" && (
+          <path d="M-7,-2 h14 v8 h-14 z M-4,6 L-2,10 h4 L4,6 M-2,-2 v8 M2,-2 v8" fill="var(--hero-road)" stroke="var(--hero-road)" strokeWidth="1" opacity="0.7" />
+        )}
 
         {/* Pulse effect */}
         <motion.circle

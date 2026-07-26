@@ -37,8 +37,7 @@ export default function Vehicle() {
         ease: "back.out(1.5)",
       });
 
-      // 2. Drive along the path
-      // Note: We use the actual path string for MotionPath
+      // 2. Drive along the path with realistic weight and momentum
       tl.to(vehicleRef.current, {
         motionPath: {
           path: route.path,
@@ -46,8 +45,8 @@ export default function Vehicle() {
           alignOrigin: [0.5, 0.5],
           autoRotate: true,
         },
-        duration: 8,
-        ease: "power1.inOut",
+        duration: 5,
+        ease: "power3.inOut",
         onComplete: () => {
           setPhase("DESTINATION");
         }

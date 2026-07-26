@@ -5,8 +5,6 @@ import { useState } from "react";
 import { ShieldCheck, MapPin, Zap, Users, Search, ArrowRight, Shield, Clock, X } from "lucide-react";
 import AuthScreen from "./AuthScreen";
 import HeroSection from "./hero/HeroSection";
-import IsoLevelWarp from "@/components/ui/isometric-wave-grid-background";
-import ScrollVehicles from "./ScrollVehicles";
 
 export default function LandingPage({ onLogin }: { onLogin: () => void }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -19,37 +17,32 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#09090B] text-slate-50 relative overflow-hidden font-sans selection:bg-blue-500/30">
+    <div className="min-h-screen bg-[var(--hero-bg)] text-slate-900 relative overflow-hidden font-sans selection:bg-[var(--hero-accent)]/30">
       
-      {/* Background Interactive Wave */}
-      <div className="absolute top-0 left-0 w-full h-screen z-0">
-        <IsoLevelWarp 
-          color="139, 92, 246" // Violet-500
-          density={45} 
-          speed={1.2}
-        />
-      </div>
+      {/* Background Subtle Noise Texture to match the cinematic feel */}
+      <div 
+        className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none mix-blend-multiply" 
+        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}
+      ></div>
 
-      <ScrollVehicles />
-      
       {/* Top Navigation */}
-      <nav className="relative z-20 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto">
+      <nav className="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto left-1/2 -translate-x-1/2">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-2"
         >
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-xl shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+          <div className="w-10 h-10 bg-[var(--hero-accent)] rounded-xl flex items-center justify-center font-black text-xl text-white shadow-[0_0_20px_rgba(79,124,255,0.3)]">
             V
           </div>
-          <span className="text-xl font-extrabold tracking-tight text-white">VNR Pool</span>
+          <span className="text-xl font-extrabold tracking-tight text-slate-900">VNR Pool</span>
         </motion.div>
         
         <motion.button
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={() => setShowAuthModal(true)}
-          className="px-6 py-2.5 rounded-full font-semibold text-sm bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md"
+          className="px-6 py-2.5 rounded-full font-semibold text-sm bg-white/50 border border-slate-200 hover:bg-white transition-colors backdrop-blur-md shadow-sm text-slate-800"
         >
           Student Login
         </motion.button>
@@ -59,36 +52,39 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
         <HeroSection onJoin={() => setShowAuthModal(true)} />
       </div>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-32">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-32">
 
-        {/* INTERACTIVE SEARCH BAR (MOCK) */}
+        {/* The SVG Route Continuation Backbone */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-gradient-to-b from-[var(--hero-accent)]/20 via-[var(--hero-accent)]/10 to-transparent -z-10"></div>
+
+        {/* INTERACTIVE SEARCH BAR */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="max-w-4xl mx-auto mb-32"
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="max-w-4xl mx-auto mb-32 -mt-10 relative z-20"
         >
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 p-4 rounded-3xl shadow-2xl flex flex-col md:flex-row items-center gap-4">
-            <div className="flex-1 flex items-center gap-3 w-full bg-black/40 px-6 py-4 rounded-2xl border border-white/5">
+          <div className="bg-white/70 backdrop-blur-2xl border border-slate-200/60 p-4 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col md:flex-row items-center gap-4">
+            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 px-6 py-4 rounded-2xl border border-slate-100">
               <MapPin className="w-5 h-5 text-slate-400" />
               <div className="flex flex-col">
-                <span className="text-xs font-bold tracking-wider text-slate-500 uppercase">From</span>
-                <span className="text-white font-medium">Kukatpally (JNTU)</span>
+                <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">From</span>
+                <span className="text-slate-700 font-bold">Kukatpally (JNTU)</span>
               </div>
             </div>
-            <div className="hidden md:flex text-slate-500">
+            <div className="hidden md:flex text-slate-300">
               <ArrowRight className="w-5 h-5" />
             </div>
-            <div className="flex-1 flex items-center gap-3 w-full bg-black/40 px-6 py-4 rounded-2xl border border-white/5">
-              <MapPin className="w-5 h-5 text-blue-400" />
+            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 px-6 py-4 rounded-2xl border border-slate-100">
+              <MapPin className="w-5 h-5 text-[var(--hero-accent)]" />
               <div className="flex flex-col">
-                <span className="text-xs font-bold tracking-wider text-blue-500/70 uppercase">To</span>
-                <span className="text-white font-medium">VNR VJIET Gate 1</span>
+                <span className="text-[10px] font-bold tracking-wider text-[var(--hero-accent)]/70 uppercase">To</span>
+                <span className="text-slate-700 font-bold">VNR VJIET Gate 1</span>
               </div>
             </div>
             <button 
               onClick={() => setShowAuthModal(true)}
-              className="w-full md:w-auto px-8 py-5 rounded-2xl bg-blue-600 hover:bg-blue-500 font-bold flex items-center justify-center gap-2 transition-colors"
+              className="w-full md:w-auto px-8 py-5 rounded-2xl bg-[var(--hero-accent)] hover:bg-[var(--hero-accent)]/90 text-white font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-500/20"
             >
               <Search className="w-5 h-5" /> Search
             </button>
@@ -98,9 +94,9 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
         {/* LIVE RIDE FEED GRID */}
         <div className="mb-32">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-            <h3 className="text-2xl font-black text-white">Live Rides Right Now</h3>
-            <span className="flex items-center gap-2 text-sm font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Active Feed
+            <h3 className="text-2xl font-black text-slate-900 tracking-tight">Live Rides Right Now</h3>
+            <span className="flex items-center gap-2 text-sm font-semibold text-[var(--hero-success)] bg-[var(--hero-success)]/10 px-4 py-2 rounded-full border border-[var(--hero-success)]/20">
+              <span className="w-2 h-2 rounded-full bg-[var(--hero-success)] animate-pulse"></span> Active Network
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -108,36 +104,37 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               <motion.div
                 key={ride.id}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + i * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="bg-slate-900/40 backdrop-blur-sm border border-white/5 hover:border-blue-500/30 p-6 rounded-3xl transition-all group"
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="bg-white/60 backdrop-blur-xl border border-slate-200/60 hover:border-[var(--hero-accent)]/30 p-6 rounded-3xl transition-all shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(79,124,255,0.1)] group"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 border-2 border-slate-700 flex items-center justify-center font-bold text-lg text-white">
+                  <div className="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-lg text-slate-700">
                     {ride.driver}
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-black text-white">₹{ride.price}</p>
+                    <p className="text-2xl font-black text-slate-900">₹{ride.price}</p>
                     <p className="text-xs text-slate-500 font-medium">per seat</p>
                   </div>
                 </div>
                 <div className="space-y-4 mb-6">
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-slate-500" />
-                    <span className="font-medium text-slate-300">{ride.origin}</span>
+                    <MapPin className="w-4 h-4 text-slate-400" />
+                    <span className="font-medium text-slate-600">{ride.origin}</span>
                   </div>
-                  <div className="w-px h-4 bg-white/10 ml-2"></div>
+                  <div className="w-px h-4 bg-slate-200 ml-2"></div>
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-blue-400" />
-                    <span className="font-bold text-white">{ride.dest}</span>
+                    <MapPin className="w-4 h-4 text-[var(--hero-accent)]" />
+                    <span className="font-bold text-slate-800">{ride.dest}</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                  <div className="flex items-center gap-1.5 text-sm text-slate-400 font-medium">
+                <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+                  <div className="flex items-center gap-1.5 text-sm text-slate-500 font-medium">
                     <Clock className="w-4 h-4" /> {ride.time}
                   </div>
-                  <div className="flex items-center gap-1.5 text-sm text-blue-400 font-bold bg-blue-500/10 px-3 py-1 rounded-full">
+                  <div className="flex items-center gap-1.5 text-sm text-[var(--hero-accent)] font-bold bg-[var(--hero-accent)]/10 px-3 py-1 rounded-full">
                     <Users className="w-4 h-4" /> {ride.seats} left
                   </div>
                 </div>
@@ -148,18 +145,18 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
 
         {/* BENTO GRID */}
         <div>
-          <h3 className="text-2xl font-black text-white mb-8 text-center">Built for VNR Students</h3>
+          <h3 className="text-2xl font-black text-slate-900 mb-8 text-center tracking-tight">Built for VNR Students</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="md:col-span-2 bg-gradient-to-br from-blue-900/40 to-slate-900/40 border border-white/10 p-8 rounded-3xl relative overflow-hidden group"
+              className="md:col-span-2 bg-gradient-to-br from-indigo-50/50 to-white/60 backdrop-blur-xl border border-slate-200/60 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
             >
-              <Shield className="w-10 h-10 text-blue-400 mb-6" />
-              <h4 className="text-2xl font-bold text-white mb-2">100% Verified Identity</h4>
-              <p className="text-slate-400 font-medium">Every user must register with a valid @vnrvjiet.in email address. No outsiders allowed.</p>
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500/20 blur-3xl rounded-full group-hover:bg-blue-500/30 transition-colors"></div>
+              <Shield className="w-10 h-10 text-[var(--hero-accent)] mb-6" />
+              <h4 className="text-2xl font-bold text-slate-900 mb-2">100% Verified Identity</h4>
+              <p className="text-slate-600 font-medium">Every user must register with a valid @vnrvjiet.in email address. No outsiders allowed.</p>
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[var(--hero-accent)]/10 blur-3xl rounded-full group-hover:bg-[var(--hero-accent)]/20 transition-colors"></div>
             </motion.div>
 
             <motion.div 
@@ -167,12 +164,12 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="md:col-span-2 bg-gradient-to-br from-purple-900/30 to-slate-900/40 border border-white/10 p-8 rounded-3xl relative overflow-hidden group"
+              className="md:col-span-2 bg-gradient-to-br from-purple-50/50 to-white/60 backdrop-blur-xl border border-slate-200/60 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
             >
-              <Users className="w-10 h-10 text-purple-400 mb-6" />
-              <h4 className="text-2xl font-bold text-white mb-2">Female-Only Rides</h4>
-              <p className="text-slate-400 font-medium">Dedicated filters to find and offer rides exclusively for female students for maximum comfort.</p>
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/20 blur-3xl rounded-full group-hover:bg-purple-500/30 transition-colors"></div>
+              <Users className="w-10 h-10 text-purple-500 mb-6" />
+              <h4 className="text-2xl font-bold text-slate-900 mb-2">Female-Only Rides</h4>
+              <p className="text-slate-600 font-medium">Dedicated filters to find and offer rides exclusively for female students for maximum comfort.</p>
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/10 blur-3xl rounded-full group-hover:bg-purple-500/20 transition-colors"></div>
             </motion.div>
 
             <motion.div 
@@ -180,16 +177,16 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="md:col-span-4 bg-slate-900/40 border border-white/10 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8"
+              className="md:col-span-4 bg-white/60 backdrop-blur-xl border border-slate-200/60 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm"
             >
               <div>
-                <Zap className="w-10 h-10 text-yellow-400 mb-6" />
-                <h4 className="text-2xl font-bold text-white mb-2">Instant Fuel Split</h4>
-                <p className="text-slate-400 font-medium max-w-lg">No more awkward money conversations. The app automatically calculates a fair fuel split based on the route and number of passengers.</p>
+                <Zap className="w-10 h-10 text-amber-500 mb-6" />
+                <h4 className="text-2xl font-bold text-slate-900 mb-2">Instant Fuel Split</h4>
+                <p className="text-slate-600 font-medium max-w-lg">No more awkward money conversations. The app automatically calculates a fair fuel split based on the route and number of passengers.</p>
               </div>
               <button 
                 onClick={() => setShowAuthModal(true)}
-                className="px-8 py-4 bg-white text-black font-bold rounded-2xl hover:bg-slate-200 transition-colors shrink-0"
+                className="px-8 py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-colors shrink-0 shadow-xl shadow-slate-900/20"
               >
                 Join the Network
               </button>
@@ -200,7 +197,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
       </main>
 
       {/* FOOTER */}
-      <footer className="relative z-10 border-t border-white/10 bg-[#09090B] py-12 text-center text-slate-500 font-medium text-sm">
+      <footer className="relative z-10 border-t border-slate-200/60 bg-[var(--hero-bg)] py-12 text-center text-slate-500 font-medium text-sm">
         <p>&copy; {new Date().getFullYear()} VNR Pool. For VNR VJIET Students.</p>
       </footer>
 
@@ -213,7 +210,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowAuthModal(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
             ></motion.div>
             
             <motion.div
@@ -222,10 +219,10 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative z-10 w-full max-w-md"
             >
-              <div className="bg-white dark:bg-[#0F172A] rounded-3xl shadow-2xl border border-white/10 overflow-hidden relative">
+              <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative">
                 <button 
                   onClick={() => setShowAuthModal(false)}
-                  className="absolute top-4 right-4 z-20 p-2 bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 rounded-full transition-colors text-slate-600 dark:text-slate-300"
+                  className="absolute top-4 right-4 z-20 p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors text-slate-600"
                 >
                   <X className="w-4 h-4" />
                 </button>
