@@ -450,8 +450,12 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       // Notify the driver
       await supabase.from('notifications').insert({
         user_id: ride.driver_id,
-        message: `${passengerName} has cancelled their ${booking.status === 'approved' ? 'seat' : 'request'} on your ride from ${ride.origin} to ${ride.destination}.`
+        title: "Passenger Cancelled",
+        message: `${passengerName} has cancelled their ${booking.status === 'approved' ? 'seat' : 'request'} on your ride from ${ride.origin} to ${ride.destination}.`,
+        type: "booking_cancelled"
       });
+      
+      notifyUser(ride.driver_id, "Passenger Cancelled", `${passengerName} has cancelled their ${booking.status === 'approved' ? 'seat' : 'request'} on your ride.`);
 
       toast.success("Seat cancelled successfully.");
       refetch();
