@@ -11,59 +11,72 @@ if (typeof window !== "undefined") {
 }
 
 export default function Vehicle() {
-  const { route, phase } = useJourney();
+  const { route, phase, scrollProgress } = useJourney();
   const vehicleRef = useRef<SVGGElement>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     if (!route || !vehicleRef.current) return;
 
-    if (phase === "INITIAL" || phase === "SEARCHING") {
+    if (tlRef.current) tlRef.current.kill();
+
+    gsap.set(vehicleRef.current, {
+      x: route.startPos.x,
+      y: route.startPos.y,
+      opacity: 0,
+      scale: 0.5,
+    });
+
+    const tl = gsap.timeline({ paused: true });
+    tlRef.current = tl;
+
+    // 1. Orb -> Outline -> Fill (Spawn animation)
+    tl.to(vehicleRef.current, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.6,
+      ease: "power1.inOut",
+    });
+
+    // 2. Drive along the path
+    tl.to(vehicleRef.current, {
+      motionPath: {
+        path: route.path,
+        align: route.path,
+        alignOrigin: [0.5, 0.5],
+        autoRotate: true,
+      },
+      duration: 4.2,
+      ease: "power2.inOut"
+    });
+
+    // 3. Sink smoothly into the destination building
+    tl.to(vehicleRef.current, {
+      scale: 0,
+      opacity: 0,
+      transformOrigin: "50% 50%",
+      duration: 0.4,
+      ease: "power2.in"
+    });
+
+    return () => {
       if (tlRef.current) tlRef.current.kill();
-      gsap.set(vehicleRef.current, {
-        x: route.startPos.x,
-        y: route.startPos.y,
-        opacity: 0,
-        scale: 0.5,
-      });
-      return;
+    };
+  }, [route]);
+
+  useEffect(() => {
+    if (!tlRef.current) return;
+    
+    // JOURNEY_BEGINS starts at 0.50, DESTINATION ends at 0.95
+    if (scrollProgress >= 0.50 && scrollProgress <= 0.95) {
+      const p = (scrollProgress - 0.50) / 0.45;
+      tlRef.current.progress(Math.max(0, Math.min(1, p)));
+    } else if (scrollProgress > 0.95) {
+      tlRef.current.progress(1);
+    } else if (scrollProgress < 0.50) {
+      tlRef.current.progress(0);
     }
-
-    if (phase === "JOURNEY_BEGINS" && !tlRef.current?.isActive()) {
-      // Vehicle forms and starts driving
-      const tl = gsap.timeline();
-      tlRef.current = tl;
-
-      // 1. Orb -> Outline -> Fill (Spawn animation)
-      tl.to(vehicleRef.current, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.6,
-        ease: "back.out(1.5)",
-      });
-
-      // 2. Drive along the path with realistic weight and momentum
-      tl.to(vehicleRef.current, {
-        motionPath: {
-          path: route.path,
-          align: route.path,
-          alignOrigin: [0.5, 0.5],
-          autoRotate: true,
-        },
-        duration: 4.2, // Faster to finish before the phase reaches DESTINATION (which is 4.8s)
-        ease: "power2.inOut"
-      });
-
-      // 3. Sink smoothly into the destination building
-      tl.to(vehicleRef.current, {
-        scale: 0,
-        opacity: 0,
-        transformOrigin: "50% 50%",
-        duration: 0.4,
-        ease: "power2.in"
-      }, "+=0.1");
-    }
-  }, [route, phase]);
+  }, [scrollProgress]);
 
   return (
     <g ref={vehicleRef} className="will-change-transform" style={{ opacity: 0 }}>
