@@ -55,21 +55,21 @@ export default function RouteScene() {
         style={{
           scale,
           x: xOffset,
-          filter: blur,
-          // We handle mirroring via a separate transform property to not conflict with the Framer Motion scale
-          transform: isMirrored ? 'scaleX(-1)' : 'none',
+          filter: blur
         }}
         preserveAspectRatio="xMidYMid meet"
       >
-        <AnimatedPath pathData={route.path} discardedPathData={route.discardedPath} />
-        
-        {/* Render all waiting passengers */}
-        {passengers.map((p) => (
-          <Passenger key={p.id} data={p} />
-        ))}
-        
-        <Vehicle />
-        <Destination />
+        <g style={{ transform: isMirrored ? 'scaleX(-1)' : 'none', transformOrigin: 'center' }}>
+          <AnimatedPath pathData={route.path} discardedPathData={route.discardedPath} />
+          
+          {/* Render all waiting passengers */}
+          {passengers.map((p) => (
+            <Passenger key={p.id} data={p} />
+          ))}
+          
+          <Vehicle />
+          <Destination />
+        </g>
       </motion.svg>
     </div>
   );
