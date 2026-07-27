@@ -23,30 +23,28 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
 
   const handleNext = async () => {
     if (step === 3) {
-      if (!/^\d{10}$/.test(formData.mobile_number)) {
-        toast.error("Please enter a valid 10-digit mobile number.");
+      if (!/^[6-9]\d{9}$/.test(formData.mobile_number)) {
+        toast.error("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");
         return;
       }
       
       const otp = Math.floor(1000 + Math.random() * 9000).toString();
       setGeneratedOtp(otp);
       
-      // Request permission and show notification
+      // Always show toast as a guaranteed fallback in case OS notifications are blocked
+      toast.success(`(Simulated SMS) Your OTP is: ${otp}`, { duration: 8000 });
+      
+      // Also attempt to show native notification
       if ("Notification" in window) {
         if (Notification.permission === "granted") {
           new Notification("VNR Pool Verification", { body: `Your code is ${otp}` });
         } else if (Notification.permission !== "denied") {
-          const permission = await Notification.requestPermission();
-          if (permission === "granted") {
-            new Notification("VNR Pool Verification", { body: `Your code is ${otp}` });
-          } else {
-             toast.success(`(Simulated SMS) Your OTP is: ${otp}`);
-          }
-        } else {
-             toast.success(`(Simulated SMS) Your OTP is: ${otp}`);
+          Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+              new Notification("VNR Pool Verification", { body: `Your code is ${otp}` });
+            }
+          });
         }
-      } else {
-          toast.success(`(Simulated SMS) Your OTP is: ${otp}`);
       }
       
       setStep(4);
@@ -74,9 +72,9 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
     const supabase = createClient();
 
     try {
-      // Validate mobile (10 digits)
-      if (!/^\d{10}$/.test(formData.mobile_number)) {
-        throw new Error("Please enter a valid 10-digit mobile number.");
+      // Validate mobile (10 digits starting with 6-9)
+      if (!/^[6-9]\d{9}$/.test(formData.mobile_number)) {
+        throw new Error("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");
       }
 
       // We need user email to complete the profile
@@ -201,7 +199,7 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
                   <input 
                     required
                     type="tel"
-                    pattern="\d{10}"
+                    pattern="[6-9]\d{9}"
                     value={formData.mobile_number}
                     onChange={e => setFormData({...formData, mobile_number: e.target.value})}
                     placeholder="9876543210"
