@@ -17,7 +17,7 @@ export default function Vehicle() {
   const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
-    if (!route || !vehicleRef.current) return;
+    if (!route || !vehicleRef.current || !pathRef.current) return;
 
     if (tlRef.current) tlRef.current.kill();
 
@@ -42,8 +42,8 @@ export default function Vehicle() {
     // 2. Drive along the path
     tl.to(vehicleRef.current, {
       motionPath: {
-        path: pathRef.current,
-        align: pathRef.current,
+        path: pathRef.current!,
+        align: pathRef.current!,
         alignOrigin: [0.5, 0.5],
         autoRotate: true,
       },
