@@ -13,11 +13,10 @@ if (typeof window !== "undefined") {
 export default function Vehicle() {
   const { route, phase, scrollProgress } = useJourney();
   const vehicleRef = useRef<SVGGElement>(null);
-  const pathRef = useRef<SVGPathElement>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
-    if (!route || !vehicleRef.current || !pathRef.current) return;
+    if (!route || !vehicleRef.current) return;
 
     if (tlRef.current) tlRef.current.kill();
 
@@ -26,6 +25,7 @@ export default function Vehicle() {
       y: route.startPos.y,
       opacity: 0,
       scale: 0.5,
+      transformOrigin: "0px 0px",
     });
 
     const tl = gsap.timeline({ paused: true });
@@ -42,9 +42,7 @@ export default function Vehicle() {
     // 2. Drive along the path
     tl.to(vehicleRef.current, {
       motionPath: {
-        path: pathRef.current!,
-        align: pathRef.current!,
-        alignOrigin: [0.5, 0.5],
+        path: route.path,
         autoRotate: true,
       },
       duration: 4.2,
@@ -55,7 +53,6 @@ export default function Vehicle() {
     tl.to(vehicleRef.current, {
       scale: 0,
       opacity: 0,
-      transformOrigin: "50% 50%",
       duration: 0.4,
       ease: "power2.in"
     });
@@ -80,9 +77,7 @@ export default function Vehicle() {
   }, [scrollProgress]);
 
   return (
-    <>
-      <path ref={pathRef} d={route?.path || ""} fill="none" opacity="0" />
-      <g ref={vehicleRef} className="will-change-transform" style={{ opacity: 0 }}>
+    <g ref={vehicleRef} className="will-change-transform" style={{ opacity: 0 }}>
       {/* Soft Glow */}
       <circle cx="0" cy="0" r="30" fill="var(--hero-glow)" filter="blur(8px)" opacity="0.6" />
       
@@ -107,6 +102,5 @@ export default function Vehicle() {
         </linearGradient>
       </defs>
     </g>
-    </>
   );
 }
