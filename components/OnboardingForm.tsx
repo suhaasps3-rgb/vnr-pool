@@ -16,15 +16,59 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
     mobile_number: "",
     gender: "",
   });
+  const [generatedOtp, setGeneratedOtp] = useState("");
+  const [enteredOtp, setEnteredOtp] = useState("");
 
   const branches = ["CSE", "ECE", "IT", "EEE", "MECH", "CIVIL", "AIML", "DS", "CSBS"];
 
-  const handleNext = () => setStep(s => Math.min(s + 1, 4));
+  const handleNext = async () => {
+    if (step === 3) {
+      if (!/^\d{10}$/.test(formData.mobile_number)) {
+        toast.error("Please enter a valid 10-digit mobile number.");
+        return;
+      }
+      
+      const otp = Math.floor(1000 + Math.random() * 9000).toString();
+      setGeneratedOtp(otp);
+      
+      // Request permission and show notification
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          new Notification("VNR Pool Verification", { body: `Your code is ${otp}` });
+        } else if (Notification.permission !== "denied") {
+          const permission = await Notification.requestPermission();
+          if (permission === "granted") {
+            new Notification("VNR Pool Verification", { body: `Your code is ${otp}` });
+          } else {
+             toast.success(`(Simulated SMS) Your OTP is: ${otp}`);
+          }
+        } else {
+             toast.success(`(Simulated SMS) Your OTP is: ${otp}`);
+        }
+      } else {
+          toast.success(`(Simulated SMS) Your OTP is: ${otp}`);
+      }
+      
+      setStep(4);
+      return;
+    }
+    
+    if (step === 4) {
+      if (enteredOtp !== generatedOtp) {
+        toast.error("Invalid OTP. Please try again.");
+        return;
+      }
+      setStep(5);
+      return;
+    }
+
+    setStep(s => Math.min(s + 1, 5));
+  };
   const handlePrev = () => setStep(s => Math.max(s - 1, 1));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (step !== 4) return handleNext();
+    if (step !== 5) return handleNext();
 
     setLoading(true);
     const supabase = createClient();
@@ -78,8 +122,8 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
         <div className="absolute top-0 left-0 h-1 bg-gray-200 dark:bg-white/10 w-full">
           <motion.div 
             className="h-full bg-blue-500"
-            initial={{ width: "25%" }}
-            animate={{ width: `${(step / 4) * 100}%` }}
+            initial={{ width: "20%" }}
+            animate={{ width: `${(step / 5) * 100}%` }}
             transition={{ duration: 0.3 }}
           />
         </div>
@@ -176,6 +220,30 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
                 className="space-y-4"
               >
                 <div>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Verify Mobile Number</label>
+                  <p className="text-xs text-gray-500 mb-2">We've sent a 4-digit code to {formData.mobile_number}</p>
+                  <input 
+                    required
+                    type="text"
+                    maxLength={4}
+                    value={enteredOtp}
+                    onChange={e => setEnteredOtp(e.target.value)}
+                    placeholder="1234"
+                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-center tracking-widest font-bold"
+                  />
+                </div>
+              </motion.div>
+            )}
+
+            {step === 5 && (
+              <motion.div 
+                key="step5"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="space-y-4"
+              >
+                <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Gender</label>
                   <div className="grid grid-cols-3 gap-2">
                     {['male', 'female', 'other'].map(g => (
@@ -212,10 +280,10 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
             <motion.button
               whileTap={{ scale: 0.95 }}
               type="submit"
-              disabled={loading || (step === 4 && !formData.gender)}
+              disabled={loading || (step === 5 && !formData.gender)}
               className="ui-button-primary px-6 py-3 rounded-xl flex items-center gap-2"
             >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : step === 4 ? (
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : step === 5 ? (
                 <>Finish <Check className="w-5 h-5" /></>
               ) : (
                 <>Next <ArrowRight className="w-5 h-5" /></>

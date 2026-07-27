@@ -13,6 +13,7 @@ if (typeof window !== "undefined") {
 export default function Vehicle() {
   const { route, phase, scrollProgress } = useJourney();
   const vehicleRef = useRef<SVGGElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
@@ -41,7 +42,8 @@ export default function Vehicle() {
     // 2. Drive along the path
     tl.to(vehicleRef.current, {
       motionPath: {
-        path: route.path,
+        path: pathRef.current,
+        align: pathRef.current,
         alignOrigin: [0.5, 0.5],
         autoRotate: true,
       },
@@ -78,7 +80,9 @@ export default function Vehicle() {
   }, [scrollProgress]);
 
   return (
-    <g ref={vehicleRef} className="will-change-transform" style={{ opacity: 0 }}>
+    <>
+      <path ref={pathRef} d={route?.path || ""} fill="none" opacity="0" />
+      <g ref={vehicleRef} className="will-change-transform" style={{ opacity: 0 }}>
       {/* Soft Glow */}
       <circle cx="0" cy="0" r="30" fill="var(--hero-glow)" filter="blur(8px)" opacity="0.6" />
       
@@ -103,5 +107,6 @@ export default function Vehicle() {
         </linearGradient>
       </defs>
     </g>
+    </>
   );
 }
