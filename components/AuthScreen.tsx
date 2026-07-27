@@ -137,13 +137,13 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
           {authMode === "verify_otp" && (
             <>
               <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">6-Digit OTP</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">8-Digit OTP</label>
                 <input 
                   type="text"
                   required
                   value={otp}
                   onChange={e => setOtp(e.target.value)}
-                  placeholder="123456"
+                  placeholder="12345678"
                   className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all tracking-widest text-center font-bold"
                 />
               </div>
