@@ -30,8 +30,15 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
 
     try {
       if (authMode === "signup") {
-        const { error } = await supabase.auth.signUp({ email, password });
-        if (error) throw error;
+        const response = await fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, type: 'signup' }),
+        });
+        
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to send signup email');
+        
         toast.success("Check your email for the confirmation link!");
       } else if (authMode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -75,9 +82,16 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
-      if (error) throw error;
-      toast.success("OTP sent to your email!");
+      const response = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, type: 'recovery' }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to send OTP');
+
+      toast.success("8-Digit OTP sent to your email!");
       setAuthMode("verify_otp");
     } catch (err: any) {
       toast.error(err.message || "Failed to send OTP");
