@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 const SYSTEM_PROMPT = `You are "Veer", the friendly AI assistant for VNR Pool — an exclusive ride-pooling app for VNR VJIET college students in Hyderabad, India.
 
@@ -76,7 +76,8 @@ export async function POST(req: Request) {
     if (!response.ok) {
       const err = await response.text();
       console.error('Gemini error:', err);
-      return NextResponse.json({ error: 'AI service error' }, { status: 500 });
+      // Return the actual error so the client can show it for debugging
+      return NextResponse.json({ error: `Gemini API error: ${err}` }, { status: 500 });
     }
 
     const data = await response.json();

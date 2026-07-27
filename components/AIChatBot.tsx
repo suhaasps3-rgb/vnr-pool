@@ -46,13 +46,13 @@ export default function AIChatBot() {
       });
 
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
+      if (!response.ok) throw new Error(data.error || 'Unknown error');
 
       setMessages([...newMessages, { role: "assistant", content: data.reply }]);
-    } catch {
+    } catch (err: any) {
       setMessages([
         ...newMessages,
-        { role: "assistant", content: "Sorry, something went wrong 😕 Please try again!" },
+        { role: "assistant", content: `Error: ${err.message}` },
       ]);
     } finally {
       setLoading(false);
