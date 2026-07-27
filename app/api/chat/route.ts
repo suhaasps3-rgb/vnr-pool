@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent`;
 
 const SYSTEM_PROMPT = `You are "Veer", the friendly AI assistant for VNR Pool — an exclusive ride-pooling app for VNR VJIET college students in Hyderabad, India.
 
@@ -63,7 +63,10 @@ export async function POST(req: Request) {
 
     const response = await fetch(GEMINI_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${GEMINI_API_KEY}`,
+      },
       body: JSON.stringify({
         contents,
         generationConfig: {
