@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${GEMINI_API_KEY}`;
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const SYSTEM_PROMPT = `You are "Veer", the friendly AI assistant for VNR Pool — an exclusive ride-pooling app for VNR VJIET college students in Hyderabad, India.
 
@@ -41,51 +39,40 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
     }
 
-    if (!GEMINI_API_KEY) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
       return NextResponse.json({ error: 'Gemini API key not configured' }, { status: 500 });
     }
 
-    // Build conversation history for Gemini
-    const contents = [
-      {
-        role: 'user',
-        parts: [{ text: SYSTEM_PROMPT }],
-      },
-      {
-        role: 'model',
-        parts: [{ text: "Hey! I'm Veer, your VNR Pool assistant 🚗 How can I help you today?" }],
-      },
-      ...messages.map((msg: { role: string; content: string }) => ({
-        role: msg.role === 'assistant' ? 'model' : 'user',
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-8b' });
+
+    // Build chat history (exclude the last user message)
+    const history = [
+      { role: 'user' as const, parts: [{ text: SYSTEM_PROMPT }] },
+      { role: 'model' as const, parts: [{ text: "Hey! I'm Veer, your VNR Pool assistant 🚗 How can I help you today?" }] },
+      ...messages.slice(0, -1).map((msg: { role: string; content: string }) => ({
+        role: (msg.role === 'assistant' ? 'model' : 'user') as 'model' | 'user',
         parts: [{ text: msg.content }],
       })),
     ];
 
-    const response = await fetch(GEMINI_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 300,
-        },
-      }),
+    const lastMessage = messages[messages.length - 1].content;
+
+    const chat = model.startChat({
+      history,
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 300,
+      },
     });
 
-    if (!response.ok) {
-      const err = await response.text();
-      console.error('Gemini error:', err);
-      // Return the actual error so the client can show it for debugging
-      return NextResponse.json({ error: `Gemini API error: ${err}` }, { status: 500 });
-    }
-
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "Sorry, I couldn't process that. Try again!";
+    const result = await chat.sendMessage(lastMessage);
+    const text = result.response.text();
 
     return NextResponse.json({ reply: text });
   } catch (err: any) {
     console.error('Chat API error:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: `Error: ${err.message}` }, { status: 500 });
   }
 }
