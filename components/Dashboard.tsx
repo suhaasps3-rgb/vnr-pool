@@ -18,6 +18,7 @@ import { createClient } from "@/lib/supabase/client";
 import ActiveRideView from "./ActiveRideView";
 import { cn } from "@/lib/utils";
 import { DISTANCE_MAP } from "@/lib/locations";
+import AIChatBot from "./AIChatBot";
 
 type TabType = "find" | "offer" | "my-rides" | "profile" | "active";
 
@@ -423,6 +424,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
       {showBlockedModal && (
         <BlockedUsersModal userId={userId} onClose={() => setShowBlockedModal(false)} />
       )}
+
+      <AIChatBot />
     </div>
   );
 }
