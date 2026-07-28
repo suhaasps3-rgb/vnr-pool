@@ -67,7 +67,7 @@ const knowledgeBase: QA[] = [
   },
   {
     keywords: ['who are you', 'what are you', 'your name', 'veer'],
-    response: "I'm **Veer** 🤖 — your AI-powered assistant for VNR Pool! I'm here to help you navigate the app, understand how rides work, and answer any questions about the platform. Think of me as your friendly campus ride guide! 🎓"
+    response: "I'm **Veer** 🤖 — your AI-powered assistant for VNR Pool! I'm here to help you navigate the app, understand how rides work, and answer any questions about the platform. Think of me as your friendly VNRPool guide! 🎓"
   },
 ];
 

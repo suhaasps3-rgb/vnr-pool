@@ -150,7 +150,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               </p>
               <span className="flex items-center gap-1 text-[11px] font-medium mt-0.5" style={{ color: "var(--accent-success)" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Campus rides active
+                VNRPool rides active
               </span>
             </div>
           </div>
