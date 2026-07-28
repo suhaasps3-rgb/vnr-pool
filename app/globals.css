@@ -2,40 +2,231 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-900: #111827;
+/* ============================================================
+   DUAL-THEME DESIGN TOKENS
+   Dark: Midnight Glassmorphism | Light: High-Contrast Depth
+   ============================================================ */
+
+:root {
+  /* --- Light Mode Tokens --- */
+  --bg-primary: #F4F5F7;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #F8FAFC;
+  --bg-nav: rgba(255, 255, 255, 0.92);
+  --bg-input: #FFFFFF;
+
+  --border-subtle: #E2E8F0;
+  --border-input: #CBD5E1;
+  --border-focus: #818CF8;
+
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-tertiary: #94A3B8;
+  --text-inverse: #FFFFFF;
+
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-nav: 0 -1px 0 rgba(0,0,0,0.06), 0 -4px 20px rgba(0, 0, 0, 0.06);
+  --shadow-button: 0 4px 14px rgba(99, 102, 241, 0.25);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  --accent-primary: #6366F1;
+  --accent-primary-hover: #4F46E5;
+  --accent-price: #A855F7;
+  --accent-price-bg: #F3E8FF;
+  --accent-success: #10B981;
+  --accent-danger: #EF4444;
+  --accent-warning: #F59E0B;
+
+  --card-glass-bg: rgba(255, 255, 255, 0.95);
+  --card-glass-border: rgba(226, 232, 240, 1);
+  --card-blur: 0px;
+
+  --watermark-opacity: 0;
 }
 
-@layer utilities {
-  .ui-card {
-    @apply bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/5 rounded-2xl shadow-sm dark:shadow-md transition-colors;
-  }
-  
-  .ui-card-hover {
-    @apply transition-all duration-300 hover:border-gray-300 dark:hover:border-white/10 hover:shadow-lg dark:hover:bg-[#334155];
-  }
-
-  .ui-button {
-    @apply relative overflow-hidden bg-white dark:bg-[#1E293B] border border-gray-200 dark:border-white/10 text-slate-700 dark:text-slate-200 shadow-sm hover:bg-gray-50 dark:hover:bg-[#334155] transition-colors rounded-xl font-medium;
-  }
-  
-  .ui-button-primary {
-    @apply relative overflow-hidden bg-[#2563EB] dark:bg-[#3B82F6] text-white shadow-md hover:bg-[#1D4ED8] dark:hover:bg-[#2563EB] transition-colors font-medium rounded-xl;
-  }
-  
-  .ui-button-accent {
-    @apply relative overflow-hidden bg-[#10B981] dark:bg-[#059669] text-white shadow-md hover:bg-[#059669] dark:hover:bg-[#047857] transition-colors font-medium rounded-xl;
-  }
-}
-
-/* Ensure native elements like date picker icons use dark mode colors */
 .dark {
+  /* --- Dark Mode Tokens (Midnight Glassmorphism) --- */
+  --bg-primary: #0B0F19;
+  --bg-surface: #0F172A;
+  --bg-surface-hover: #1E293B;
+  --bg-nav: rgba(11, 15, 25, 0.85);
+  --bg-input: rgba(15, 23, 42, 0.8);
+
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-input: rgba(255, 255, 255, 0.12);
+  --border-focus: #818CF8;
+
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-tertiary: #475569;
+  --text-inverse: #0B0F19;
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3);
+  --shadow-nav: 0 -1px 0 rgba(255,255,255,0.06), 0 -8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-button: 0 4px 20px rgba(168, 85, 247, 0.35);
+  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.5);
+
+  --accent-primary: #818CF8;
+  --accent-primary-hover: #6366F1;
+  --accent-price: #C084FC;
+  --accent-price-bg: rgba(168, 85, 247, 0.15);
+  --accent-success: #34D399;
+  --accent-danger: #F87171;
+  --accent-warning: #FCD34D;
+
+  --card-glass-bg: rgba(15, 23, 42, 0.6);
+  --card-glass-border: rgba(255, 255, 255, 0.07);
+  --card-blur: blur(12px);
+
+  --watermark-opacity: 0.04;
+
   color-scheme: dark;
 }
 
-@import './DesignTokens.css';
+/* ============================================================
+   COMPONENT UTILITIES
+   ============================================================ */
 
+@layer utilities {
+  /* Glass Card — used for ride cards in dark mode */
+  .glass-card {
+    background: var(--card-glass-bg);
+    backdrop-filter: var(--card-blur);
+    -webkit-backdrop-filter: var(--card-blur);
+    border: 1px solid var(--card-glass-border);
+    box-shadow: var(--shadow-card);
+  }
+
+  .glass-card:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /* Solid card — white in light, dark surface in dark */
+  .ui-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Input fields */
+  .ui-input {
+    background: var(--bg-input);
+    border: 1.5px solid var(--border-input);
+    color: var(--text-primary);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .ui-input:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+    outline: none;
+  }
+
+  .ui-input::placeholder {
+    color: var(--text-tertiary);
+  }
+
+  /* Primary action button */
+  .btn-primary {
+    background: var(--accent-primary);
+    color: #FFFFFF;
+    box-shadow: var(--shadow-button);
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  /* Price badge */
+  .price-badge {
+    background: var(--accent-price-bg);
+    color: var(--accent-price);
+  }
+
+  /* Bottom nav */
+  .bottom-nav {
+    background: var(--bg-nav);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-nav);
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  /* Vehicle watermark in dark mode ride cards */
+  .ride-card-watermark {
+    opacity: var(--watermark-opacity);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Seat visual map */
+  .seat-available {
+    color: #10B981;
+    fill: #10B981;
+  }
+
+  .seat-booked {
+    color: #EF4444;
+    fill: #EF4444;
+  }
+
+  /* No scrollbar utility */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Smooth page transition */
+  .page-transition {
+    animation: pageIn 0.2s ease-out;
+  }
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   GLOBAL BASE STYLES
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Date/time input colors for dark mode */
+.dark input[type="date"],
+.dark input[type="time"],
+.dark input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
+/* Range slider styling */
+input[type="range"] {
+  accent-color: var(--accent-primary);
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}

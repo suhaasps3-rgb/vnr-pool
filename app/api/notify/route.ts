@@ -8,6 +8,24 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export const dynamic = 'force-dynamic';
 
+// ── In-Memory Rate Limiter ────────────────────────────────
+// Max 30 requests per user per 60-second window
+const RATE_LIMIT_MAX = 30;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const rateLimitMap = new Map<string, number[]>();
+
+function isRateLimited(userId: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(userId) || []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS
+  );
+  if (timestamps.length >= RATE_LIMIT_MAX) return true;
+  timestamps.push(now);
+  rateLimitMap.set(userId, timestamps);
+  return false;
+}
+
+
 try { 
   webpush.setVapidDetails(
     'mailto:support@vnrpool.com',
@@ -31,8 +49,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // ── Rate Limiting ─────────────────────────────────────
+    if (isRateLimited(user.id)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please slow down.' },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
+    }
+
     const body = await request.json();
     const { targetUserId, title, message } = body;
+
 
     if (!targetUserId || !title || !message) {
       return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });

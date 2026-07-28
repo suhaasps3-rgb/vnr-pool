@@ -65,30 +65,21 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           const { latitude, longitude } = position.coords;
           const res = await fetch(`/api/geocode?lat=${latitude}&lon=${longitude}`);
           const data = await res.json();
-          if (data && data.address) {
-            let bestMatch = null;
-            let bestIndex = Infinity;
-            
-            const addressValues = data.address ? Object.values(data.address).join(', ') : "";
-            const searchString = (addressValues + ", " + (data.display_name || "")).toLowerCase();
-            
-            for (const loc of COMMON_LOCATIONS) {
-              const idx = searchString.indexOf(loc.toLowerCase());
-              if (idx !== -1) {
-                if (idx < bestIndex) {
-                  bestIndex = idx;
-                  bestMatch = loc;
-                } else if (idx === bestIndex && loc.length > (bestMatch?.length || 0)) {
-                  bestMatch = loc;
-                }
-              }
-            }
-            const addr = data.address;
-            const locName = bestMatch || addr.neighbourhood || addr.suburb || addr.residential || addr.village || addr.town || addr.city_district || data.name || (data.display_name ? data.display_name.split(',')[0] : "Unknown Location");
+          if (data) {
+            // Use structured POI label from enhanced geocode API
+            const locName =
+              data.poiLabel ||
+              data.address?.neighbourhood ||
+              data.address?.suburb ||
+              data.address?.residential ||
+              data.address?.village ||
+              data.address?.town ||
+              data.name ||
+              (data.display_name ? data.display_name.split(',')[0] : 'Unknown Location');
             setSearchOrigin(locName);
-            toast.success(`Location found: ${locName}`);
+            toast.success(`📍 ${locName}`);
           } else {
-            toast.error("Could not resolve location name");
+            toast.error('Could not resolve location name');
           }
         } catch (error) {
           console.error("Geocoding error", error);
@@ -705,12 +696,67 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             <div key={i} className="glass-card h-32 animate-pulse" />
           ))
         ) : rides?.length === 0 || (mode === "feed" && hasActiveTrip) ? (
-          <div className="text-center py-12 text-neutral-500">
-            {hasActiveTrip && mode === "feed" 
-              ? "You are currently restricted to your active trip."
-              : mode === "active_trip" 
-                ? "No active trips found." 
-                : "No rides available at the moment. Try adjusting your filters!"}
+          <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+            {hasActiveTrip && mode === "feed" ? (
+              <>
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-3xl" style={{ background: 'rgba(99,102,241,0.1)' }}>
+                  🚗
+                </div>
+                <h3 className="text-base font-bold mb-1" style={{ color: 'var(--text-primary)' }}>You&apos;re on a live trip!</h3>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Check the Live Trip tab to track your ride.</p>
+              </>
+            ) : mode === "active_trip" ? (
+              <>
+                <p className="text-base font-semibold" style={{ color: 'var(--text-secondary)' }}>No active trips right now.</p>
+              </>
+            ) : (
+              <>
+                {/* Animated car SVG illustration */}
+                <div className="mb-6 relative">
+                  <svg width="120" height="80" viewBox="0 0 120 80" fill="none" className="mx-auto">
+                    {/* Road */}
+                    <rect x="0" y="65" width="120" height="6" rx="3" fill="#E2E8F0" className="dark:fill-slate-700" />
+                    <rect x="20" y="67" width="15" height="2" rx="1" fill="#CBD5E1" className="dark:fill-slate-600" />
+                    <rect x="50" y="67" width="15" height="2" rx="1" fill="#CBD5E1" className="dark:fill-slate-600" />
+                    <rect x="80" y="67" width="15" height="2" rx="1" fill="#CBD5E1" className="dark:fill-slate-600" />
+                    {/* Car body */}
+                    <rect x="22" y="40" width="76" height="26" rx="6" fill="#818CF8" />
+                    <path d="M35 40 L48 22 L72 22 L85 40Z" fill="#6366F1" />
+                    {/* Windows */}
+                    <rect x="50" y="26" width="18" height="12" rx="3" fill="#E0E7FF" opacity="0.9" />
+                    <rect x="36" y="28" width="11" height="10" rx="2" fill="#E0E7FF" opacity="0.9" />
+                    {/* Wheels */}
+                    <circle cx="42" cy="66" r="10" fill="#1E293B" className="dark:fill-slate-900" />
+                    <circle cx="42" cy="66" r="5" fill="#94A3B8" />
+                    <circle cx="78" cy="66" r="10" fill="#1E293B" className="dark:fill-slate-900" />
+                    <circle cx="78" cy="66" r="5" fill="#94A3B8" />
+                    {/* Headlights */}
+                    <rect x="94" y="47" width="6" height="5" rx="2" fill="#FCD34D" opacity="0.9" />
+                    <rect x="20" y="47" width="6" height="5" rx="2" fill="#F87171" opacity="0.7" />
+                    {/* Stars / sparkles */}
+                    <circle cx="105" cy="20" r="2" fill="#A855F7" opacity="0.7" />
+                    <circle cx="15" cy="15" r="1.5" fill="#6366F1" opacity="0.5" />
+                    <circle cx="60" cy="8" r="2.5" fill="#10B981" opacity="0.4" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-black mb-2" style={{ color: 'var(--text-primary)' }}>
+                  No rides right now
+                </h3>
+                <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--text-secondary)' }}>
+                  No rides match your filters. Try clearing your search, or offer the first ride!
+                </p>
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'offer' }))}
+                  className="px-6 py-3 rounded-2xl font-bold text-sm text-white transition-all"
+                  style={{
+                    background: 'linear-gradient(135deg, #A855F7, #7C3AED)',
+                    boxShadow: '0 4px 16px rgba(168,85,247,0.4)',
+                  }}
+                >
+                  🚗 Offer a Ride Instead
+                </button>
+              </>
+            )}
           </div>
         ) : (
           <motion.div
@@ -1001,7 +1047,13 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                     </span>
                     {ride.ride_category === 'personal_vehicle' && ride.vehicle_number && (
                       <span className="bg-orange-50 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 dark:border-orange-500/30 uppercase tracking-widest ml-1 shadow-sm">
-                        {ride.vehicle_number}
+                        {/* Mask plate in public feed — only reveal when approved or driver's own ride */}
+                        {(isApproved || mode === 'offered')
+                          ? ride.vehicle_number
+                          : ride.vehicle_number.length > 4
+                            ? ride.vehicle_number.slice(0, 2) + ' •••• ' + ride.vehicle_number.slice(-4)
+                            : ride.vehicle_number
+                        }
                       </span>
                     )}
                   </div>

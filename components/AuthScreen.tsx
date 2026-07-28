@@ -14,17 +14,30 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
   const [authMode, setAuthMode] = useState<"login" | "signup" | "forgot_password" | "verify_otp">("login");
   const supabase = createClient();
+
+  const COLLEGE_EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@vnrvjiet\.in$/i;
+
+  const validateEmail = (val: string) => {
+    if (!val) { setEmailError(""); return; }
+    if (!COLLEGE_EMAIL_REGEX.test(val)) {
+      setEmailError("Only @vnrvjiet.in emails are allowed");
+    } else {
+      setEmailError("");
+    }
+  };
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@vnrvjiet\.in$/i;
-    if (!emailRegex.test(email)) {
-      toast.error("Access Restricted: You must use a valid @vnrvjiet.in college email ID.");
+    if (!COLLEGE_EMAIL_REGEX.test(email)) {
+      setEmailError("Only @vnrvjiet.in emails are allowed");
+      toast.error("Access Restricted: Use your @vnrvjiet.in college email.");
       return;
     }
+    setEmailError("");
 
     setLoading(true);
 
@@ -128,10 +141,23 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
               required
               value={email}
               disabled={authMode === "verify_otp"}
-              onChange={e => setEmail(e.target.value)}
+              onChange={e => { setEmail(e.target.value); validateEmail(e.target.value); }}
+              onBlur={e => validateEmail(e.target.value)}
               placeholder="rollno@vnrvjiet.in"
-              className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all disabled:opacity-50"
+              className={`w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border rounded-xl outline-none focus:ring-1 transition-all disabled:opacity-50 ${
+                emailError
+                  ? "border-red-400 focus:border-red-500 focus:ring-red-500/20"
+                  : "border-gray-200 dark:border-white/10 focus:border-blue-500 focus:ring-blue-500"
+              }`}
             />
+            {emailError && (
+              <p className="mt-1.5 text-xs font-medium text-red-500 flex items-center gap-1">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                {emailError}
+              </p>
+            )}
           </div>
 
           {(authMode === "login" || authMode === "signup") && (

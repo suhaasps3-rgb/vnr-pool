@@ -48,10 +48,8 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
   const maxSeats = (() => {
     if (formData.vehicle_type === 'bike') return 1;
-    if (formData.vehicle_type === 'auto') return 2;
-    if (formData.vehicle_type === 'car') {
-      return formData.ride_category === 'auto_split' ? 3 : 4;
-    }
+    if (formData.vehicle_type === 'auto') return 3; // auto can carry up to 3 passengers
+    if (formData.vehicle_type === 'car') return 6;  // car can carry up to 6 passengers
     return 4;
   })();
 
@@ -234,30 +232,20 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           const { latitude, longitude } = position.coords;
           const res = await fetch(`/api/geocode?lat=${latitude}&lon=${longitude}`);
           const data = await res.json();
-          if (data && data.address) {
-            let bestMatch = null;
-            let bestIndex = Infinity;
-            
-            const addressValues = data.address ? Object.values(data.address).join(', ') : "";
-            const searchString = (addressValues + ", " + (data.display_name || "")).toLowerCase();
-            
-            for (const loc of COMMON_LOCATIONS) {
-              const idx = searchString.indexOf(loc.toLowerCase());
-              if (idx !== -1) {
-                if (idx < bestIndex) {
-                  bestIndex = idx;
-                  bestMatch = loc;
-                } else if (idx === bestIndex && loc.length > (bestMatch?.length || 0)) {
-                  bestMatch = loc;
-                }
-              }
-            }
-            const addr = data.address;
-            const locName = bestMatch || addr.neighbourhood || addr.suburb || addr.residential || addr.village || addr.town || addr.city_district || data.name || (data.display_name ? data.display_name.split(',')[0] : "Unknown Location");
+          if (data) {
+            const locName =
+              data.poiLabel ||
+              data.address?.neighbourhood ||
+              data.address?.suburb ||
+              data.address?.residential ||
+              data.address?.village ||
+              data.address?.town ||
+              data.name ||
+              (data.display_name ? data.display_name.split(',')[0] : 'Unknown Location');
             setFormData(prev => ({...prev, origin: locName}));
-            toast.success(`Location found: ${locName}`);
+            toast.success(`📍 ${locName}`);
           } else {
-            toast.error("Could not resolve location name");
+            toast.error('Could not resolve location name');
           }
         } catch (error) {
           console.error("Geocoding error", error);
@@ -315,7 +303,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           <div className="relative z-[100]">
             <div className="flex justify-between items-center mb-2">
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                Origin {showOriginDropdown ? "(OPEN)" : "(CLOSED)"}
+                Origin
               </label>
               <button
                 type="button"
@@ -373,7 +361,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
           <div className="relative z-[90]">
             <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
-              Destination {showDestDropdown ? "(OPEN)" : "(CLOSED)"}
+              Destination
             </label>
             <input 
               required
@@ -479,20 +467,30 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Total Seats (Max: {maxSeats})</label>
-            <input 
-              required
-              type="number"
-              min="1"
-              max={maxSeats}
-              value={formData.total_seats}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                if (val > maxSeats) return;
-                setFormData({...formData, total_seats: val});
-              }}
-              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
-            />
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+              Available {formData.vehicle_type === 'bike' ? 'Seats (Max: 1)' : `Seats (Max: ${maxSeats})`}
+            </label>
+            {/* Visual seat selector buttons */}
+            <div className="flex gap-2 flex-wrap">
+              {Array.from({ length: maxSeats }, (_, i) => i + 1).map(num => (
+                <button
+                  key={num}
+                  type="button"
+                  onClick={() => setFormData({...formData, total_seats: num})}
+                  className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${
+                    formData.total_seats === num
+                      ? 'text-white shadow-md'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  }`}
+                  style={formData.total_seats === num ? { background: 'var(--accent-price)', color: 'white' } : {}}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs mt-1.5" style={{ color: 'var(--text-tertiary)' }}>
+              {formData.total_seats} {formData.total_seats === 1 ? 'seat' : 'seats'} available
+            </p>
           </div>
 
           <div>
@@ -581,11 +579,151 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={loading}
-          className="w-full ui-button-primary py-4 rounded-xl font-bold flex justify-center items-center text-lg"
+          className="w-full py-4 rounded-2xl font-bold text-lg text-white flex justify-center items-center gap-2 transition-all"
+          style={{
+            background: loading ? 'var(--accent-price)' : 'linear-gradient(135deg, #A855F7, #7C3AED)',
+            boxShadow: loading ? 'none' : '0 6px 20px rgba(168,85,247,0.4)',
+          }}
         >
-          {loading ? <Loader2 className="animate-spin w-6 h-6" /> : "Post Ride"}
+          {loading ? <Loader2 className="animate-spin w-5 h-5" /> : '🚗 Post Ride'}
         </motion.button>
+
+        {/* ── Embedded Fare Splitter (contextual to Offer flow) ── */}
+        <FareSplitterSection seats={formData.total_seats} />
       </form>
+    </div>
+  );
+}
+
+// ── Collapsible Fare Splitter ──────────────────────────────
+function FareSplitterSection({ seats }: { seats: number }) {
+  const [open, setOpen] = useState(false);
+  const [distance, setDistance] = useState(15);
+  const [manualDistance, setManualDistance] = useState('');
+  const [vehicle, setVehicle] = useState<'car' | 'bike'>('car');
+  const [passengers, setPassengers] = useState(seats || 2);
+
+  useEffect(() => { setPassengers(seats || 2); }, [seats]);
+
+  let ratePerKm = 0;
+  if (vehicle === 'bike') {
+    ratePerKm = 2.55;
+  } else {
+    if (passengers >= 4) ratePerKm = 2.66;
+    else if (passengers === 3) ratePerKm = 3.55;
+    else if (passengers === 2) ratePerKm = 5.32;
+    else ratePerKm = 10.65;
+  }
+  const effectiveDistance = manualDistance !== '' ? Number(manualDistance) : distance;
+  const perSeat = Math.ceil(ratePerKm * effectiveDistance);
+  const total = perSeat * passengers;
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden mt-2"
+      style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-primary)' }}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold transition-colors"
+        style={{ color: 'var(--text-secondary)' }}
+      >
+        <span className="flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Quick Fare Splitter
+        </span>
+        <svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+        >
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+
+      {open && (
+        <div className="px-4 pb-4 space-y-3">
+          <div className="grid grid-cols-2 gap-2">
+            {(['car', 'bike'] as const).map(v => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setVehicle(v)}
+                className="py-2 rounded-xl text-xs font-bold transition-all"
+                style={{
+                  background: vehicle === v ? 'var(--accent-price)' : 'var(--bg-surface)',
+                  color: vehicle === v ? 'white' : 'var(--text-secondary)',
+                  border: '1px solid var(--border-subtle)',
+                }}
+              >
+                {v === 'car' ? '🚗 Car' : '🏍️ Bike'}
+              </button>
+            ))}
+          </div>
+
+          {vehicle === 'car' && (
+            <div className="flex gap-1.5 flex-wrap">
+              {[1,2,3,4,5,6].map(n => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setPassengers(n)}
+                  className="w-9 h-9 rounded-xl text-xs font-bold transition-all"
+                  style={{
+                    background: passengers === n ? 'var(--accent-price)' : 'var(--bg-surface)',
+                    color: passengers === n ? 'white' : 'var(--text-secondary)',
+                    border: '1px solid var(--border-subtle)',
+                  }}
+                >
+                  {n}
+                </button>
+              ))}
+              <span className="self-center text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                {passengers} {passengers === 1 ? 'passenger' : 'passengers'}
+              </span>
+            </div>
+          )}
+
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold" style={{ color: 'var(--text-tertiary)' }}>Distance</label>
+              <div className="flex items-center gap-1.5">
+                <input
+                  type="number"
+                  min="1"
+                  max="200"
+                  value={manualDistance !== '' ? manualDistance : distance}
+                  onChange={e => setManualDistance(e.target.value)}
+                  className="w-16 text-center text-xs font-bold rounded-lg px-2 py-1 ui-input"
+                  style={{ color: 'var(--accent-price)' }}
+                />
+                <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>km</span>
+              </div>
+            </div>
+            <input
+              type="range" min="1" max="100"
+              value={manualDistance !== '' ? Number(manualDistance) : distance}
+              onChange={e => { setDistance(Number(e.target.value)); setManualDistance(''); }}
+              className="w-full h-1.5 rounded-full"
+            />
+          </div>
+
+          <div
+            className="flex items-center justify-between p-3 rounded-xl"
+            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}
+          >
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: 'var(--text-tertiary)' }}>Per Seat</div>
+              <div className="text-xl font-black" style={{ color: 'var(--text-primary)' }}>₹{perSeat}</div>
+            </div>
+            <div className="w-px h-8" style={{ background: 'var(--border-subtle)' }} />
+            <div className="text-right">
+              <div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: 'var(--accent-price)' }}>Total Fare</div>
+              <div className="text-2xl font-black" style={{ color: 'var(--accent-price)' }}>₹{total}</div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
