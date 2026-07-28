@@ -1,13 +1,27 @@
-name: 5-Minute Ride Reminders Cron
+name: VNR Pool Scheduled Jobs
+
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/5 * * * *'   # Every 5 mins — reminders
+    - cron: '0 * * * *'     # Every hour — archive stale rides
   workflow_dispatch:
 
 jobs:
-  ping_reminders:
+  ride_reminders:
     runs-on: ubuntu-latest
     steps:
-      - name: Hit Vercel SMS Endpoint
+      - name: Ping Reminders Endpoint
         run: |
-          curl -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" https://vnr-pool-omega.vercel.app/api/cron/reminders
+          curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            https://vnr-pool-omega.vercel.app/api/cron/reminders
+
+  archive_stale_rides:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 * * * *' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Ping Archive Endpoint
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            https://vnr-pool-omega.vercel.app/api/cron/archive
