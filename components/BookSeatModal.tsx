@@ -116,7 +116,7 @@ export default function BookSeatModal({
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto">
+            <div className="p-6 overflow-y-auto flex-1 min-h-0">
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
                   <span className="text-slate-500 dark:text-slate-400 font-medium">Driver</span>

@@ -256,18 +256,38 @@ export function calculateFractionalPrice(
 ): number {
   if (!paxOrigin || !paxDest) return driverPrice;
 
-  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const findDist = (loc: string) => {
+  const getDistInternal = (loc: string) => {
     const q = normalize(loc);
     const matchedKey = Object.keys(DISTANCE_MAP).find(k => normalize(k) === q || normalize(k).includes(q) || q.includes(normalize(k)));
     if (matchedKey) return DISTANCE_MAP[matchedKey];
     return null;
   };
 
-  const d1 = findDist(driverOrigin);
-  const d2 = findDist(driverDest);
-  const p1 = findDist(paxOrigin);
-  const p2 = findDist(paxDest);
+  const getDist = (loc: string) => {
+    const val = getDistInternal(loc);
+    if (val !== null) return val;
+    
+    if (normalize(loc) === normalize(driverOrigin) && !driverOrigin.toLowerCase().includes('vnr')) {
+        const pd = getDistInternal(paxOrigin);
+        return (pd !== null ? pd : 10) + 5;
+    }
+    if (normalize(loc) === normalize(driverDest) && !driverDest.toLowerCase().includes('vnr')) {
+        const pd = getDistInternal(paxDest);
+        return (pd !== null ? pd : 10) + 5;
+    }
+    if (normalize(loc) === normalize(paxOrigin) && normalize(paxOrigin) === normalize(driverOrigin)) {
+        return getDist(driverOrigin);
+    }
+    if (normalize(loc) === normalize(paxDest) && normalize(paxDest) === normalize(driverDest)) {
+        return getDist(driverDest);
+    }
+    return null;
+  };
+
+  const d1 = getDist(driverOrigin);
+  const d2 = getDist(driverDest);
+  const p1 = getDist(paxOrigin);
+  const p2 = getDist(paxDest);
 
   if (d1 === null || d2 === null || p1 === null || p2 === null) {
     return driverPrice;
@@ -293,11 +313,39 @@ export function calculateDynamicOverlappingSplit(
   isAuto: boolean,
   passengers: { id: string; pickup: string; dropoff: string }[]
 ): { driverShare: number, passengerShares: Record<string, number> } | null {
-  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const getDist = (loc: string) => {
+  const getDistInternal = (loc: string) => {
     const q = normalize(loc);
     const matchedKey = Object.keys(DISTANCE_MAP).find(k => normalize(k) === q || normalize(k).includes(q) || q.includes(normalize(k)));
     if (matchedKey) return DISTANCE_MAP[matchedKey];
+    return null;
+  };
+
+  const getDist = (loc: string) => {
+    const val = getDistInternal(loc);
+    if (val !== null) return val;
+    
+    if (normalize(loc) === normalize(driverOrigin) && !driverOrigin.toLowerCase().includes('vnr')) {
+        let maxD = 10;
+        passengers.forEach(p => {
+           const pd = getDistInternal(p.pickup);
+           if (pd !== null && pd > maxD) maxD = pd;
+        });
+        return maxD + 5;
+    }
+    if (normalize(loc) === normalize(driverDest) && !driverDest.toLowerCase().includes('vnr')) {
+        let maxD = 10;
+        passengers.forEach(p => {
+           const pd = getDistInternal(p.dropoff);
+           if (pd !== null && pd > maxD) maxD = pd;
+        });
+        return maxD + 5;
+    }
+    if (passengers.some(p => normalize(p.pickup) === normalize(loc) && normalize(loc) === normalize(driverOrigin))) {
+        return getDist(driverOrigin);
+    }
+    if (passengers.some(p => normalize(p.dropoff) === normalize(loc) && normalize(loc) === normalize(driverDest))) {
+        return getDist(driverDest);
+    }
     return null;
   };
 

@@ -1061,7 +1061,14 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   <div className="flex items-center gap-4 w-full md:w-auto">
                     <div className="text-right flex-1 md:flex-none">
                       <p className="text-2xl font-black text-[#0F172A] dark:text-white">₹{displayPrice}</p>
-                      <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">{ride.available_seats} seats left</p>
+                      <div className="flex items-center justify-end gap-1.5 mt-0.5">
+                        <div className="flex gap-0.5">
+                          {Array.from({ length: ride.total_seats }).map((_, idx) => (
+                            <div key={idx} className={`w-1.5 h-2.5 rounded-[1px] ${idx < (ride.total_seats - ride.available_seats) ? 'bg-red-400 dark:bg-red-500/70' : 'bg-emerald-400 dark:bg-emerald-500/80'}`} />
+                          ))}
+                        </div>
+                        <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">{ride.available_seats} seats left</p>
+                      </div>
                       {dynamicPriceNote && (
                         <p className="text-[10px] text-slate-400 font-bold uppercase mt-0.5 tracking-wider">{dynamicPriceNote}</p>
                       )}
