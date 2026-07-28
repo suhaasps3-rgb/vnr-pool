@@ -785,13 +785,12 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             const isApproved = myBooking?.status === 'approved';
             const hasRequested = !!myBooking;
             const approvedPassengers = ride.bookings.filter((b: any) => b.status === 'approved');
-
             const isAuto = ride.ride_category === 'auto_split';
             let displayPrice = ride.price_per_seat;
             let dynamicPriceNote = "";
             let baseDynamicSplit: any = null;
 
-            {
+            if (isAuto) {
               const basePassengers = approvedPassengers.map((b: any) => ({
                 id: b.passenger_id,
                 pickup: b.pickup_location || ride.origin,
@@ -816,7 +815,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               if (simulatedSplit) {
                 if (ride.driver_id === userId) {
                   displayPrice = simulatedSplit.driverShare;
-                  dynamicPriceNote = isAuto ? "Your cab split" : "Your fuel share";
+                  dynamicPriceNote = "Your cab split";
                 } else if (isSimulated) {
                   displayPrice = simulatedSplit.passengerShares[userId] || 0;
                   dynamicPriceNote = "If you join";
@@ -845,6 +844,26 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   displayPrice = calculateFractionalPrice(ride.origin, ride.destination, searchOrigin, searchDestination, ride.price_per_seat);
                   dynamicPriceNote = "Est. share";
                 }
+              }
+            } else {
+              // personal_vehicle logic (fixed fractional cost model)
+              const totalCost = ride.price_per_seat * ride.total_seats;
+              const totalPaxShare = approvedPassengers.reduce((sum: number, b: any) => sum + (b.calculated_price || 0), 0);
+              
+              if (ride.driver_id === userId) {
+                displayPrice = Math.max(0, totalCost - totalPaxShare);
+                dynamicPriceNote = "Your fuel share";
+              } else if (isApproved) {
+                displayPrice = myBooking?.calculated_price || 0;
+                dynamicPriceNote = "Your share";
+              } else if (hasRequested && myBooking?.pickup_location) {
+                displayPrice = myBooking.calculated_price || 0;
+                dynamicPriceNote = "Your share";
+              } else {
+                displayPrice = calculateFractionalPrice(
+                  ride.origin, ride.destination, searchOrigin || ride.origin, searchDestination || ride.destination, ride.price_per_seat
+                );
+                dynamicPriceNote = "Est. share";
               }
             }
 
@@ -1200,7 +1219,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                             <span className="text-xs text-gray-500 dark:text-gray-400">({booking.passenger?.roll_no})</span>
                             {(() => {
                               let renderPrice = booking.calculated_price;
-                              if (baseDynamicSplit) {
+                              if (ride.ride_category === 'auto_split' && baseDynamicSplit) {
                                 if (booking.status === 'approved') {
                                   renderPrice = baseDynamicSplit.passengerShares[booking.passenger_id] || renderPrice;
                                 } else if (booking.status === 'pending' && booking.pickup_location) {
