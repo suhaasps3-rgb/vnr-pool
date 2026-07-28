@@ -22,6 +22,19 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
   const branches = ["CSE", "ECE", "IT", "EEE", "MECH", "CIVIL", "AIML", "DS", "CSBS"];
 
   const handleNext = async () => {
+    if (step === 1) {
+      const rollStr = formData.roll_no.trim();
+      if (rollStr.length < 10) {
+        toast.error("Roll Number must be at least 10 characters long.");
+        return;
+      }
+      const year = parseInt(rollStr.substring(0, 2), 10);
+      if (isNaN(year) || year < 21 || year > 25) {
+        toast.error("Roll Number must start with year 21, 22, 23, 24, or 25.");
+        return;
+      }
+    }
+
     if (step === 3) {
       if (!/^[6-9]\d{9}$/.test(formData.mobile_number)) {
         toast.error("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");

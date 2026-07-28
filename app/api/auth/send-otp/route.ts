@@ -34,7 +34,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const { email_otp, action_link } = data.properties;
+    let { email_otp, action_link } = data.properties;
+
+    // Force link to the new production URL in case Supabase Site URL is outdated
+    if (action_link) {
+      const origin = req.headers.get('origin') || 'https://vnr-pool-omega.vercel.app';
+      const url = new URL(action_link);
+      action_link = action_link.replace(url.origin, origin);
+    }
 
     // Prepare email content based on type
     let subject = '';

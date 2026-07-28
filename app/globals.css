@@ -42,6 +42,12 @@
   --card-blur: 0px;
 
   --watermark-opacity: 0;
+
+  /* --- Hero Landing Page Tokens --- */
+  --hero-bg: #FFFFFF;
+  --hero-accent: #4F7CFF;
+  --hero-road: #E2E8F0;
+  --hero-success: #10B981;
 }
 
 .dark {
@@ -79,6 +85,12 @@
   --card-blur: blur(12px);
 
   --watermark-opacity: 0.04;
+
+  /* --- Hero Landing Page Tokens --- */
+  --hero-bg: #0B0F19;
+  --hero-accent: #638FFF;
+  --hero-road: #1E293B;
+  --hero-success: #34D399;
 
   color-scheme: dark;
 }
