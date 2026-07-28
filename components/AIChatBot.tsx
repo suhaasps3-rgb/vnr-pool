@@ -85,7 +85,7 @@ export default function AIChatBot() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-2xl flex items-center justify-center transition-colors"
+        className="fixed bottom-[84px] md:bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-2xl flex items-center justify-center transition-colors"
         style={{ display: open ? "none" : "flex" }}
         aria-label="Open AI Assistant"
       >
@@ -102,7 +102,7 @@ export default function AIChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-24px)] h-[520px] max-h-[calc(100vh-80px)] flex flex-col rounded-2xl shadow-2xl overflow-hidden border border-white/10"
+            className="fixed bottom-[84px] md:bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-24px)] h-[520px] max-h-[calc(100vh-100px)] flex flex-col rounded-2xl shadow-2xl overflow-hidden border border-white/10"
             style={{
               background: "var(--card-bg, #1a1a2e)",
               backdropFilter: "blur(20px)",

@@ -275,13 +275,16 @@ export function calculateFractionalPrice(
         const pd = getDistInternal(paxDest);
         return (pd !== null ? pd : 10) + 5;
     }
-    if (normalize(loc) === normalize(paxOrigin) && normalize(paxOrigin) === normalize(driverOrigin)) {
-        return getDist(driverOrigin);
+    
+    if (!loc.toLowerCase().includes('vnr')) {
+        if (driverDest.toLowerCase().includes('vnr')) {
+            return getDist(driverOrigin);
+        } else {
+            return getDist(driverDest);
+        }
     }
-    if (normalize(loc) === normalize(paxDest) && normalize(paxDest) === normalize(driverDest)) {
-        return getDist(driverDest);
-    }
-    return null;
+    
+    return 0;
   };
 
   const d1 = getDist(driverOrigin);
@@ -340,13 +343,16 @@ export function calculateDynamicOverlappingSplit(
         });
         return maxD + 5;
     }
-    if (passengers.some(p => normalize(p.pickup) === normalize(loc) && normalize(loc) === normalize(driverOrigin))) {
-        return getDist(driverOrigin);
+    
+    if (!loc.toLowerCase().includes('vnr')) {
+        if (driverDest.toLowerCase().includes('vnr')) {
+            return getDist(driverOrigin);
+        } else {
+            return getDist(driverDest);
+        }
     }
-    if (passengers.some(p => normalize(p.dropoff) === normalize(loc) && normalize(loc) === normalize(driverDest))) {
-        return getDist(driverDest);
-    }
-    return null;
+    
+    return 0;
   };
 
   const d1 = getDist(driverOrigin);
