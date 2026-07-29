@@ -95,14 +95,14 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-[#0B1F1C] text-[#F5F5F0] shadow-md border-b border-slate-800">
+      <header className="sticky top-0 z-40 w-full bg-[var(--bg-nav)] shadow-sm border-b border-[var(--border-subtle)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo & Brand */}
             <div className="flex items-center gap-3">
               <img src="/vnr_logo.png" alt="VNR Logo" className="w-8 h-8 rounded shadow-sm bg-white" />
-              <span className="font-extrabold text-xl tracking-tight text-[#F5F5F0]">
-                VNR<span className="text-[#1D9E75]">-Pool</span>
+              <span className="font-extrabold text-xl tracking-tight text-[var(--text-primary)]">
+                VNR<span className="text-[var(--accent-primary)]">-Pool</span>
               </span>
             </div>
 
@@ -111,9 +111,9 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
               {hasActiveTrip ? (
                 <button
                   onClick={() => setActiveTab("active")}
-                  className={`flex items-center gap-2 px-4 py-2 min-h-[48px] rounded-lg text-sm font-medium transition-colors bg-[#EF9F27]/20 text-[#EF9F27] relative overflow-hidden`}
+                  className={`flex items-center gap-2 px-4 py-2 min-h-[48px] rounded-lg text-sm font-medium transition-colors bg-[var(--accent-warning)]/10 text-[var(--accent-warning)] relative overflow-hidden`}
                 >
-                  <span className="animate-pulse">🚗</span> Ride in Progress
+                  <span className="w-2 h-2 rounded-full bg-[var(--accent-warning)] animate-pulse" /> Ride in Progress
                 </button>
               ) : (
                 <>
@@ -155,11 +155,11 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
             <div className="flex items-center gap-3 relative">
               <button 
                 onClick={() => { setShowNotifications(!showNotifications); setShowProfileMenu(false); }}
-                className="p-2 min-h-[48px] min-w-[48px] flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10 transition-colors relative"
+                className="p-2 min-h-[48px] min-w-[48px] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-xl transition-colors relative"
               >
                 <Bell className="w-5 h-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-[#EF9F27] rounded-full border-2 border-[#0B1F1C]"></span>
+                   <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-[var(--accent-primary)] rounded-full border-2 border-[var(--bg-nav)]"></span>
                 )}
               </button>
 
@@ -232,12 +232,12 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
               </AnimatePresence>
 
               {/* Profile Dropdown */}
-              <div className="relative">
+              <div className="relative hidden md:block">
                 <button 
                   onClick={() => { setShowProfileMenu(!showProfileMenu); setShowNotifications(false); }}
-                  className="flex items-center gap-2 p-1 pl-2 pr-3 min-h-[48px] rounded-full bg-white/5 hover:bg-white/10 border border-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                  className="flex items-center gap-2 p-1 pl-2 pr-3 min-h-[48px] rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--border-focus)]"
                 >
-                  <div className="w-8 h-8 rounded-full bg-[#1D9E75] text-white flex items-center justify-center font-bold text-sm overflow-hidden">
+                  <div className="w-8 h-8 rounded-full bg-[var(--text-secondary)] text-white flex items-center justify-center font-bold text-sm overflow-hidden">
                     {userProfile?.avatar_url ? (
                       <img src={userProfile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
@@ -310,51 +310,42 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
       </header>
 
       {/* Mobile Nav Links (Fixed Bottom) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex border-t border-slate-200 dark:border-slate-800 bg-[#FFFFFF] dark:bg-[#0B1F1C] px-2 py-2 gap-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe">
-        {hasActiveTrip ? (
-          <button
-            onClick={() => setActiveTab("active")}
-            className={`flex-1 flex flex-col justify-center items-center gap-1 min-h-[48px] rounded-lg text-xs font-medium transition-colors bg-[#EF9F27]/20 text-[#EF9F27]`}
-          >
-            <span className="animate-pulse text-lg">🚗</span>
-            <span>Active Ride</span>
-          </button>
-        ) : (
-          <>
-            <button
-              onClick={() => setActiveTab("find")}
-              className={`flex-1 flex flex-col justify-center items-center gap-1 min-h-[48px] rounded-lg text-xs font-medium transition-colors ${
-                activeTab === "find"
-                  ? "text-[#1D9E75]"
-                  : "text-slate-500 hover:bg-slate-50 dark:hover:bg-[#122926]"
-              }`}
-            >
-              <Search className="w-5 h-5" />
-              <span>Find</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("offer")}
-              className={`flex-1 flex flex-col justify-center items-center gap-1 min-h-[48px] rounded-lg text-xs font-medium transition-colors ${
-                activeTab === "offer"
-                  ? "text-[#1D9E75]"
-                  : "text-slate-500 hover:bg-slate-50 dark:hover:bg-[#122926]"
-              }`}
-            >
-              <PlusCircle className="w-5 h-5" />
-              <span>Offer</span>
-            </button>
-          </>
-        )}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex bottom-nav px-2 py-2 gap-2 pb-safe">
+        <button
+          onClick={() => setActiveTab("find")}
+          className={`flex-1 flex flex-col justify-center items-center gap-1 min-h-[48px] rounded-xl text-[10px] font-medium transition-colors ${
+            activeTab === "find" ? "text-[var(--accent-primary)]" : "text-[var(--text-secondary)]"
+          }`}
+        >
+          <Search className="w-5 h-5" />
+          <span>Find</span>
+        </button>
+        <button
+          onClick={() => setActiveTab("offer")}
+          className={`flex-1 flex flex-col justify-center items-center gap-1 min-h-[48px] rounded-xl text-[10px] font-medium transition-colors ${
+            activeTab === "offer" ? "text-[var(--accent-primary)]" : "text-[var(--text-secondary)]"
+          }`}
+        >
+          <PlusCircle className="w-5 h-5" />
+          <span>Offer</span>
+        </button>
         <button
           onClick={() => setActiveTab("my-rides")}
-          className={`flex-1 flex flex-col justify-center items-center gap-1 min-h-[48px] rounded-lg text-xs font-medium transition-colors ${
-            activeTab === "my-rides"
-              ? "text-[#1D9E75]"
-              : "text-slate-500 hover:bg-slate-50 dark:hover:bg-[#122926]"
+          className={`flex-1 flex flex-col justify-center items-center gap-1 min-h-[48px] rounded-xl text-[10px] font-medium transition-colors ${
+            activeTab === "my-rides" ? "text-[var(--accent-primary)]" : "text-[var(--text-secondary)]"
           }`}
         >
           <Bookmark className="w-5 h-5" />
-          <span>My Rides</span>
+          <span>Bookings</span>
+        </button>
+        <button
+          onClick={() => setActiveTab("profile")}
+          className={`flex-1 flex flex-col justify-center items-center gap-1 min-h-[48px] rounded-xl text-[10px] font-medium transition-colors ${
+            activeTab === "profile" ? "text-[var(--accent-primary)]" : "text-[var(--text-secondary)]"
+          }`}
+        >
+          <User className="w-5 h-5" />
+          <span>Profile</span>
         </button>
       </div>
       

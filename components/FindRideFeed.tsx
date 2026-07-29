@@ -10,6 +10,7 @@ import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2
 import ChatModal from "./ChatModal";
 import RateUser from "./RateUser";
 import RideCard from "./RideCard";
+import EmptyState from "./EmptyState";
 import BookSeatModal from "./BookSeatModal";
 import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
@@ -712,52 +713,12 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 <p className="text-base font-semibold" style={{ color: 'var(--text-secondary)' }}>No active trips right now.</p>
               </>
             ) : (
-              <>
-                {/* Animated car SVG illustration */}
-                <div className="mb-6 relative">
-                  <svg width="120" height="80" viewBox="0 0 120 80" fill="none" className="mx-auto">
-                    {/* Road */}
-                    <rect x="0" y="65" width="120" height="6" rx="3" fill="#E2E8F0" className="dark:fill-slate-700" />
-                    <rect x="20" y="67" width="15" height="2" rx="1" fill="#CBD5E1" className="dark:fill-slate-600" />
-                    <rect x="50" y="67" width="15" height="2" rx="1" fill="#CBD5E1" className="dark:fill-slate-600" />
-                    <rect x="80" y="67" width="15" height="2" rx="1" fill="#CBD5E1" className="dark:fill-slate-600" />
-                    {/* Car body */}
-                    <rect x="22" y="40" width="76" height="26" rx="6" fill="#818CF8" />
-                    <path d="M35 40 L48 22 L72 22 L85 40Z" fill="#6366F1" />
-                    {/* Windows */}
-                    <rect x="50" y="26" width="18" height="12" rx="3" fill="#E0E7FF" opacity="0.9" />
-                    <rect x="36" y="28" width="11" height="10" rx="2" fill="#E0E7FF" opacity="0.9" />
-                    {/* Wheels */}
-                    <circle cx="42" cy="66" r="10" fill="#1E293B" className="dark:fill-slate-900" />
-                    <circle cx="42" cy="66" r="5" fill="#94A3B8" />
-                    <circle cx="78" cy="66" r="10" fill="#1E293B" className="dark:fill-slate-900" />
-                    <circle cx="78" cy="66" r="5" fill="#94A3B8" />
-                    {/* Headlights */}
-                    <rect x="94" y="47" width="6" height="5" rx="2" fill="#FCD34D" opacity="0.9" />
-                    <rect x="20" y="47" width="6" height="5" rx="2" fill="#F87171" opacity="0.7" />
-                    {/* Stars / sparkles */}
-                    <circle cx="105" cy="20" r="2" fill="#A855F7" opacity="0.7" />
-                    <circle cx="15" cy="15" r="1.5" fill="#6366F1" opacity="0.5" />
-                    <circle cx="60" cy="8" r="2.5" fill="#10B981" opacity="0.4" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-black mb-2" style={{ color: 'var(--text-primary)' }}>
-                  No rides right now
-                </h3>
-                <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--text-secondary)' }}>
-                  No rides match your filters. Try clearing your search, or offer the first ride!
-                </p>
-                <button
-                  onClick={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'offer' }))}
-                  className="px-6 py-3 rounded-2xl font-bold text-sm text-white transition-all"
-                  style={{
-                    background: 'linear-gradient(135deg, #A855F7, #7C3AED)',
-                    boxShadow: '0 4px 16px rgba(168,85,247,0.4)',
-                  }}
-                >
-                  🚗 Offer a Ride Instead
-                </button>
-              </>
+              <EmptyState 
+                title="No rides right now" 
+                description="No rides match your filters. Try clearing your search, or offer the first ride!" 
+                actionLabel="Offer a Ride Instead" 
+                onAction={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'offer' }))} 
+              />
             )}
           </div>
         ) : (

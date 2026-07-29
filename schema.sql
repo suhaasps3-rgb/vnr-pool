@@ -204,17 +204,34 @@ CREATE TABLE public.notifications (
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY ""Users can read own notifications"" ON public.notifications
+CREATE POLICY "Users can read own notifications" ON public.notifications
 FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY ""Users can insert notifications"" ON public.notifications
-FOR INSERT WITH CHECK (true); -- Allow triggering notifications by anyone, or we can restrict it. Actually, letting authenticated users insert is fine for peer-to-peer.
+CREATE POLICY "Only the intended recipient can insert their notifications" ON public.notifications
+FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can update own notifications" ON public.notifications
 FOR UPDATE USING (auth.uid() = user_id);
 
+-- Enable Realtime on notifications
 alter publication supabase_realtime add table public.notifications;
 
--- 9. Create Ratings Table
+-- 9. pg_cron Setup for 24-Hour Archiving
+-- Automatically mark rides as 'completed' if 24 hours have passed since departure_time
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+SELECT cron.schedule(
+    'archive-old-rides',
+    '0 * * * *', -- Run every hour
+    $$
+    UPDATE public.rides 
+    SET status = 'completed' 
+    WHERE status IN ('active', 'in_progress') 
+    AND departure_time < (now() - interval '24 hours');
+    $$
+);
+
+-- 10. Create Ratings Table
 CREATE TABLE public.ratings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     ride_id UUID NOT NULL REFERENCES public.rides(id) ON DELETE CASCADE,

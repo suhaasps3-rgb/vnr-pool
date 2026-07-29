@@ -8,72 +8,61 @@
    ============================================================ */
 
 :root {
-  /* --- Global Tokens --- */
-  --bg-primary: #F5F5F0;
+  /* --- Light Mode (High-Contrast Depth) --- */
+  --bg-primary: #F4F5F7;
   --bg-surface: #FFFFFF;
-  --bg-surface-hover: #F8F9FA;
-  --bg-nav: #0B1F1C;
+  --bg-surface-hover: #F8FAFC;
+  --bg-nav: #FFFFFF;
   --bg-input: #FFFFFF;
 
   --border-subtle: #E2E8F0;
   --border-input: #CBD5E1;
-  --border-focus: #1D9E75;
+  --border-focus: #A855F7;
 
-  --text-primary: #0B1F1C;
+  --text-primary: #0F172A;
   --text-secondary: #475569;
   --text-tertiary: #64748B;
   --text-inverse: #FFFFFF;
 
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
-  --shadow-nav: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  --shadow-button: 0 2px 4px rgba(29, 158, 117, 0.2);
-  --shadow-card-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-nav: 0 -4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-button: 0 2px 4px rgba(168, 85, 247, 0.2);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-  --accent-primary: #1D9E75;
-  --accent-primary-hover: #178361;
-  --accent-success: #639922;
-  --accent-danger: #E24B4A;
-  --accent-warning: #EF9F27;
-
-  /* --- Hero Landing Page Tokens --- */
-  --hero-bg: #F5F5F0;
-  --hero-accent: #1D9E75;
-  --hero-road: #E2E8F0;
-  --hero-success: #639922;
+  --accent-primary: #A855F7;
+  --accent-primary-hover: #9333EA;
+  --accent-success: #10B981;
+  --accent-danger: #EF4444;
+  --accent-warning: #F59E0B;
 }
 
 .dark {
-  /* Adapting to dark mode while keeping the color structure */
-  --bg-primary: #0B1F1C;
-  --bg-surface: #122926;
-  --bg-surface-hover: #1A3632;
-  --bg-nav: #061311;
-  --bg-input: #122926;
+  /* --- Dark Mode (Midnight Glassmorphism) --- */
+  --bg-primary: #0B0F19;
+  --bg-surface: rgba(11, 15, 25, 0.9);
+  --bg-surface-hover: rgba(15, 23, 42, 0.95);
+  --bg-nav: rgba(11, 15, 25, 0.95);
+  --bg-input: rgba(15, 23, 42, 0.8);
 
   --border-subtle: rgba(255, 255, 255, 0.1);
   --border-input: rgba(255, 255, 255, 0.15);
-  --border-focus: #1D9E75;
+  --border-focus: #A855F7;
 
-  --text-primary: #F5F5F0;
+  --text-primary: #F8FAFC;
   --text-secondary: #94A3B8;
   --text-tertiary: #64748B;
-  --text-inverse: #0B1F1C;
+  --text-inverse: #0F172A;
 
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2);
-  --shadow-nav: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --shadow-button: 0 2px 4px rgba(29, 158, 117, 0.2);
-  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-nav: 0 -4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-button: 0 2px 4px rgba(168, 85, 247, 0.2);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
 
-  --accent-primary: #1D9E75;
-  --accent-primary-hover: #178361;
-  --accent-success: #639922;
-  --accent-danger: #E24B4A;
-  --accent-warning: #EF9F27;
-
-  --hero-bg: #0B1F1C;
-  --hero-accent: #1D9E75;
-  --hero-road: #1A3632;
-  --hero-success: #639922;
+  --accent-primary: #A855F7;
+  --accent-primary-hover: #9333EA;
+  --accent-success: #10B981;
+  --accent-danger: #EF4444;
+  --accent-warning: #F59E0B;
 
   color-scheme: dark;
 }
@@ -83,20 +72,23 @@
    ============================================================ */
 
 @layer utilities {
-  /* Solid card for both modes */
+  /* Solid card for light mode, frosted glass for dark mode */
   .ui-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-card);
     transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
   }
+  
+  .dark .ui-card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
 
   .ui-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-card-hover);
   }
-
-  /* Removed old solid card override since .ui-card handles it all now */
 
   /* Input fields */
   .ui-input {
@@ -108,7 +100,7 @@
 
   .ui-input:focus {
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
     outline: none;
   }
 
@@ -121,63 +113,43 @@
     background: var(--accent-primary);
     color: #FFFFFF;
     box-shadow: var(--shadow-button);
-    transition: background-color 0.15s ease-in-out, transform 0.15s ease-out;
+    transition: background-color 0.15s ease-in-out, transform 0.15s ease-out, opacity 0.15s ease-in-out;
   }
 
   .btn-primary:hover {
     background: var(--accent-primary-hover);
+    opacity: 0.9;
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
   }
 
   .btn-primary:active {
     transform: translateY(0);
   }
 
-  /* Price badge */
-  .price-badge {
-    background: var(--accent-price-bg);
-    color: var(--accent-price);
-  }
-
   /* Bottom nav */
   .bottom-nav {
-    background: var(--bg-surface);
+    background: var(--bg-nav);
     box-shadow: var(--shadow-nav);
     border-top: 1px solid var(--border-subtle);
+  }
+  
+  .dark .bottom-nav {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   /* Vehicle watermark in dark mode ride cards */
   .ride-card-watermark {
-    opacity: var(--watermark-opacity);
+    opacity: 0.03;
     pointer-events: none;
     user-select: none;
-  }
-
-  /* Seat visual map */
-  .seat-available {
-    color: #10B981;
-    fill: #10B981;
-  }
-
-  .seat-booked {
-    color: #EF4444;
-    fill: #EF4444;
+    mix-blend-mode: overlay;
   }
 
   /* No scrollbar utility */
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-  /* Smooth page transition */
-  .page-transition {
-    animation: pageIn 0.2s ease-out;
-  }
-}
-
-@keyframes pageIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================================
@@ -201,19 +173,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Date/time input colors for dark mode */
 .dark input[type="date"],
 .dark input[type="time"],
 .dark input[type="datetime-local"] {
   color-scheme: dark;
 }
 
-/* Range slider styling */
 input[type="range"] {
   accent-color: var(--accent-primary);
 }
 
-/* Focus visible for accessibility */
 :focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;

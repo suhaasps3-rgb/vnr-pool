@@ -609,9 +609,9 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={loading}
-          className="w-full py-4 rounded-xl font-bold text-lg text-white flex justify-center items-center gap-2 transition-colors bg-[#1D9E75] hover:bg-[#178361] disabled:opacity-60"
+          className="btn-primary w-full py-4 rounded-xl font-black text-lg flex justify-center items-center gap-2 disabled:opacity-60"
         >
-          {loading ? <Loader2 className="animate-spin w-5 h-5" /> : '🚗 Post Ride'}
+          {loading ? <Loader2 className="animate-spin w-5 h-5" /> : 'Post Ride'}
         </motion.button>
       </form>
     </div>

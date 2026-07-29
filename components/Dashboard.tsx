@@ -127,21 +127,21 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
 
       {/* ─── Top Header ─── */}
       <header
-        className="sticky top-0 z-50 w-full bg-[#0B1F1C] text-[#F5F5F0] shadow-md border-b border-slate-800"
+        className="sticky top-0 z-50 w-full bg-[var(--bg-nav)] text-[var(--text-primary)] shadow-[var(--shadow-nav)] border-b border-[var(--border-subtle)]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             {/* Logo + Greeting */}
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#1D9E75] rounded-xl flex items-center justify-center font-black text-base text-white flex-shrink-0">
+              <div className="w-8 h-8 bg-[var(--accent-primary)] rounded-xl flex items-center justify-center font-black text-base text-white flex-shrink-0">
                 V
               </div>
               <div className="hidden sm:block">
-                <p className="text-[13px] font-bold leading-none text-[#F5F5F0]">
-                  Hey, {firstName} 👋
+                <p className="text-[13px] font-bold leading-none text-[var(--text-primary)]">
+                  Hey, {firstName}
                 </p>
-                <span className="flex items-center gap-1 text-[11px] font-medium mt-0.5 text-[#639922]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#639922] animate-pulse" />
+                <span className="flex items-center gap-1 text-[11px] font-medium mt-0.5 text-[var(--accent-success)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-success)] animate-pulse" />
                   VNRPool rides active
                 </span>
               </div>
@@ -154,10 +154,10 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "px-4 py-2 min-h-[48px] rounded-lg text-sm font-medium transition-colors flex items-center gap-2",
+                    "px-4 py-2 min-h-[48px] rounded-xl text-sm font-medium transition-colors flex items-center gap-2",
                     activeTab === tab.id
-                      ? "bg-[#1D9E75]/20 text-[#1D9E75]"
-                      : "text-slate-300 hover:bg-white/10 hover:text-white"
+                      ? "bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]"
+                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]"
                   )}
                 >
                   <tab.icon className="w-4 h-4" />
@@ -174,20 +174,20 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowBlockedModal(true)}
-              className="p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-lg transition-colors text-slate-300 hover:text-white hover:bg-white/10"
+              className="p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-xl transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]"
               title="Blocked Users"
             >
               <UserX className="w-5 h-5" />
             </button>
-            <div className="text-slate-300 hover:text-white transition-colors">
+            <div className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
               <ThemeToggle />
             </div>
-            <div className="text-slate-300 hover:text-white transition-colors">
+            <div className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
               <NotificationBell userId={userId} />
             </div>
             <button
               onClick={onSignOut}
-              className="p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-lg transition-colors text-[#E24B4A] hover:bg-[#E24B4A]/10"
+              className="p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-xl transition-colors text-[var(--accent-danger)] hover:bg-[var(--accent-danger)]/10"
               title="Sign Out"
             >
               <LogOut className="w-5 h-5" />
@@ -227,7 +227,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
       </main>
 
       {/* ─── Fixed Bottom Navigation Bar (Mobile Only) ─── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#FFFFFF] dark:bg-[#0B1F1C] border-t border-slate-200 dark:border-slate-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bottom-nav pb-safe">
         <div className="max-w-2xl mx-auto px-2">
           <div className="flex items-stretch h-[64px]">
             {TABS.map((tab) => {
@@ -242,13 +242,13 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   className={cn(
                     "flex-1 flex flex-col items-center justify-center gap-1 relative transition-colors duration-150 py-2 rounded-xl mx-0.5 min-h-[48px]",
                     isActive
-                      ? "text-[#1D9E75]"
-                      : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                      ? "text-[var(--accent-primary)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   )}
                 >
                   {/* Pulse for live trip */}
                   {isLiveTrip && (
-                    <span className="absolute top-2 right-2 w-2 h-2 bg-[#EF9F27] rounded-full animate-pulse" />
+                    <span className="absolute top-2 right-2 w-2 h-2 bg-[var(--accent-warning)] rounded-full animate-pulse" />
                   )}
 
                   <span className="relative z-10 flex flex-col items-center gap-1">

@@ -14,18 +14,18 @@ function SeatMap({ total, available }: { total: number; available: number }) {
     <div className="flex items-center gap-1.5">
       {Array.from({ length: total }).map((_, i) => (
         <svg key={i} width="14" height="16" viewBox="0 0 14 16" fill="none">
-          <rect x="1" y="1" width="12" height="9" rx="2.5" fill={i < booked ? "#E24B4A" : "#1D9E75"} opacity="0.9"/>
-          <rect x="2" y="10" width="10" height="4" rx="1.5" fill={i < booked ? "#E24B4A" : "#1D9E75"} opacity="0.7"/>
-          <rect x="2" y="13" width="2" height="2.5" rx="0.5" fill={i < booked ? "#E24B4A" : "#1D9E75"} opacity="0.6"/>
-          <rect x="10" y="13" width="2" height="2.5" rx="0.5" fill={i < booked ? "#E24B4A" : "#1D9E75"} opacity="0.6"/>
+          <rect x="1" y="1" width="12" height="9" rx="2.5" fill={i < booked ? "#EF4444" : "#10B981"} opacity="0.9"/>
+          <rect x="2" y="10" width="10" height="4" rx="1.5" fill={i < booked ? "#EF4444" : "#10B981"} opacity="0.7"/>
+          <rect x="2" y="13" width="2" height="2.5" rx="0.5" fill={i < booked ? "#EF4444" : "#10B981"} opacity="0.6"/>
+          <rect x="10" y="13" width="2" height="2.5" rx="0.5" fill={i < booked ? "#EF4444" : "#10B981"} opacity="0.6"/>
         </svg>
       ))}
       <span
-        className="text-[10px] font-bold ml-1"
-        style={{ color: available > 0 ? "#1D9E75" : "#E24B4A" }}
+        className="text-[10px] font-bold ml-1 uppercase tracking-wider"
+        style={{ color: available > 0 ? "#10B981" : "#EF4444" }}
       >
         {available > 0
-          ? `${available} open`
+          ? `${available} ${available === 1 ? 'Seat' : 'Seats'}`
           : "Full"}
       </span>
     </div>
@@ -39,7 +39,7 @@ function VehicleTag({ type, vehicleNumber }: { type: string; vehicleNumber?: str
     auto: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
     bike: "bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400",
   };
-  const labels: Record<string, string> = { car: "🚗 Car", auto: "🛺 Auto", bike: "🏍️ Bike" };
+  const labels: Record<string, string> = { car: "Car", auto: "Auto", bike: "Bike" };
 
   // Mask vehicle number: show first 2 + last 4 only
   const maskedNumber = vehicleNumber
@@ -104,7 +104,7 @@ export default function RideCard({
           transition: { type: "tween", ease: "easeOut", duration: 0.15 },
         },
       }}
-      className={`bg-white dark:bg-[#122926] border border-slate-200 dark:border-slate-800 shadow-sm rounded-xl relative overflow-hidden transition-all duration-150 ease-out sm:hover:-translate-y-[2px] sm:hover:shadow-md ${
+      className={`ui-card rounded-2xl relative overflow-hidden ${
         ride.status === "cancelled" ? "opacity-60 grayscale" : ""
       }`}
     >
@@ -128,17 +128,17 @@ export default function RideCard({
       )}
       {ride.is_women_only && (
         <div className="absolute top-4 right-4 bg-pink-500/10 text-pink-500 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide border border-pink-500/20 z-10">
-          👩 Women Only
+          Women Only
         </div>
       )}
 
       <div className="p-4 sm:p-6">
         {/* ── Header: Driver + Price ── */}
-        <div className="flex items-start justify-between mb-6">
+        <div className="flex items-start justify-between mb-8">
           {/* Driver info */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="relative flex-shrink-0">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[#0B1F1C] dark:text-white font-bold text-lg border border-slate-200 dark:border-slate-700">
+              <div className="w-14 h-14 rounded-full overflow-hidden bg-[var(--bg-surface-hover)] flex items-center justify-center text-[var(--text-primary)] font-bold text-xl border border-[var(--border-subtle)] shadow-sm">
                 {ride.driver?.avatar_url ? (
                   <img
                     src={ride.driver.avatar_url}
@@ -150,57 +150,54 @@ export default function RideCard({
                 )}
               </div>
               <div
-                className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#1D9E75] rounded-full flex items-center justify-center border-2 border-white dark:border-[#122926]"
+                className="absolute -bottom-1 -right-1 w-6 h-6 bg-[var(--accent-primary)] rounded-full flex items-center justify-center border-2 border-[var(--bg-surface)] shadow-sm"
                 title="Verified VNRian"
               >
-                <ShieldCheck className="w-3 h-3 text-white" />
+                <ShieldCheck className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
 
             <div>
-              <h4 className="font-bold text-base text-[#0B1F1C] dark:text-white leading-tight">
+              <h4 className="font-bold text-lg text-[var(--text-primary)] leading-tight tracking-tight">
                 {ride.driver?.full_name || "Unknown Driver"}
               </h4>
               <div className="flex items-center gap-2 mt-1">
                 {driverRating && (
-                  <span className="text-xs font-medium text-[#EF9F27]">
+                  <span className="text-[11px] font-bold text-[var(--accent-warning)] bg-[var(--accent-warning)]/10 px-1.5 py-0.5 rounded-md">
                     ★ {driverRating}
                   </span>
                 )}
-                <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
+                <span className="text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-wider bg-[var(--accent-primary)]/10 px-2 py-0.5 rounded-full">
                   VNRian
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Price badge */}
-          <div className="text-right flex-shrink-0 flex flex-col items-end">
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 mb-1">Price</span>
-            <span className="text-xl font-bold leading-none text-[#0B1F1C] dark:text-white">
-              {price === 0 ? "Free" : `₹${price}`}
-            </span>
-            {priceNote && (
-              <p className="text-[10px] mt-1 text-slate-500">
-                {priceNote}
-              </p>
-            )}
+          {/* Floating Price Badge */}
+          <div className="flex-shrink-0 flex flex-col items-end">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)] mb-0.5">Share</span>
+            <div className="bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 px-3 py-1.5 rounded-xl text-right">
+              <span className="text-2xl font-black text-[var(--accent-primary)]">
+                {price === 0 ? "Free" : `₹${price}`}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* ── Route Micro-Timeline ── */}
-        <div className="relative pl-5 mb-6">
+        <div className="relative pl-[22px] mb-8">
           {/* Solid line connector */}
-          <div className="absolute left-[7px] top-3 bottom-4 w-[2px] bg-[#1D9E75] rounded-full" />
+          <div className="absolute left-[7px] top-4 bottom-5 w-[2px] bg-gradient-to-b from-[var(--border-subtle)] via-[var(--border-subtle)] to-[var(--accent-primary)] rounded-full" />
 
           {/* Origin */}
-          <div className="relative flex items-start gap-4 mb-5">
-            <div className="w-3.5 h-3.5 rounded-full bg-white dark:bg-[#122926] border-2 border-[#1D9E75] flex-shrink-0 mt-0.5 z-10 -ml-[5px]" />
+          <div className="relative flex items-start gap-4 mb-6">
+            <div className="absolute -left-[20.5px] top-1.5 w-2.5 h-2.5 rounded-full bg-[var(--text-secondary)] shadow-[0_0_0_4px_var(--bg-surface)] z-10" />
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-tertiary)] mb-0.5">
                 Pickup
               </p>
-              <p className="text-sm font-medium text-[#0B1F1C] dark:text-white leading-tight">
+              <p className="text-base font-semibold text-[var(--text-primary)] leading-tight">
                 {ride.origin}
               </p>
             </div>
@@ -208,12 +205,12 @@ export default function RideCard({
 
           {/* Destination */}
           <div className="relative flex items-start gap-4">
-            <div className="w-3.5 h-3.5 rounded-full bg-[#1D9E75] flex-shrink-0 mt-0.5 z-10 -ml-[5px]" />
+            <div className="absolute -left-[20.5px] top-1.5 w-2.5 h-2.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_0_4px_var(--bg-surface)] z-10" />
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-tertiary)] mb-0.5">
                 Dropoff
               </p>
-              <p className="text-sm font-medium text-[#0B1F1C] dark:text-white leading-tight">
+              <p className="text-base font-semibold text-[var(--text-primary)] leading-tight">
                 {ride.destination}
               </p>
             </div>
@@ -221,18 +218,18 @@ export default function RideCard({
         </div>
 
         {/* ── Stats Row ── */}
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 mb-5">
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[var(--bg-surface-hover)] border border-[var(--border-subtle)] mb-5">
           {/* Departure time */}
-          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
+          <div className="flex items-center gap-2 text-[var(--text-secondary)]">
             <Clock className="w-4 h-4 flex-shrink-0" />
-            <span className="text-xs font-semibold">
+            <span className="text-xs font-bold">
               {ride.departure_time
                 ? format(new Date(ride.departure_time), "h:mm a, MMM d")
                 : "Flexible"}
             </span>
           </div>
 
-          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700" />
+          <div className="w-px h-6 bg-[var(--border-subtle)]" />
 
           {/* Visual seat map */}
           <SeatMap total={ride.total_seats} available={ride.available_seats} />
@@ -288,14 +285,14 @@ export default function RideCard({
             <button
               onClick={onBookClick}
               disabled={isProcessing}
-              className="flex-1 py-3 rounded-lg font-bold text-sm flex items-center justify-center gap-2 text-white transition-colors bg-[#1D9E75] hover:bg-[#178361] disabled:opacity-60 disabled:cursor-not-allowed"
+              className="btn-primary flex-1 py-4 rounded-xl font-black text-[15px] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isProcessing ? (
-                <span className="animate-spin w-4 h-4 border-2 border-white/30 border-t-white rounded-full" />
+                <span className="animate-spin w-5 h-5 border-2 border-white/30 border-t-white rounded-full" />
               ) : (
                 <>
                   Request Seat
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-5 h-5" />
                 </>
               )}
             </button>
@@ -310,8 +307,8 @@ export default function RideCard({
 
           {/* Pending request */}
           {hasRequested && !isApproved && !isDriver && (
-            <div className="flex-1 py-3 rounded-lg font-bold text-sm text-center bg-[#EF9F27]/10 text-[#EF9F27] border border-[#EF9F27]/20">
-              ⏳ Request Pending
+            <div className="flex-1 py-3 rounded-lg font-bold text-sm text-center bg-[var(--accent-warning)]/10 text-[var(--accent-warning)] border border-[var(--accent-warning)]/20">
+              Request Pending
             </div>
           )}
 
@@ -342,9 +339,9 @@ export default function RideCard({
         {isDriver && ride.status === "in_progress" && (
           <button
             onClick={onCompleteClick}
-            className="w-full mt-3 py-3 rounded-lg font-bold text-sm text-white transition-colors bg-[#639922] hover:bg-[#52821a]"
+            className="w-full mt-3 py-4 rounded-xl font-black text-sm text-white transition-colors bg-[var(--accent-success)] hover:opacity-90"
           >
-            ✓ Complete Ride
+            Complete Ride
           </button>
         )}
       </div>
