@@ -756,6 +756,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {rides?.filter((ride) => {
+            if (ride.status === 'cancelled') return false;
+
             if (mode === "booked" || mode === "offered") return true;
             
             if (mode === "feed") {
@@ -765,7 +767,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             }
 
             if (mode === "active_trip") {
-              if (ride.status === 'cancelled' || ride.status === 'completed') return false;
+              if (ride.status === 'completed') return false;
               return true;
             }
 
