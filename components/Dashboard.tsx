@@ -133,8 +133,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           <div className="flex items-center gap-6">
             {/* Logo + Greeting */}
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[var(--accent-primary)] rounded-xl flex items-center justify-center font-black text-base text-white flex-shrink-0">
-                V
+              <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden border border-slate-200 dark:border-slate-800">
+                <img src="/vnr_logo.png" alt="VNR Logo" className="w-full h-full object-contain p-0.5" />
               </div>
               <div className="hidden sm:block">
                 <p className="text-[13px] font-bold leading-none text-[var(--text-primary)]">
