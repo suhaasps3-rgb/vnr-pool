@@ -79,7 +79,9 @@ function findBestResponse(message: string): string {
   for (const qa of knowledgeBase) {
     let score = 0;
     for (const keyword of qa.keywords) {
-      if (msg.includes(keyword.toLowerCase())) {
+      // Use regex with word boundaries to prevent partial word matches (e.g. 'hi' in 'Rohit')
+      const regex = new RegExp(`\\b${keyword.toLowerCase()}\\b`, 'i');
+      if (regex.test(msg)) {
         // Longer keyword matches are worth more
         score += keyword.length;
       }
@@ -94,7 +96,7 @@ function findBestResponse(message: string): string {
   }
   
   // Default response for unrecognized questions
-  return "Sorry, I am just a simple bot and I don't understand that. This topic or query is not supported yet! 🚫";
+  return "Sorry, I am just a simple bot and I don't understand that topic. 🚫\n\nPlease ask me questions related to the VNR Pool website, such as:\n• How to book or offer a ride\n• How fare splitting works\n• App safety features\n• Updating your profile";
 }
 
 export async function POST(req: Request) {
