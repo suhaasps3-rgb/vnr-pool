@@ -14,15 +14,23 @@ const RATE_LIMIT_MAX = 30;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const rateLimitMap = new Map<string, number[]>();
 
-function isRateLimited(userId: string): boolean {
+function isRateLimited(identifier: string): boolean {
   const now = Date.now();
-  const timestamps = (rateLimitMap.get(userId) || []).filter(
+  const timestamps = (rateLimitMap.get(identifier) || []).filter(
     (t) => now - t < RATE_LIMIT_WINDOW_MS
   );
   if (timestamps.length >= RATE_LIMIT_MAX) return true;
   timestamps.push(now);
-  rateLimitMap.set(userId, timestamps);
+  rateLimitMap.set(identifier, timestamps);
   return false;
+}
+
+// Basic HTML sanitizer to prevent injection
+function sanitizeString(str: string, maxLength: number = 200): string {
+  if (!str) return '';
+  return str.replace(/[<&>]/g, function (c) {
+    return {'<': '&lt;', '>': '&gt;', '&': '&amp;'}[c] as string;
+  }).substring(0, maxLength);
 }
 
 
@@ -38,6 +46,12 @@ try {
 
 export async function POST(request: Request) {
   try {
+    // ── Payload Size Check ────────────────────────────────
+    const contentLength = request.headers.get('content-length');
+    if (contentLength && parseInt(contentLength, 10) > 4096) {
+      return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+    }
+
     const authHeader = request.headers.get('authorization');
     if (!authHeader) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -50,7 +64,10 @@ export async function POST(request: Request) {
     }
 
     // ── Rate Limiting ─────────────────────────────────────
-    if (isRateLimited(user.id)) {
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const rateLimitIdentifier = `${ip}-${user.id}`;
+    
+    if (isRateLimited(rateLimitIdentifier)) {
       return NextResponse.json(
         { error: 'Too many requests. Please slow down.' },
         { status: 429, headers: { 'Retry-After': '60' } }
@@ -58,11 +75,23 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { targetUserId, title, message } = body;
+    
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'Invalid payload format' }, { status: 400 });
+    }
 
+    // Sanitize and validate inputs
+    const targetUserId = typeof body.targetUserId === 'string' ? body.targetUserId.trim() : '';
+    const title = typeof body.title === 'string' ? sanitizeString(body.title, 100) : '';
+    const message = typeof body.message === 'string' ? sanitizeString(body.message, 500) : '';
 
     if (!targetUserId || !title || !message) {
       return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
+    }
+    
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(targetUserId)) {
+      return NextResponse.json({ error: 'Invalid target user ID' }, { status: 400 });
     }
 
     const { data: targetUser, error } = await supabase.auth.admin.getUserById(targetUserId);

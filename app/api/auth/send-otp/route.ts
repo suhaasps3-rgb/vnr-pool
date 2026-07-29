@@ -15,12 +15,76 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// ── In-Memory Rate Limiter ────────────────────────────────
+// Max 5 attempts per IP per 15-minute window for auth routes
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const rateLimitMap = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(ip) || []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS
+  );
+  if (timestamps.length >= RATE_LIMIT_MAX) return true;
+  timestamps.push(now);
+  rateLimitMap.set(ip, timestamps);
+  return false;
+}
+
+// Basic HTML sanitizer for inputs
+function sanitizeString(str: string): string {
+  if (!str) return '';
+  return str.replace(/[<&>]/g, function (c) {
+    return {'<': '&lt;', '>': '&gt;', '&': '&amp;'}[c] as string;
+  }).substring(0, 100);
+}
+
 export async function POST(req: Request) {
   try {
-    const { email, type, password } = await req.json();
+    // 1. Rate Limiting Check
+    const ip = req.headers.get('x-forwarded-for') || 'unknown';
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429, headers: { 'Retry-After': '900' } }
+      );
+    }
+
+    // 2. Payload Size Check (Reject if larger than 2KB)
+    const contentLength = req.headers.get('content-length');
+    if (contentLength && parseInt(contentLength, 10) > 2048) {
+      return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+    }
+
+    const body = await req.json();
+    
+    // 3. Input Sanitization and Validation
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'Invalid payload format' }, { status: 400 });
+    }
+
+    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+    const type = typeof body.type === 'string' ? sanitizeString(body.type) : '';
+    const password = typeof body.password === 'string' ? body.password : undefined;
 
     if (!email || !type) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // Strict email validation for VNR domain
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@vnrvjiet\.in$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: 'Invalid email format or domain' }, { status: 400 });
+    }
+
+    // Strict type validation
+    if (type !== 'signup' && type !== 'recovery') {
+      return NextResponse.json({ error: 'Invalid operation type' }, { status: 400 });
+    }
+    
+    if (password && (password.length < 6 || password.length > 50)) {
+       return NextResponse.json({ error: 'Password length invalid' }, { status: 400 });
     }
 
     // Generate the OTP/Link via Supabase Admin API
