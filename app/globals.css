@@ -8,6 +8,14 @@
    ============================================================ */
 
 :root {
+  /* --- Hero Landing Page Tokens --- */
+  --hero-bg: #F8FAFC;
+  --hero-accent: #4F7CFF;
+  --hero-success: #10B981;
+  --hero-road: #CBD5E1;
+  --hero-glass-bg: rgba(255, 255, 255, 0.7);
+  --hero-glass-border: rgba(255, 255, 255, 0.5);
+
   /* --- Light Mode (High-Contrast Depth) --- */
   --bg-primary: #F4F5F7;
   --bg-surface: #FFFFFF;
@@ -37,6 +45,14 @@
 }
 
 .dark {
+  /* --- Hero Landing Page Tokens --- */
+  --hero-bg: #0B0F19;
+  --hero-accent: #638fff;
+  --hero-success: #10B981;
+  --hero-road: #334155;
+  --hero-glass-bg: rgba(11, 15, 25, 0.7);
+  --hero-glass-border: rgba(255, 255, 255, 0.1);
+
   /* --- Dark Mode (Midnight Glassmorphism) --- */
   --bg-primary: #0B0F19;
   --bg-surface: rgba(11, 15, 25, 0.9);
