@@ -718,44 +718,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
 
       {/* Feed */}
       <div ref={containerRef} className="w-full">
-        {isLoading ? (
-          // Skeleton Loaders
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(3)].map((_, i) => (
-              <SkeletonRideCard key={i} />
-            ))}
-          </div>
-        ) : rides?.length === 0 || (mode === "feed" && hasActiveTrip) ? (
-          <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-            {hasActiveTrip && mode === "feed" ? (
-              <>
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-3xl" style={{ background: 'rgba(99,102,241,0.1)' }}>
-                  🚗
-                </div>
-                <h3 className="text-base font-bold mb-1" style={{ color: 'var(--text-primary)' }}>You&apos;re on a live trip!</h3>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Check the Live Trip tab to track your ride.</p>
-              </>
-            ) : mode === "active_trip" ? (
-              <>
-                <p className="text-base font-semibold" style={{ color: 'var(--text-secondary)' }}>No active trips right now.</p>
-              </>
-            ) : (
-              <EmptyState 
-                title="No rides right now" 
-                description="No rides match your filters. Try clearing your search, or offer the first ride!" 
-                actionLabel="Offer a Ride Instead" 
-                onAction={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'offer' }))} 
-              />
-            )}
-          </div>
-        ) : (
-          <motion.div
-            variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.05 } } }}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {rides?.filter((ride) => {
+        {(() => {
+          const visibleRides = rides?.filter((ride) => {
             if (ride.status === 'cancelled') return false;
 
             if (mode === "booked" || mode === "offered") return true;
@@ -772,7 +736,62 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             }
 
             return true;
-          }).map((ride) => {
+          }) || [];
+
+          return (
+            <>
+              {isLoading ? (
+                // Skeleton Loaders
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[...Array(3)].map((_, i) => (
+                    <SkeletonRideCard key={i} />
+                  ))}
+                </div>
+              ) : visibleRides.length === 0 || (mode === "feed" && hasActiveTrip) ? (
+                <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+                  {hasActiveTrip && mode === "feed" ? (
+                    <>
+                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-3xl" style={{ background: 'rgba(99,102,241,0.1)' }}>
+                        🚗
+                      </div>
+                      <h3 className="text-base font-bold mb-1" style={{ color: 'var(--text-primary)' }}>You&apos;re on a live trip!</h3>
+                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Check the Live Trip tab to track your ride.</p>
+                    </>
+                  ) : mode === "active_trip" ? (
+                    <>
+                      <p className="text-base font-semibold" style={{ color: 'var(--text-secondary)' }}>No active trips right now.</p>
+                    </>
+                  ) : mode === "offered" ? (
+                    <EmptyState 
+                      title="No rides offered yet" 
+                      description="You haven't offered any rides. Start sharing your journey with campus peers!" 
+                      actionLabel="Offer a Ride Now" 
+                      onAction={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'offer' }))} 
+                    />
+                  ) : mode === "booked" ? (
+                    <EmptyState 
+                      title="No rides booked yet" 
+                      description="You haven't requested or booked any rides. Find someone heading your way!" 
+                      actionLabel="Find a Ride" 
+                      onAction={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'feed' }))} 
+                    />
+                  ) : (
+                    <EmptyState 
+                      title="No rides right now" 
+                      description="No rides match your filters. Try clearing your search, or offer the first ride!" 
+                      actionLabel="Offer a Ride Instead" 
+                      onAction={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'offer' }))} 
+                    />
+                  )}
+                </div>
+              ) : (
+                <motion.div
+                  variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.05 } } }}
+                  initial="hidden"
+                  animate="show"
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                  {visibleRides.map((ride) => {
             const myBooking = ride.bookings.find((b: any) => b.passenger_id === userId && (b.status === 'approved' || b.status === 'pending'));
             const isApproved = myBooking?.status === 'approved';
             const hasRequested = !!myBooking;
@@ -1257,6 +1276,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           })}
           </motion.div>
         )}
+        </>
+        );
+      })()}
       </div>
 
       {selectedRideId && (
