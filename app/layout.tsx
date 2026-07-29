@@ -9,6 +9,16 @@ const inter = Inter({ subsets: ["latin"], weight: ['400', '500', '700'] });
 export const metadata: Metadata = {
   title: "VNR Pool - Hyperlocal Ride Pooling",
   description: "Exclusive ride-pooling for VNR VJIET students.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "VNR Pool",
+  },
+};
+
+export const viewport = {
+  themeColor: "#0F172A",
 };
 
 export default function RootLayout({

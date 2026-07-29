@@ -11,7 +11,10 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
   const [messages, setMessages] = useState<any[]>([]);
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(true);
+  const [typingUsers, setTypingUsers] = useState<Record<string, boolean>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const channelRef = useRef<any>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const supabase = createClient();
   
   const notifyUser = async (targetUserId: string, title: string, message: string) => {
@@ -31,8 +34,10 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
   useEffect(() => {
     fetchMessages();
 
-    // Subscribe to new messages
-    const channel = supabase.channel('realtime:messages')
+    // Subscribe to new messages and typing broadcast
+    const channel = supabase.channel(`chat_${rideId}`, {
+      config: { broadcast: { self: false } }
+    })
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
@@ -52,7 +57,13 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
           messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
         }, 50);
       })
+      .on('broadcast', { event: 'typing' }, (payload) => {
+        setTypingUsers(prev => ({ ...prev, [payload.payload.userId]: payload.payload.isTyping }));
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      })
       .subscribe();
+
+    channelRef.current = channel;
 
     return () => {
       supabase.removeChannel(channel);
@@ -202,6 +213,17 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
                 );
               })
             )}
+            
+            {/* Live Typing Indicator */}
+            {Object.values(typingUsers).some(Boolean) && (
+              <div className="flex items-start">
+                <div className="px-4 py-3 rounded-2xl bg-slate-100 dark:bg-[var(--bg-primary)] border border-[var(--border-subtle)] flex items-center gap-1.5 rounded-bl-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: "0ms" }}></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: "150ms" }}></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
@@ -209,7 +231,25 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
             <form onSubmit={handleSend} className="p-4 bg-slate-50 dark:bg-[var(--bg-primary)] border-t border-[var(--border-subtle)] flex gap-2">
               <input 
                 value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
+                onChange={(e) => {
+                  setInputText(e.target.value);
+                  if (channelRef.current) {
+                    channelRef.current.send({
+                      type: 'broadcast',
+                      event: 'typing',
+                      payload: { userId, isTyping: true }
+                    });
+                    
+                    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+                    typingTimeoutRef.current = setTimeout(() => {
+                      channelRef.current.send({
+                        type: 'broadcast',
+                        event: 'typing',
+                        payload: { userId, isTyping: false }
+                      });
+                    }, 1500);
+                  }
+                }}
                 placeholder="Type a message..."
                 className="flex-1 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl px-4 py-2 outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-[var(--text-primary)]"
               />

@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { DISTANCE_MAP } from "@/lib/locations";
 import { calculateFractionalPrice, calculateDynamicOverlappingSplit, ROUTES, findLocIndex } from "@/lib/matchmaking";
+import { triggerHaptic, playUISound } from "@/lib/interactions";
 
 export default function BookSeatModal({ 
   ride, 
@@ -216,7 +217,11 @@ export default function BookSeatModal({
 
             <div className="p-6 pt-4 border-t border-[var(--border-subtle)] shrink-0">
               <button
-                onClick={() => onConfirm(pickup, dropoff, calculatedPrice)}
+                onClick={() => {
+                  triggerHaptic('success');
+                  playUISound('pop');
+                  onConfirm(pickup, dropoff, calculatedPrice);
+                }}
                 disabled={isProcessing || !canSubmit}
                 className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
                   isProcessing || !canSubmit

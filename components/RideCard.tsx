@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, ShieldCheck, ChevronRight, Map, MessageCircle } from "lucide-react";
+import { Clock, ShieldCheck, ChevronRight, Map, MessageCircle, Share2 } from "lucide-react";
 import { format } from "date-fns";
 import DynamicMap from "./DynamicMap";
 import { ROUTES, findLocIndex } from "@/lib/matchmaking";
@@ -183,9 +183,23 @@ export default function RideCard({
             </div>
           </div>
 
-          {/* Floating Price Badge */}
+          {/* Floating Price Badge & Share */}
           <div className="flex-shrink-0 flex flex-col items-end">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)] mb-0.5">Share</span>
+            <div className="flex items-center gap-2 mb-1.5">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const time = ride.departure_time ? format(new Date(ride.departure_time), "h:mm a, MMM d") : "N/A";
+                  const text = `🚗 VNR Pool Ride Available!\n📍 From: ${ride.origin}\n🏁 To: ${ride.destination}\n🕒 At: ${time}\n💵 Price: ₹${price}\n\nBook your seat now: ${window.location.origin}`;
+                  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                }}
+                className="p-1.5 rounded-full bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-colors"
+                title="Share on WhatsApp"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+              </button>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Cost</span>
+            </div>
             <div className="bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 px-3 py-1.5 rounded-xl text-right">
               <span className="text-2xl font-black text-[var(--accent-primary)]">
                 {price === 0 ? "Free" : `₹${price}`}

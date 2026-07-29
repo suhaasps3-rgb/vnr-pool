@@ -7,8 +7,9 @@ import { toast } from "sonner";
 import {
   User, Car, Bike, Star, Loader2, Save, Upload,
   CheckCircle2, AlertTriangle, Edit3, X, Shield,
-  Phone, BookOpen, MapPin
+  Phone, BookOpen, MapPin, Award, Leaf, Zap, Crown
 } from "lucide-react";
+import confetti from "canvas-confetti";
 
 // ── Section Divider ────────────────────────────────────────
 function SectionDivider({ label }: { label: string }) {
@@ -116,6 +117,53 @@ export default function Profile({ userId }: { userId: string }) {
       return data;
     },
   });
+
+  const { data: ecoStats } = useQuery({
+    queryKey: ["ecoStats", userId],
+    queryFn: async () => {
+      // Fetch driver rides
+      const { count: driverRides, error: dError } = await supabase.from('rides')
+        .select('*', { count: 'exact', head: true })
+        .eq('driver_id', userId)
+        .eq('status', 'completed');
+      
+      if (dError) console.error("Driver rides error:", dError);
+      
+      // Fetch passenger rides and filter in JS to avoid complex joins
+      const { data: pBookings, error: pError } = await supabase.from('bookings')
+        .select('id, rides(status)')
+        .eq('passenger_id', userId)
+        .eq('status', 'approved');
+        
+      if (pError) console.error("Passenger bookings error:", pError);
+      
+      const passengerCompletedRides = pBookings ? pBookings.filter((b: any) => b.rides?.status === 'completed').length : 0;
+        
+      const totalRides = (driverRides || 0) + passengerCompletedRides;
+      const points = totalRides * 50;
+      
+      let tier = "Bronze";
+      let color = "from-amber-600 to-amber-800";
+      let icon = Leaf;
+      
+      if (totalRides >= 20) { tier = "Platinum"; color = "from-slate-300 to-slate-500"; icon = Crown; }
+      else if (totalRides >= 10) { tier = "Gold"; color = "from-yellow-400 to-yellow-600"; icon = Award; }
+      else if (totalRides >= 5) { tier = "Silver"; color = "from-gray-300 to-gray-500"; icon = Zap; }
+      
+      return { totalRides, points, tier, color, Icon: icon };
+    }
+  });
+
+  useEffect(() => {
+    if (ecoStats?.tier) {
+      const storedTier = localStorage.getItem(`eco_tier_${userId}`);
+      if (storedTier && storedTier !== ecoStats.tier) {
+        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+        toast.success(`Level Up! You've reached ${ecoStats.tier} Tier! 🏆`);
+      }
+      localStorage.setItem(`eco_tier_${userId}`, ecoStats.tier);
+    }
+  }, [ecoStats?.tier, userId]);
 
   useEffect(() => {
     if (user) {
@@ -286,6 +334,37 @@ export default function Profile({ userId }: { userId: string }) {
           )}
         </div>
       </div>
+
+      {/* ── Eco-Tier Gamification ── */}
+      <div className="rounded-3xl p-5 mb-4 relative overflow-hidden" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", boxShadow: "var(--shadow-card)" }}>
+        {ecoStats ? (
+          <>
+            <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${ecoStats.color} opacity-10 rounded-full blur-2xl -mr-10 -mt-10`}></div>
+            <div className="flex items-center gap-4 relative z-10">
+              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${ecoStats.color} flex items-center justify-center text-white shadow-lg`}>
+                <ecoStats.Icon className="w-7 h-7" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-black text-[var(--text-primary)]">{ecoStats.tier} Tier</h3>
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                    {ecoStats.points} Eco Points
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] font-medium mt-1">
+                  You've completed {ecoStats.totalRides} sustainable {ecoStats.totalRides === 1 ? 'ride' : 'rides'}.
+                </p>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center justify-center p-2">
+            <Loader2 className="w-6 h-6 animate-spin text-[var(--accent-primary)]" />
+            <span className="ml-3 font-medium text-[var(--text-secondary)] text-sm">Loading Eco-Tiers...</span>
+          </div>
+        )}
+      </div>
+
 
       {/* ── Section 1: Personal Information ── */}
       <div

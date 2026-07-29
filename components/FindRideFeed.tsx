@@ -18,6 +18,7 @@ import { isAIMatch, ROUTES, calculateFractionalPrice, findLocIndex, calculateDyn
 import { ALL_LOCATIONS as COMMON_LOCATIONS } from "@/lib/locations";
 import DynamicMap from "./DynamicMap";
 import { SkeletonRideCard } from "./SkeletonRideCard";
+import { triggerHaptic, playUISound } from "@/lib/interactions";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", onSearchChange }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip", onSearchChange?: (origin: string, dest: string) => void }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
@@ -35,6 +36,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   const [selectedDriverForModal, setSelectedDriverForModal] = useState<{driver: any, vehicleNumber: string} | null>(null);
   const [userGender, setUserGender] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [pullY, setPullY] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const touchStartY = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
   const queryClient = useQueryClient();
@@ -370,29 +374,34 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
     }
   };
 
-  const handleManageRequest = async (bookingId: string, passengerId: string, status: 'approved' | 'rejected', ride: any) => {
+  const handleManageRequest = async (bookingId: string, passengerId: string, newStatus: 'approved' | 'rejected', ride: any) => {
     try {
-      const { error: bookingError } = await supabase.from('bookings').update({ status }).eq('id', bookingId);
-      if (bookingError) throw bookingError;
-
-      if (status === 'approved') {
+      if (newStatus === 'approved') {
+        if (ride.available_seats <= 0) {
+          toast.error("No seats available.");
+          triggerHaptic('error');
+          return;
+        }
+        triggerHaptic('success');
+        playUISound('pop');
         const { error: rideError } = await supabase.from('rides').update({ available_seats: ride.available_seats - 1 }).eq('id', ride.id);
         if (rideError) throw rideError;
+      } else {
+        triggerHaptic('light');
       }
 
-      // Send Notification to Passenger
-      await supabase.from('notifications').insert({
+      const { error: bookingError } = await supabase.from('bookings').update({ status: newStatus }).eq('id', bookingId);
+      if (bookingError) throw bookingError;
+
+      // Notify passenger
+      await supabase.from('notifications').insert([{
         user_id: passengerId,
-        title: status === 'approved' ? "Seat Approved!" : "Seat Rejected",
-        message: `Your seat request for ${ride.origin} to ${ride.destination} has been ${status}!`,
-        type: status === 'approved' ? 'booking_approved' : 'booking_rejected'
-      });
+        message: `Your ride request from ${ride.origin} to ${ride.destination} has been ${newStatus}.`,
+        type: newStatus === 'approved' ? 'ride_approved' : 'ride_rejected'
+      }]);
+      notifyUser(passengerId, `Ride ${newStatus === 'approved' ? 'Approved' : 'Rejected'}`, `Your request from ${ride.origin} to ${ride.destination} has been ${newStatus}.`);
 
-      if (status === 'approved') {
-        notifyUser(passengerId, "Seat Approved!", `Your seat request to ${ride.destination} was approved by the driver!`);
-      }
-
-      toast.success(`Request ${status}!`);
+      toast.success(`Request ${newStatus} successfully.`);
       refetch();
     } catch (err: any) {
       toast.error(err.message || "Failed to manage request.");
@@ -401,6 +410,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
 
   const handleStartRide = async (ride: any) => {
     try {
+      triggerHaptic('success');
+      playUISound('pop');
       const { error } = await supabase.from('rides').update({ status: 'in_progress' }).eq('id', ride.id);
       if (error) throw error;
 
@@ -425,6 +436,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
 
   const handleCompleteRide = async (ride: any) => {
     try {
+      triggerHaptic('success');
+      playUISound('ding');
       const { error } = await supabase.from('rides').update({ status: 'completed' }).eq('id', ride.id);
       if (error) throw error;
 
@@ -455,6 +468,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   const handleCancelBooking = async (ride: any, booking: any) => {
     if (!confirm("Are you sure you want to cancel your seat?")) return;
     try {
+      triggerHaptic('light');
       const { error } = await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', booking.id);
       if (error) throw error;
 
@@ -480,6 +494,18 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       refetch();
     } catch (err: any) {
       toast.error(err.message || "Failed to cancel seat.");
+    }
+  };
+
+  const handleCancelRequest = async (bookingId: string) => {
+    try {
+      triggerHaptic('light');
+      const { error } = await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', bookingId);
+      if (error) throw error;
+      toast.success("Request cancelled successfully.");
+      refetch();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to cancel request.");
     }
   };
 
@@ -537,8 +563,50 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         return `+91 ${mobile.slice(0, 2)}XXX X${mobile.slice(-4)}`;
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (window.scrollY === 0) {
+      touchStartY.current = e.touches[0].clientY;
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartY.current > 0 && window.scrollY <= 0) {
+      const y = e.touches[0].clientY - touchStartY.current;
+      if (y > 0 && y < 150) {
+        setPullY(y);
+      }
+    }
+  };
+
+  const handleTouchEnd = async () => {
+    if (pullY > 80) {
+      setIsRefreshing(true);
+      triggerHaptic('success');
+      playUISound('pop');
+      await refetch();
+      setIsRefreshing(false);
+    }
+    setPullY(0);
+    touchStartY.current = 0;
+  };
+
   return (
-    <div>
+    <div 
+      onTouchStart={handleTouchStart} 
+      onTouchMove={handleTouchMove} 
+      onTouchEnd={handleTouchEnd}
+      className="relative w-full"
+    >
+      {/* Pull-to-Refresh Indicator */}
+      <div 
+        className="absolute top-0 left-0 right-0 flex justify-center items-center overflow-hidden transition-all duration-300 z-[100] pointer-events-none"
+        style={{ height: `${pullY}px`, opacity: Math.min(1, pullY / 80) }}
+      >
+        <div className={`rounded-full bg-white dark:bg-[#1E293B] shadow-lg p-2 transition-transform ${isRefreshing ? 'animate-spin' : ''}`}
+             style={{ transform: `rotate(${pullY * 2}deg)` }}>
+          <Loader2 className="w-6 h-6 text-[var(--accent-primary)]" />
+        </div>
+      </div>
         {/* FULL SCREEN OVERLAY LOCK FOR ACTIVE TRIPS */}
         {mode === "feed" && hasActiveTrip && (
           <div className="flex flex-col items-center justify-center py-12 px-6 animate-in fade-in duration-300">

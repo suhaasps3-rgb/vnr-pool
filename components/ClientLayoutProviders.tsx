@@ -3,6 +3,8 @@
 import { useRideReminders } from "@/hooks/useRideReminders";
 import QueryProvider from "./QueryProvider";
 import { Toaster } from "sonner";
+import { useEffect } from "react";
+import InstallBanner from "./InstallBanner";
 
 export default function ClientLayoutProviders({
   children,
@@ -10,6 +12,19 @@ export default function ClientLayoutProviders({
   children: React.ReactNode;
 }) {
   useRideReminders(); // Initialize global reminders
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(
+        (registration) => {
+          console.log('Service Worker registration successful with scope: ', registration.scope);
+        },
+        (err) => {
+          console.log('Service Worker registration failed: ', err);
+        }
+      );
+    }
+  }, []);
 
   return (
     <QueryProvider>
@@ -28,6 +43,7 @@ export default function ClientLayoutProviders({
           }
         }}
       />
+      <InstallBanner />
     </QueryProvider>
   );
 }
