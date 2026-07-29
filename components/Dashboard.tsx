@@ -120,67 +120,84 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
 
   return (
     <div
-      className="min-h-screen relative overflow-x-hidden font-sans"
+      className="min-h-screen relative font-sans"
       style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}
     >
-      {/* Ambient light blobs */}
-      <div className="fixed top-0 left-[15%] w-[500px] h-[500px] bg-indigo-600/8 dark:bg-indigo-600/12 rounded-full blur-[140px] pointer-events-none" />
-      <div className="fixed bottom-[5%] right-[10%] w-[400px] h-[400px] bg-purple-600/6 dark:bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="fixed top-[40%] left-[-5%] w-[300px] h-[300px] bg-teal-500/5 dark:bg-teal-500/8 rounded-full blur-[100px] pointer-events-none" />
+      {/* Ambient light blobs removed as requested to avoid vibe-coding */}
 
       {/* ─── Top Header ─── */}
       <header
-        className="sticky top-0 z-50 w-full"
-        style={{
-          background: "var(--bg-nav)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          borderBottom: "1px solid var(--border-subtle)",
-        }}
+        className="sticky top-0 z-50 w-full bg-[#0B1F1C] text-[#F5F5F0] shadow-md border-b border-slate-800"
       >
-        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
-          {/* Logo + Greeting */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-xl flex items-center justify-center font-black text-base text-white shadow-lg shadow-indigo-600/30 flex-shrink-0">
-              V
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            {/* Logo + Greeting */}
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-[#1D9E75] rounded-xl flex items-center justify-center font-black text-base text-white flex-shrink-0">
+                V
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-[13px] font-bold leading-none text-[#F5F5F0]">
+                  Hey, {firstName} 👋
+                </p>
+                <span className="flex items-center gap-1 text-[11px] font-medium mt-0.5 text-[#639922]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#639922] animate-pulse" />
+                  VNRPool rides active
+                </span>
+              </div>
             </div>
-            <div>
-              <p className="text-[13px] font-bold leading-none" style={{ color: "var(--text-primary)" }}>
-                Hey, {firstName} 👋
-              </p>
-              <span className="flex items-center gap-1 text-[11px] font-medium mt-0.5" style={{ color: "var(--accent-success)" }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                VNRPool rides active
-              </span>
-            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-2 border-l border-slate-700 pl-6">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "px-4 py-2 min-h-[48px] rounded-lg text-sm font-medium transition-colors flex items-center gap-2",
+                    activeTab === tab.id
+                      ? "bg-[#1D9E75]/20 text-[#1D9E75]"
+                      : "text-slate-300 hover:bg-white/10 hover:text-white"
+                  )}
+                >
+                  <tab.icon className="w-4 h-4" />
+                  {tab.label}
+                  {tab.id === "active" && (
+                    <span className="w-1.5 h-1.5 bg-[#EF9F27] rounded-full animate-pulse ml-1" />
+                  )}
+                </button>
+              ))}
+            </nav>
           </div>
 
           {/* Header Actions */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setShowBlockedModal(true)}
-              className="p-2 rounded-lg transition-colors hover:bg-black/5 dark:hover:bg-white/8"
+              className="p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-lg transition-colors text-slate-300 hover:text-white hover:bg-white/10"
               title="Blocked Users"
-              style={{ color: "var(--text-secondary)" }}
             >
-              <UserX className="w-4 h-4" />
+              <UserX className="w-5 h-5" />
             </button>
-            <ThemeToggle />
-            <NotificationBell userId={userId} />
+            <div className="text-slate-300 hover:text-white transition-colors">
+              <ThemeToggle />
+            </div>
+            <div className="text-slate-300 hover:text-white transition-colors">
+              <NotificationBell userId={userId} />
+            </div>
             <button
               onClick={onSignOut}
-              className="p-2 rounded-lg transition-colors hover:bg-black/5 dark:hover:bg-white/8"
+              className="p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-lg transition-colors text-[#E24B4A] hover:bg-[#E24B4A]/10"
               title="Sign Out"
-              style={{ color: "var(--text-secondary)" }}
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-5 h-5" />
             </button>
           </div>
         </div>
       </header>
 
       {/* ─── Main Content ─── */}
-      <main className="max-w-2xl mx-auto px-4 pt-4 pb-28 relative z-10 min-h-screen">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-28 relative z-10 min-h-screen">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -209,12 +226,10 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
         </AnimatePresence>
       </main>
 
-      {/* ─── Fixed Bottom Navigation Bar ─── */}
-      <nav
-        className="bottom-nav fixed bottom-0 left-0 right-0 z-50 safe-area-inset-bottom"
-      >
+      {/* ─── Fixed Bottom Navigation Bar (Mobile Only) ─── */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#FFFFFF] dark:bg-[#0B1F1C] border-t border-slate-200 dark:border-slate-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe">
         <div className="max-w-2xl mx-auto px-2">
-          <div className="flex items-stretch h-16">
+          <div className="flex items-stretch h-[64px]">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
               const Icon = tab.icon;
@@ -225,29 +240,20 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "flex-1 flex flex-col items-center justify-center gap-1 relative transition-all duration-200 py-2 rounded-xl mx-0.5",
+                    "flex-1 flex flex-col items-center justify-center gap-1 relative transition-colors duration-150 py-2 rounded-xl mx-0.5 min-h-[48px]",
                     isActive
-                      ? "text-indigo-500 dark:text-indigo-400"
-                      : "text-[color:var(--text-tertiary)] hover:text-[color:var(--text-secondary)]"
+                      ? "text-[#1D9E75]"
+                      : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                   )}
                 >
-                  {/* Active indicator pill */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="bottomNavIndicator"
-                      className="absolute inset-0 rounded-xl bg-indigo-50 dark:bg-indigo-500/10"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
-                    />
-                  )}
-
                   {/* Pulse for live trip */}
                   {isLiveTrip && (
-                    <span className="absolute top-2 right-2 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                    <span className="absolute top-2 right-2 w-2 h-2 bg-[#EF9F27] rounded-full animate-pulse" />
                   )}
 
                   <span className="relative z-10 flex flex-col items-center gap-1">
-                    <Icon className={cn("w-5 h-5 transition-transform", isActive && "scale-110")} />
-                    <span className="text-[10px] font-semibold tracking-wide leading-none">
+                    <Icon className="w-5 h-5" />
+                    <span className="text-[10px] font-medium tracking-wide leading-none">
                       {tab.label}
                     </span>
                   </span>

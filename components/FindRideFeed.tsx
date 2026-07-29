@@ -689,12 +689,14 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       )}
 
       {/* Feed */}
-      <div ref={containerRef} className="space-y-4">
+      <div ref={containerRef} className="w-full">
         {isLoading ? (
           // Skeleton Loaders
-          [...Array(3)].map((_, i) => (
-            <div key={i} className="glass-card h-32 animate-pulse" />
-          ))
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-slate-100 dark:bg-slate-800 rounded-xl h-64 animate-pulse" />
+            ))}
+          </div>
         ) : rides?.length === 0 || (mode === "feed" && hasActiveTrip) ? (
           <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
             {hasActiveTrip && mode === "feed" ? (
@@ -760,10 +762,10 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           </div>
         ) : (
           <motion.div
-            variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.25, delayChildren: 0.1 } } }}
+            variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.05 } } }}
             initial="hidden"
             animate="show"
-            className="space-y-4"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {rides?.filter((ride) => {
             if (mode === "booked" || mode === "offered") return true;

@@ -263,82 +263,87 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   };
 
   return (
-    <div className="ui-card p-3 md:p-10 mb-6 md:mb-8 border-t-4 border-t-[#2563EB] dark:border-t-[#3B82F6]">
-      <div className="mb-4 md:mb-8">
-        <h2 className="text-xl md:text-2xl font-extrabold text-[#0F172A] dark:text-white">Offer a Ride</h2>
+    <div className="bg-white dark:bg-[#122926] rounded-2xl border border-slate-200 dark:border-slate-800 p-4 md:p-8 mb-6 md:mb-8 shadow-sm">
+      <div className="mb-6 md:mb-8">
+        <h2 className="text-xl md:text-2xl font-extrabold text-[#0B1F1C] dark:text-white">Offer a Ride</h2>
         <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mt-1">Fill in the details to share your journey with campus peers.</p>
       </div>
       
-      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          <div>
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Ride Category</label>
-            <select 
-              value={formData.ride_category}
-              onChange={(e) => setFormData({...formData, ride_category: e.target.value})}
-              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
-            >
-              <option value="auto_split">Auto/Cab Fare Split</option>
-              <option value="personal_vehicle">Student Vehicle Pool</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Vehicle Type</label>
-            <select 
-              value={formData.vehicle_type}
-              onChange={(e) => setFormData({...formData, vehicle_type: e.target.value})}
-              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
-            >
-              {formData.ride_category === 'auto_split' && (
-                <option value="auto">Auto</option>
-              )}
-              <option value="car">Car</option>
-              {formData.ride_category === 'personal_vehicle' && (
-                <option value="bike">Bike</option>
-              )}
-            </select>
-          </div>
-
-          <div className="relative z-[100]">
-            <div className="flex justify-between items-center mb-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                Origin
-              </label>
-              <button
-                type="button"
-                onClick={handleGetLocation}
-                disabled={gettingLocation}
-                className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1 bg-blue-50 dark:bg-blue-500/10 px-2 py-1 rounded-md transition-colors disabled:opacity-50"
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {/* ── SECTION: Trip Details ── */}
+        <div>
+          <h3 className="text-lg font-bold text-[#0B1F1C] dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+            Trip Details
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Ride Category</label>
+              <select 
+                value={formData.ride_category}
+                onChange={(e) => setFormData({...formData, ride_category: e.target.value})}
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
               >
-                {gettingLocation ? <Loader2 className="w-3 h-3 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
-                {gettingLocation ? "Locating..." : "Use Current Location"}
-              </button>
+                <option value="auto_split">Auto/Cab Fare Split</option>
+                <option value="personal_vehicle">Student Vehicle Pool</option>
+              </select>
             </div>
-            <input 
-              required
-              placeholder="e.g. JNTU Metro"
-              value={formData.origin}
-              onChange={(e) => {
-                setFormData({...formData, origin: e.target.value});
-                setShowOriginDropdown(true);
-              }}
-              onFocus={() => setShowOriginDropdown(true)}
-              onBlur={() => setTimeout(() => setShowOriginDropdown(false), 150)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  if (showOriginDropdown) {
-                    const matches = formData.origin ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.origin.toLowerCase())) : COMMON_LOCATIONS;
-                    if (matches.length > 0) {
-                      setFormData({...formData, origin: matches[0]});
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Vehicle Type</label>
+              <select 
+                value={formData.vehicle_type}
+                onChange={(e) => setFormData({...formData, vehicle_type: e.target.value})}
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+              >
+                {formData.ride_category === 'auto_split' && (
+                  <option value="auto">Auto</option>
+                )}
+                <option value="car">Car</option>
+                {formData.ride_category === 'personal_vehicle' && (
+                  <option value="bike">Bike</option>
+                )}
+              </select>
+            </div>
+
+            <div className="relative z-[100]">
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Origin
+                </label>
+                <button
+                  type="button"
+                  onClick={handleGetLocation}
+                  disabled={gettingLocation}
+                  className="text-xs font-bold text-[#1D9E75] hover:text-[#178361] flex items-center gap-1 bg-[#1D9E75]/10 px-2 py-1 rounded-md transition-colors disabled:opacity-50"
+                >
+                  {gettingLocation ? <Loader2 className="w-3 h-3 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
+                  {gettingLocation ? "Locating..." : "Use Current Location"}
+                </button>
+              </div>
+              <input 
+                required
+                placeholder="e.g. JNTU Metro"
+                value={formData.origin}
+                onChange={(e) => {
+                  setFormData({...formData, origin: e.target.value});
+                  setShowOriginDropdown(true);
+                }}
+                onFocus={() => setShowOriginDropdown(true)}
+                onBlur={() => setTimeout(() => setShowOriginDropdown(false), 150)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (showOriginDropdown) {
+                      const matches = formData.origin ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.origin.toLowerCase())) : COMMON_LOCATIONS;
+                      if (matches.length > 0) {
+                        setFormData({...formData, origin: matches[0]});
+                      }
+                      setShowOriginDropdown(false);
                     }
-                    setShowOriginDropdown(false);
                   }
-                }
-              }}
-              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
-            />
+                }}
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+              />
             <div 
               className="absolute z-[100] w-full mt-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
               style={{ display: showOriginDropdown ? "block" : "none" }}
@@ -359,34 +364,34 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
             </div>
           </div>
 
-          <div className="relative z-[90]">
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
-              Destination
-            </label>
-            <input 
-              required
-              placeholder="e.g. VNR VJIET"
-              value={formData.destination}
-              onChange={(e) => {
-                setFormData({...formData, destination: e.target.value});
-                setShowDestDropdown(true);
-              }}
-              onFocus={() => setShowDestDropdown(true)}
-              onBlur={() => setTimeout(() => setShowDestDropdown(false), 150)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  if (showDestDropdown) {
-                    const matches = formData.destination ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.destination.toLowerCase())) : COMMON_LOCATIONS;
-                    if (matches.length > 0) {
-                      setFormData({...formData, destination: matches[0]});
+            <div className="relative z-[90]">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+                Destination
+              </label>
+              <input 
+                required
+                placeholder="e.g. VNR VJIET"
+                value={formData.destination}
+                onChange={(e) => {
+                  setFormData({...formData, destination: e.target.value});
+                  setShowDestDropdown(true);
+                }}
+                onFocus={() => setShowDestDropdown(true)}
+                onBlur={() => setTimeout(() => setShowDestDropdown(false), 150)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (showDestDropdown) {
+                      const matches = formData.destination ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.destination.toLowerCase())) : COMMON_LOCATIONS;
+                      if (matches.length > 0) {
+                        setFormData({...formData, destination: matches[0]});
+                      }
+                      setShowDestDropdown(false);
                     }
-                    setShowDestDropdown(false);
                   }
-                }
-              }}
-              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
-            />
+                }}
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+              />
             <div 
               className="absolute z-[100] w-full mt-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
               style={{ display: showDestDropdown ? "block" : "none" }}
@@ -407,121 +412,145 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
             </div>
           </div>
 
-          {possibleRoutes.length > 0 && (
-            <div className="col-span-1 md:col-span-2">
+            {possibleRoutes.length > 0 && (
+              <div className="col-span-1 md:col-span-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+                  Select Your Exact Route
+                </label>
+                <div className="space-y-3">
+                  {possibleRoutes.map((r, idx) => (
+                    <label 
+                      key={r.index}
+                      className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
+                        chosenRouteIndex === r.index 
+                          ? 'border-[#1D9E75] bg-[#1D9E75]/10' 
+                          : 'border-slate-200 dark:border-slate-700 hover:border-[#1D9E75]/50'
+                      }`}
+                    >
+                      <input 
+                        type="radio"
+                        name="route"
+                        checked={chosenRouteIndex === r.index}
+                        onChange={() => setChosenRouteIndex(r.index)}
+                        className="mt-1 w-4 h-4 text-[#1D9E75] border-gray-300 focus:ring-[#1D9E75]"
+                      />
+                      <div>
+                        <div className="font-bold text-[#0B1F1C] dark:text-white">Option {idx + 1}</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize leading-relaxed">
+                          Via {r.path.join(' → ')}
+                        </div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── SECTION: Schedule & Capacity ── */}
+        <div>
+          <h3 className="text-lg font-bold text-[#0B1F1C] dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+            Schedule & Capacity
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Departure Date</label>
+                <input 
+                  required
+                  type="date"
+                  min={new Date().toISOString().split('T')[0]}
+                  value={formData.departure_date}
+                  onChange={(e) => setFormData({...formData, departure_date: e.target.value})}
+                  className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Time</label>
+                <input 
+                  required
+                  type="time"
+                  min={formData.departure_date === new Date().toISOString().split('T')[0] ? new Date().toTimeString().slice(0, 5) : undefined}
+                  value={formData.departure_time}
+                  onChange={(e) => setFormData({...formData, departure_time: e.target.value})}
+                  className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+                />
+              </div>
+          </div>
+
+            <div>
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
-                Select Your Exact Route
+                Available {formData.vehicle_type === 'bike' ? 'Seats (Max: 1)' : `Seats (Max: ${maxSeats})`}
               </label>
-              <div className="space-y-3">
-                {possibleRoutes.map((r, idx) => (
-                  <label 
-                    key={r.index}
-                    className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
-                      chosenRouteIndex === r.index 
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10' 
-                        : 'border-slate-200 dark:border-white/10 hover:border-blue-300 dark:hover:border-blue-500/50'
+              <div className="flex gap-2 flex-wrap">
+                {Array.from({ length: maxSeats }, (_, i) => i + 1).map(num => (
+                  <button
+                    key={num}
+                    type="button"
+                    onClick={() => setFormData({...formData, total_seats: num})}
+                    className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${
+                      formData.total_seats === num
+                        ? 'bg-[#1D9E75] text-white shadow-md'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                     }`}
                   >
-                    <input 
-                      type="radio"
-                      name="route"
-                      checked={chosenRouteIndex === r.index}
-                      onChange={() => setChosenRouteIndex(r.index)}
-                      className="mt-1 w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <div>
-                      <div className="font-bold text-slate-900 dark:text-white">Option {idx + 1}</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize leading-relaxed">
-                        Via {r.path.join(' → ')}
-                      </div>
-                    </div>
-                  </label>
+                    {num}
+                  </button>
                 ))}
               </div>
+              <p className="text-xs mt-1.5 text-slate-500">
+                {formData.total_seats} {formData.total_seats === 1 ? 'seat' : 'seats'} available
+              </p>
             </div>
-          )}
+          </div>
+        </div>
 
-          <div className="grid grid-cols-2 gap-4">
+        {/* ── SECTION: Pricing ── */}
+        <div>
+          <h3 className="text-lg font-bold text-[#0B1F1C] dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+            Pricing
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div>
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Departure Date</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Total Trip Cost (₹)</label>
               <input 
                 required
-                type="date"
-                min={new Date().toISOString().split('T')[0]}
-                value={formData.departure_date}
-                onChange={(e) => setFormData({...formData, departure_date: e.target.value})}
-                className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
+                type="number"
+                min="0"
+                value={formData.total_cost}
+                onChange={(e) => setFormData({...formData, total_cost: Number(e.target.value)})}
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
               />
             </div>
+
             <div>
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Time</label>
-              <input 
-                required
-                type="time"
-                min={formData.departure_date === new Date().toISOString().split('T')[0] ? new Date().toTimeString().slice(0, 5) : undefined}
-                value={formData.departure_time}
-                onChange={(e) => setFormData({...formData, departure_time: e.target.value})}
-                className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
-              />
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+                {formData.ride_category === 'auto_split' ? "Pricing Method" : "Price Per Seat (Calculated)"}
+              </label>
+              <div className="w-full p-4 bg-[#1D9E75]/10 text-[#1D9E75] font-bold border border-[#1D9E75]/20 rounded-xl flex items-center justify-between shadow-sm">
+                {formData.ride_category === 'auto_split' ? (
+                  <span className="text-sm">Dynamic split based on active passengers</span>
+                ) : (
+                  <>
+                    <span className="text-xl">₹{Math.ceil(formData.total_cost / formData.total_seats)}</span>
+                    <span className="text-xs font-medium opacity-80">
+                      ({formData.total_seats} seats)
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
+          <FareSplitterSection seats={formData.total_seats} />
+        </div>
 
-          <div>
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
-              Available {formData.vehicle_type === 'bike' ? 'Seats (Max: 1)' : `Seats (Max: ${maxSeats})`}
-            </label>
-            {/* Visual seat selector buttons */}
-            <div className="flex gap-2 flex-wrap">
-              {Array.from({ length: maxSeats }, (_, i) => i + 1).map(num => (
-                <button
-                  key={num}
-                  type="button"
-                  onClick={() => setFormData({...formData, total_seats: num})}
-                  className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${
-                    formData.total_seats === num
-                      ? 'text-white shadow-md'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-                  }`}
-                  style={formData.total_seats === num ? { background: 'var(--accent-price)', color: 'white' } : {}}
-                >
-                  {num}
-                </button>
-              ))}
-            </div>
-            <p className="text-xs mt-1.5" style={{ color: 'var(--text-tertiary)' }}>
-              {formData.total_seats} {formData.total_seats === 1 ? 'seat' : 'seats'} available
-            </p>
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Total Trip Cost (₹)</label>
-            <input 
-              required
-              type="number"
-              min="0"
-              value={formData.total_cost}
-              onChange={(e) => setFormData({...formData, total_cost: Number(e.target.value)})}
-              className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
-              {formData.ride_category === 'auto_split' ? "Pricing Method" : "Price Per Seat (Calculated)"}
-            </label>
-            <div className="w-full p-4 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-500/20 rounded-xl flex items-center justify-between shadow-sm">
-              {formData.ride_category === 'auto_split' ? (
-                <span className="text-sm">Dynamic split based on active passengers</span>
-              ) : (
-                <>
-                  <span className="text-xl">₹{Math.ceil(formData.total_cost / formData.total_seats)}</span>
-                  <span className="text-xs text-emerald-600/70 dark:text-emerald-400/70 font-medium">
-                    ({formData.total_seats} seats)
-                  </span>
-                </>
-              )}
-            </div>
-          </div>
+        {/* ── SECTION: Preferences ── */}
+        <div>
+          <h3 className="text-lg font-bold text-[#0B1F1C] dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+            Preferences
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
           {formData.ride_category === "personal_vehicle" && (
             <div>
@@ -531,7 +560,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                   <select 
                     value={vehicleEntryMode}
                     onChange={(e) => setVehicleEntryMode(e.target.value as 'profile' | 'manual')}
-                    className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all font-medium"
+                    className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all font-medium"
                   >
                     <option value="profile">{formData.vehicle_type === 'car' ? userCarNumber : userBikeNumber} (From Profile)</option>
                     <option value="manual">Use a different vehicle...</option>
@@ -543,7 +572,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                       placeholder="e.g. TS 08 AB 1234"
                       value={formData.vehicle_number}
                       onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
-                      className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
+                      className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all uppercase"
                     />
                   )}
                 </div>
@@ -553,43 +582,37 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                   placeholder="TS 08 AB 1234"
                   value={formData.vehicle_number}
                   onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
-                  className="w-full p-2.5 md:p-4 text-sm md:text-base bg-slate-50 dark:bg-[#0F172A] text-[#0F172A] dark:text-white border border-slate-200 dark:border-white/10 rounded-xl outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all uppercase"
+                  className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all uppercase"
                 />
               )}
             </div>
           )}
-        </div>
 
-        {userGender === 'female' && (
-          <label className="flex items-center gap-3 cursor-pointer bg-pink-50 dark:bg-pink-500/10 p-4 rounded-xl border border-pink-200 dark:border-pink-500/20">
-            <input 
-              type="checkbox"
-              checked={formData.is_women_only}
-              onChange={(e) => setFormData({...formData, is_women_only: e.target.checked})}
-              className="w-5 h-5 accent-pink-500"
-            />
-            <div>
-              <span className="font-medium text-pink-700 dark:text-pink-400 block">Women-Only Ride</span>
-              <span className="text-xs text-pink-600/70 dark:text-pink-400/70">Only female users will be able to see and request this ride.</span>
-            </div>
-          </label>
-        )}
+          {userGender === 'female' && (
+            <label className="flex items-center gap-3 cursor-pointer bg-pink-50 dark:bg-pink-500/10 p-4 rounded-xl border border-pink-200 dark:border-pink-500/20 col-span-1 md:col-span-2">
+              <input 
+                type="checkbox"
+                checked={formData.is_women_only}
+                onChange={(e) => setFormData({...formData, is_women_only: e.target.checked})}
+                className="w-5 h-5 accent-pink-500"
+              />
+              <div>
+                <span className="font-medium text-pink-700 dark:text-pink-400 block">Women-Only Ride</span>
+                <span className="text-xs text-pink-600/70 dark:text-pink-400/70">Only female users will be able to see and request this ride.</span>
+              </div>
+            </label>
+          )}
+          </div>
+        </div>
 
         <motion.button
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={loading}
-          className="w-full py-4 rounded-2xl font-bold text-lg text-white flex justify-center items-center gap-2 transition-all"
-          style={{
-            background: loading ? 'var(--accent-price)' : 'linear-gradient(135deg, #A855F7, #7C3AED)',
-            boxShadow: loading ? 'none' : '0 6px 20px rgba(168,85,247,0.4)',
-          }}
+          className="w-full py-4 rounded-xl font-bold text-lg text-white flex justify-center items-center gap-2 transition-colors bg-[#1D9E75] hover:bg-[#178361] disabled:opacity-60"
         >
           {loading ? <Loader2 className="animate-spin w-5 h-5" /> : '🚗 Post Ride'}
         </motion.button>
-
-        {/* ── Embedded Fare Splitter (contextual to Offer flow) ── */}
-        <FareSplitterSection seats={formData.total_seats} />
       </form>
     </div>
   );
@@ -620,8 +643,7 @@ function FareSplitterSection({ seats }: { seats: number }) {
 
   return (
     <div
-      className="rounded-2xl overflow-hidden mt-2"
-      style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-primary)' }}
+      className="rounded-xl overflow-hidden mt-4 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#122926]"
     >
       <button
         type="button"
@@ -651,9 +673,9 @@ function FareSplitterSection({ seats }: { seats: number }) {
                 onClick={() => setVehicle(v)}
                 className="py-2 rounded-xl text-xs font-bold transition-all"
                 style={{
-                  background: vehicle === v ? 'var(--accent-price)' : 'var(--bg-surface)',
-                  color: vehicle === v ? 'white' : 'var(--text-secondary)',
-                  border: '1px solid var(--border-subtle)',
+                  background: vehicle === v ? '#1D9E75' : 'transparent',
+                  color: vehicle === v ? 'white' : 'inherit',
+                  borderColor: vehicle === v ? '#1D9E75' : 'inherit',
                 }}
               >
                 {v === 'car' ? '🚗 Car' : '🏍️ Bike'}
@@ -670,9 +692,9 @@ function FareSplitterSection({ seats }: { seats: number }) {
                   onClick={() => setPassengers(n)}
                   className="w-9 h-9 rounded-xl text-xs font-bold transition-all"
                   style={{
-                    background: passengers === n ? 'var(--accent-price)' : 'var(--bg-surface)',
-                    color: passengers === n ? 'white' : 'var(--text-secondary)',
-                    border: '1px solid var(--border-subtle)',
+                    background: passengers === n ? '#1D9E75' : 'transparent',
+                    color: passengers === n ? 'white' : 'inherit',
+                    borderColor: passengers === n ? '#1D9E75' : 'inherit',
                   }}
                 >
                   {n}
@@ -694,8 +716,7 @@ function FareSplitterSection({ seats }: { seats: number }) {
                   max="200"
                   value={manualDistance !== '' ? manualDistance : distance}
                   onChange={e => setManualDistance(e.target.value)}
-                  className="w-16 text-center text-xs font-bold rounded-lg px-2 py-1 ui-input"
-                  style={{ color: 'var(--accent-price)' }}
+                  className="w-16 text-center text-xs font-bold rounded-lg px-2 py-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-700 outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] text-[#1D9E75]"
                 />
                 <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>km</span>
               </div>
@@ -709,17 +730,16 @@ function FareSplitterSection({ seats }: { seats: number }) {
           </div>
 
           <div
-            className="flex items-center justify-between p-3 rounded-xl"
-            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}
+            className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-700"
           >
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: 'var(--text-tertiary)' }}>Per Seat</div>
-              <div className="text-xl font-black" style={{ color: 'var(--text-primary)' }}>₹{perSeat}</div>
+              <div className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Per Seat</div>
+              <div className="text-xl font-black text-[#0B1F1C] dark:text-white">₹{perSeat}</div>
             </div>
-            <div className="w-px h-8" style={{ background: 'var(--border-subtle)' }} />
+            <div className="w-px h-8 bg-slate-200 dark:bg-slate-700" />
             <div className="text-right">
-              <div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: 'var(--accent-price)' }}>Total Fare</div>
-              <div className="text-2xl font-black" style={{ color: 'var(--accent-price)' }}>₹{total}</div>
+              <div className="text-[10px] font-bold uppercase tracking-wide text-[#1D9E75]">Total Fare</div>
+              <div className="text-2xl font-black text-[#1D9E75]">₹{total}</div>
             </div>
           </div>
         </div>

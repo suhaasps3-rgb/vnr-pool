@@ -8,89 +8,72 @@
    ============================================================ */
 
 :root {
-  /* --- Light Mode Tokens --- */
-  --bg-primary: #F4F5F7;
+  /* --- Global Tokens --- */
+  --bg-primary: #F5F5F0;
   --bg-surface: #FFFFFF;
-  --bg-surface-hover: #F8FAFC;
-  --bg-nav: rgba(255, 255, 255, 0.92);
+  --bg-surface-hover: #F8F9FA;
+  --bg-nav: #0B1F1C;
   --bg-input: #FFFFFF;
 
   --border-subtle: #E2E8F0;
   --border-input: #CBD5E1;
-  --border-focus: #818CF8;
+  --border-focus: #1D9E75;
 
-  --text-primary: #0F172A;
+  --text-primary: #0B1F1C;
   --text-secondary: #475569;
-  --text-tertiary: #94A3B8;
+  --text-tertiary: #64748B;
   --text-inverse: #FFFFFF;
 
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-nav: 0 -1px 0 rgba(0,0,0,0.06), 0 -4px 20px rgba(0, 0, 0, 0.06);
-  --shadow-button: 0 4px 14px rgba(99, 102, 241, 0.25);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-nav: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-button: 0 2px 4px rgba(29, 158, 117, 0.2);
+  --shadow-card-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
-  --accent-primary: #6366F1;
-  --accent-primary-hover: #4F46E5;
-  --accent-price: #A855F7;
-  --accent-price-bg: #F3E8FF;
-  --accent-success: #10B981;
-  --accent-danger: #EF4444;
-  --accent-warning: #F59E0B;
-
-  --card-glass-bg: rgba(255, 255, 255, 0.95);
-  --card-glass-border: rgba(226, 232, 240, 1);
-  --card-blur: 0px;
-
-  --watermark-opacity: 0;
+  --accent-primary: #1D9E75;
+  --accent-primary-hover: #178361;
+  --accent-success: #639922;
+  --accent-danger: #E24B4A;
+  --accent-warning: #EF9F27;
 
   /* --- Hero Landing Page Tokens --- */
-  --hero-bg: #FFFFFF;
-  --hero-accent: #4F7CFF;
+  --hero-bg: #F5F5F0;
+  --hero-accent: #1D9E75;
   --hero-road: #E2E8F0;
-  --hero-success: #10B981;
+  --hero-success: #639922;
 }
 
 .dark {
-  /* --- Dark Mode Tokens (Midnight Glassmorphism) --- */
-  --bg-primary: #0B0F19;
-  --bg-surface: #0F172A;
-  --bg-surface-hover: #1E293B;
-  --bg-nav: rgba(11, 15, 25, 0.85);
-  --bg-input: rgba(15, 23, 42, 0.8);
+  /* Adapting to dark mode while keeping the color structure */
+  --bg-primary: #0B1F1C;
+  --bg-surface: #122926;
+  --bg-surface-hover: #1A3632;
+  --bg-nav: #061311;
+  --bg-input: #122926;
 
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-input: rgba(255, 255, 255, 0.12);
-  --border-focus: #818CF8;
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-input: rgba(255, 255, 255, 0.15);
+  --border-focus: #1D9E75;
 
-  --text-primary: #F1F5F9;
+  --text-primary: #F5F5F0;
   --text-secondary: #94A3B8;
-  --text-tertiary: #475569;
-  --text-inverse: #0B0F19;
+  --text-tertiary: #64748B;
+  --text-inverse: #0B1F1C;
 
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3);
-  --shadow-nav: 0 -1px 0 rgba(255,255,255,0.06), 0 -8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-button: 0 4px 20px rgba(168, 85, 247, 0.35);
-  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-nav: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-button: 0 2px 4px rgba(29, 158, 117, 0.2);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.3);
 
-  --accent-primary: #818CF8;
-  --accent-primary-hover: #6366F1;
-  --accent-price: #C084FC;
-  --accent-price-bg: rgba(168, 85, 247, 0.15);
-  --accent-success: #34D399;
-  --accent-danger: #F87171;
-  --accent-warning: #FCD34D;
+  --accent-primary: #1D9E75;
+  --accent-primary-hover: #178361;
+  --accent-success: #639922;
+  --accent-danger: #E24B4A;
+  --accent-warning: #EF9F27;
 
-  --card-glass-bg: rgba(15, 23, 42, 0.6);
-  --card-glass-border: rgba(255, 255, 255, 0.07);
-  --card-blur: blur(12px);
-
-  --watermark-opacity: 0.04;
-
-  /* --- Hero Landing Page Tokens --- */
-  --hero-bg: #0B0F19;
-  --hero-accent: #638FFF;
-  --hero-road: #1E293B;
-  --hero-success: #34D399;
+  --hero-bg: #0B1F1C;
+  --hero-accent: #1D9E75;
+  --hero-road: #1A3632;
+  --hero-success: #639922;
 
   color-scheme: dark;
 }
@@ -100,25 +83,20 @@
    ============================================================ */
 
 @layer utilities {
-  /* Glass Card — used for ride cards in dark mode */
-  .glass-card {
-    background: var(--card-glass-bg);
-    backdrop-filter: var(--card-blur);
-    -webkit-backdrop-filter: var(--card-blur);
-    border: 1px solid var(--card-glass-border);
-    box-shadow: var(--shadow-card);
-  }
-
-  .glass-card:hover {
-    box-shadow: var(--shadow-card-hover);
-  }
-
-  /* Solid card — white in light, dark surface in dark */
+  /* Solid card for both modes */
   .ui-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-card);
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
   }
+
+  .ui-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /* Removed old solid card override since .ui-card handles it all now */
 
   /* Input fields */
   .ui-input {
@@ -143,7 +121,7 @@
     background: var(--accent-primary);
     color: #FFFFFF;
     box-shadow: var(--shadow-button);
-    transition: all 0.2s ease;
+    transition: background-color 0.15s ease-in-out, transform 0.15s ease-out;
   }
 
   .btn-primary:hover {
@@ -164,9 +142,7 @@
 
   /* Bottom nav */
   .bottom-nav {
-    background: var(--bg-nav);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: var(--bg-surface);
     box-shadow: var(--shadow-nav);
     border-top: 1px solid var(--border-subtle);
   }
