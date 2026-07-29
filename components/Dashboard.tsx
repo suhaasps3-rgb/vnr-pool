@@ -147,28 +147,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               </div>
             </div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-2 border-l border-slate-700 pl-6">
-              {TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "px-4 py-2 min-h-[48px] rounded-xl text-sm font-medium transition-colors flex items-center gap-2",
-                    activeTab === tab.id
-                      ? "bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]"
-                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]"
-                  )}
-                >
-                  <tab.icon className="w-4 h-4" />
-                  {tab.label}
-                  {tab.id === "active" && (
-                    <span className="w-1.5 h-1.5 bg-[#EF9F27] rounded-full animate-pulse ml-1" />
-                  )}
-                </button>
-              ))}
-            </nav>
-          </div>
+            {/* Top Navigation Eradicated as per Strict Mobile-First Directive */}
 
           {/* Header Actions */}
           <div className="flex items-center gap-2">
@@ -226,8 +205,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
         </AnimatePresence>
       </main>
 
-      {/* ─── Fixed Bottom Navigation Bar (Mobile Only) ─── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bottom-nav pb-safe">
+      {/* ─── Fixed Bottom Navigation Bar (Global) ─── */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bottom-nav pb-safe border-t border-[var(--border-subtle)] bg-[var(--bg-nav)] shadow-[0_-4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.2)]">
         <div className="max-w-2xl mx-auto px-2">
           <div className="flex items-stretch h-[64px]">
             {TABS.map((tab) => {
