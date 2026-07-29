@@ -121,7 +121,7 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                     onClick={() => setActiveTab("find")}
                     className={`flex items-center gap-2 px-4 py-2 min-h-[48px] rounded-lg text-sm font-medium transition-colors ${
                       activeTab === "find"
-                        ? "bg-[#1D9E75]/20 text-[#1D9E75]"
+                        ? "bg-[var(--accent-primary)]/20 text-[var(--accent-primary)]"
                         : "text-slate-300 hover:bg-white/10"
                     }`}
                   >
@@ -131,7 +131,7 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                     onClick={() => setActiveTab("offer")}
                     className={`flex items-center gap-2 px-4 py-2 min-h-[48px] rounded-lg text-sm font-medium transition-colors ${
                       activeTab === "offer"
-                        ? "bg-[#1D9E75]/20 text-[#1D9E75]"
+                        ? "bg-[var(--accent-primary)]/20 text-[var(--accent-primary)]"
                         : "text-slate-300 hover:bg-white/10"
                     }`}
                   >
@@ -143,7 +143,7 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                 onClick={() => setActiveTab("my-rides")}
                 className={`flex items-center gap-2 px-4 py-2 min-h-[48px] rounded-lg text-sm font-medium transition-colors ${
                   activeTab === "my-rides"
-                    ? "bg-[#1D9E75]/20 text-[#1D9E75]"
+                    ? "bg-[var(--accent-primary)]/20 text-[var(--accent-primary)]"
                     : "text-slate-300 hover:bg-white/10"
                 }`}
               >
@@ -170,12 +170,12 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute top-14 right-0 w-80 bg-[#FFFFFF] dark:bg-[#122926] border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg overflow-hidden z-50 text-[#0B1F1C] dark:text-[#F5F5F0]"
+                    className="absolute top-14 right-0 w-80 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl shadow-lg overflow-hidden z-50 text-[var(--text-primary)]"
                   >
-                    <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                    <div className="p-4 border-b border-[var(--border-subtle)] flex justify-between items-center">
                       <h3 className="font-bold">Notifications</h3>
                       {unreadCount > 0 && (
-                        <button onClick={markAllAsRead} className="text-xs text-[#1D9E75] font-medium hover:underline">
+                        <button onClick={markAllAsRead} className="text-xs text-[var(--accent-primary)] font-medium hover:underline">
                           Mark all read
                         </button>
                       )}
@@ -183,10 +183,10 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                     <div className="max-h-[300px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
                       {notifications?.length === 0 ? (
                         <div className="p-8 text-center flex flex-col items-center justify-center">
-                          <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3">
+                          <div className="w-12 h-12 rounded-full bg-[var(--bg-primary)] flex items-center justify-center mb-3">
                             <Bell className="w-6 h-6 text-slate-400" />
                           </div>
-                          <p className="text-slate-500 dark:text-slate-400 font-medium">You're all caught up!</p>
+                          <p className="text-[var(--text-secondary)] font-medium">You're all caught up!</p>
                         </div>
                       ) : (
                         notifications?.map((notification) => (
@@ -195,22 +195,22 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                             onClick={() => !notification.is_read && markAsRead(notification.id)}
                             className={`p-4 transition-colors cursor-pointer flex gap-3 ${
                               notification.is_read 
-                                ? 'bg-white dark:bg-[#122926] opacity-75' 
-                                : 'bg-[#1D9E75]/5 hover:bg-[#1D9E75]/10'
+                                ? 'bg-[var(--bg-surface)] opacity-75' 
+                                : 'bg-[var(--accent-primary)]/10 hover:bg-[var(--accent-primary)]/10'
                             }`}
                           >
-                            <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                              {notification.type === 'booking_request' ? <User className="w-5 h-5 text-[#1D9E75]" /> :
+                            <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-[var(--bg-primary)] border border-[var(--border-subtle)]">
+                              {notification.type === 'booking_request' ? <User className="w-5 h-5 text-[var(--accent-primary)]" /> :
                                notification.type === 'booking_approved' ? <Check className="w-5 h-5 text-[#639922]" /> :
                                notification.type === 'ride_reminder' ? <Car className="w-5 h-5 text-[#EF9F27]" /> :
                                <Bell className="w-5 h-5 text-slate-500" />}
                             </div>
                             
                             <div className="flex-1 min-w-0">
-                              <h4 className={`text-sm font-semibold truncate ${notification.is_read ? 'text-slate-600 dark:text-slate-400' : 'text-[#0B1F1C] dark:text-white'}`}>
+                              <h4 className={`text-sm font-semibold truncate ${notification.is_read ? 'text-slate-600 dark:text-slate-400' : 'text-[var(--text-primary)]'}`}>
                                 {notification.title}
                               </h4>
-                              <p className={`text-xs line-clamp-2 ${notification.is_read ? 'text-slate-500' : 'text-slate-600 dark:text-slate-300 font-medium'}`}>
+                              <p className={`text-xs line-clamp-2 ${notification.is_read ? 'text-slate-500' : 'text-[var(--text-secondary)] font-medium'}`}>
                                 {notification.message}
                               </p>
                               <p className="text-[10px] font-medium text-slate-400 mt-1.5">
@@ -220,7 +220,7 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                             
                             {!notification.is_read && (
                               <div className="shrink-0 flex items-center">
-                                <div className="w-2 h-2 rounded-full bg-[#1D9E75]"></div>
+                                <div className="w-2 h-2 rounded-full bg-[var(--accent-primary)]"></div>
                               </div>
                             )}
                           </div>
@@ -235,7 +235,7 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
               <div className="relative hidden md:block">
                 <button 
                   onClick={() => { setShowProfileMenu(!showProfileMenu); setShowNotifications(false); }}
-                  className="flex items-center gap-2 p-1 pl-2 pr-3 min-h-[48px] rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--border-focus)]"
+                  className="flex items-center gap-2 p-1 pl-2 pr-3 min-h-[48px] rounded-xl hover:bg-[var(--bg-surface-hover)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--border-focus)]"
                 >
                   <div className="w-8 h-8 rounded-full bg-[var(--text-secondary)] text-white flex items-center justify-center font-bold text-sm overflow-hidden">
                     {userProfile?.avatar_url ? (
@@ -253,10 +253,10 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute top-14 right-0 w-64 bg-[#FFFFFF] dark:bg-[#122926] border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg overflow-hidden z-50 text-[#0B1F1C] dark:text-[#F5F5F0]"
+                      className="absolute top-14 right-0 w-64 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl shadow-lg overflow-hidden z-50 text-[var(--text-primary)]"
                     >
-                      <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-col items-center text-center">
-                        <div className="w-16 h-16 rounded-full bg-[#1D9E75]/10 text-[#1D9E75] flex items-center justify-center font-black text-2xl mb-3 overflow-hidden">
+                      <div className="p-4 border-b border-[var(--border-subtle)] flex flex-col items-center text-center">
+                        <div className="w-16 h-16 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] flex items-center justify-center font-black text-2xl mb-3 overflow-hidden">
                           {userProfile?.avatar_url ? (
                             <img src={userProfile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                           ) : (
@@ -270,13 +270,13 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                       <div className="p-2 space-y-1">
                         <button 
                           onClick={() => { setActiveTab("profile"); setShowProfileMenu(false); }}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-[#1A3632] rounded-lg transition-colors text-left"
+                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-[var(--bg-surface-hover)] rounded-lg transition-colors text-left"
                         >
                           <Settings className="w-4 h-4 text-slate-400" /> Edit Profile & Photo
                         </button>
                         <button 
                           onClick={() => { setActiveTab("profile"); setShowProfileMenu(false); }}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-[#1A3632] rounded-lg transition-colors text-left"
+                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-[var(--bg-surface-hover)] rounded-lg transition-colors text-left"
                         >
                           <Car className="w-4 h-4 text-slate-400" /> Vehicle Details
                         </button>
@@ -284,7 +284,7 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                         {mounted && (
                           <button 
                             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-[#1A3632] rounded-lg transition-colors text-left"
+                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-[var(--bg-surface-hover)] rounded-lg transition-colors text-left"
                           >
                             {theme === "dark" ? <Sun className="w-4 h-4 text-slate-400" /> : <Moon className="w-4 h-4 text-slate-400" />}
                             {theme === "dark" ? "Light Mode" : "Dark Mode"}
@@ -292,7 +292,7 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
                         )}
                       </div>
                       
-                      <div className="p-2 border-t border-slate-100 dark:border-slate-800">
+                      <div className="p-2 border-t border-[var(--border-subtle)]">
                         <button 
                           onClick={() => { onSignOut(); setShowProfileMenu(false); }} 
                           className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-bold text-[#E24B4A] hover:bg-[#E24B4A]/10 rounded-lg transition-colors"

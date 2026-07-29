@@ -104,13 +104,13 @@ export default function BookSeatModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative z-10 w-full max-w-md bg-white dark:bg-[#122926] rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh]"
+            className="relative z-10 w-full max-w-md bg-[var(--bg-surface)] rounded-2xl shadow-xl border border-[var(--border-subtle)] flex flex-col max-h-[90vh]"
           >
-            <div className="p-6 pb-4 border-b border-slate-100 dark:border-slate-800 shrink-0 flex items-center justify-between">
-              <h3 className="text-xl font-bold text-[#0B1F1C] dark:text-white">Confirm Boarding</h3>
+            <div className="p-6 pb-4 border-b border-[var(--border-subtle)] shrink-0 flex items-center justify-between">
+              <h3 className="text-xl font-bold text-[var(--text-primary)]">Confirm Boarding</h3>
               <button 
                 onClick={!isProcessing ? onClose : undefined}
-                className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500"
+                className="p-2 bg-[var(--bg-primary)] hover:bg-[var(--bg-surface-hover)] rounded-full transition-colors text-slate-500"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -118,32 +118,32 @@ export default function BookSeatModal({
 
             <div className="p-6 overflow-y-auto flex-1 min-h-0">
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">Driver</span>
-                  <span className="font-bold text-[#0B1F1C] dark:text-white">{ride.driver?.full_name}</span>
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-[var(--border-subtle)]">
+                  <span className="text-[var(--text-secondary)] font-medium">Driver</span>
+                  <span className="font-bold text-[var(--text-primary)]">{ride.driver?.full_name}</span>
                 </div>
                 
-                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">Departure</span>
-                  <span className="font-bold text-[#0B1F1C] dark:text-white">
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-[var(--border-subtle)]">
+                  <span className="text-[var(--text-secondary)] font-medium">Departure</span>
+                  <span className="font-bold text-[var(--text-primary)]">
                     {ride.departure_time ? format(new Date(ride.departure_time), "h:mm a, MMM d") : "N/A"}
                   </span>
                 </div>
 
-                <div className="bg-[#1D9E75]/10 p-4 rounded-xl border border-[#1D9E75]/20 space-y-4">
+                <div className="bg-[var(--accent-primary)]/10 p-4 rounded-xl border border-[var(--accent-primary)]/20 space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-[#1D9E75] uppercase tracking-wider mb-2">Pickup Location</label>
+                    <label className="block text-xs font-bold text-[var(--accent-primary)] uppercase tracking-wider mb-2">Pickup Location</label>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1D9E75]" />
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--accent-primary)]" />
                       {isFromVnr ? (
-                        <div className="w-full pl-10 pr-4 py-2.5 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-500 dark:text-slate-400 capitalize cursor-not-allowed flex items-center">
+                        <div className="w-full pl-10 pr-4 py-2.5 bg-white/50 dark:bg-slate-800/50 border border-[var(--border-subtle)] rounded-lg text-sm font-semibold text-[var(--text-secondary)] capitalize cursor-not-allowed flex items-center">
                           {ride.origin}
                         </div>
                       ) : (
                         <select 
                           value={pickup} 
                           onChange={(e) => setPickup(e.target.value)}
-                          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#122926] border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-[#0B1F1C] dark:text-white focus:outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] capitalize"
+                          className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-lg text-sm font-semibold text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] capitalize"
                         >
                           {!validLocations.includes(ride.origin) && !ride.origin.toLowerCase().includes('vnr') && (
                             <option value={ride.origin}>{ride.origin} (Driver's Start)</option>
@@ -154,22 +154,22 @@ export default function BookSeatModal({
                         </select>
                       )}
                     </div>
-                    {isFromVnr && <p className="text-[10px] text-[#1D9E75] mt-1 font-medium">* Pickup is locked to VNR VJIET for this route.</p>}
+                    {isFromVnr && <p className="text-[10px] text-[var(--accent-primary)] mt-1 font-medium">* Pickup is locked to VNR VJIET for this route.</p>}
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#1D9E75] uppercase tracking-wider mb-2">Dropoff Location</label>
+                    <label className="block text-xs font-bold text-[var(--accent-primary)] uppercase tracking-wider mb-2">Dropoff Location</label>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1D9E75]" />
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--accent-primary)]" />
                       {isToVnr ? (
-                        <div className="w-full pl-10 pr-4 py-2.5 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-500 dark:text-slate-400 capitalize cursor-not-allowed flex items-center">
+                        <div className="w-full pl-10 pr-4 py-2.5 bg-white/50 dark:bg-slate-800/50 border border-[var(--border-subtle)] rounded-lg text-sm font-semibold text-[var(--text-secondary)] capitalize cursor-not-allowed flex items-center">
                           {ride.destination}
                         </div>
                       ) : (
                         <select 
                           value={dropoff} 
                           onChange={(e) => setDropoff(e.target.value)}
-                          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#122926] border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-[#0B1F1C] dark:text-white focus:outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] capitalize"
+                          className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-lg text-sm font-semibold text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] capitalize"
                         >
                           {!validLocations.includes(ride.destination) && !ride.destination.toLowerCase().includes('vnr') && (
                             <option value={ride.destination}>{ride.destination} (Driver's End)</option>
@@ -180,7 +180,7 @@ export default function BookSeatModal({
                         </select>
                       )}
                     </div>
-                    {isToVnr && <p className="text-[10px] text-[#1D9E75] mt-1 font-medium">* Dropoff is locked to VNR VJIET for this route.</p>}
+                    {isToVnr && <p className="text-[10px] text-[var(--accent-primary)] mt-1 font-medium">* Dropoff is locked to VNR VJIET for this route.</p>}
                   </div>
                   
                   {!isVnrPresent && (
@@ -195,12 +195,12 @@ export default function BookSeatModal({
                   )}
                 </div>
 
-                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-[var(--border-subtle)]">
                   <div>
-                    <span className="text-[#0B1F1C] dark:text-white font-medium">Dynamic Split Price</span>
+                    <span className="text-[var(--text-primary)] font-medium">Dynamic Split Price</span>
                     <p className="text-[10px] text-slate-500 mt-0.5">Based on your route segment & co-passengers</p>
                   </div>
-                  <span className="font-black text-2xl text-[#1D9E75]">
+                  <span className="font-black text-2xl text-[var(--accent-primary)]">
                     ₹{calculatedPrice}
                   </span>
                 </div>
@@ -214,14 +214,14 @@ export default function BookSeatModal({
               </div>
             </div>
 
-            <div className="p-6 pt-4 border-t border-slate-100 dark:border-slate-800 shrink-0">
+            <div className="p-6 pt-4 border-t border-[var(--border-subtle)] shrink-0">
               <button
                 onClick={() => onConfirm(pickup, dropoff, calculatedPrice)}
                 disabled={isProcessing || !canSubmit}
                 className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
                   isProcessing || !canSubmit
-                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' 
-                    : 'bg-[#1D9E75] hover:bg-[#178361] text-white shadow-sm'
+                    ? 'bg-[var(--bg-primary)] text-slate-400 cursor-not-allowed' 
+                    : 'bg-[var(--accent-primary)] hover:bg-[#178361] text-white shadow-sm'
                 }`}
               >
                 {isProcessing ? (

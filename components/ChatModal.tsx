@@ -154,13 +154,13 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
             initial={{ scale: 0.95, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.95, y: 20 }}
-            className="bg-white dark:bg-[#122926] w-full max-w-lg h-[600px] max-h-[90vh] flex flex-col overflow-hidden rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800"
+            className="bg-[var(--bg-surface)] w-full max-w-lg h-[600px] max-h-[90vh] flex flex-col overflow-hidden rounded-2xl shadow-xl border border-[var(--border-subtle)]"
           >
             {/* Header */}
-            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-[#1E293B]">
-              <h3 className="font-bold text-[#0B1F1C] dark:text-white">Ride Chat</h3>
-              <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors">
-                <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+            <div className="p-4 border-b border-[var(--border-subtle)] flex justify-between items-center bg-slate-50 dark:bg-[var(--bg-primary)]">
+              <h3 className="font-bold text-[var(--text-primary)]">Ride Chat</h3>
+              <button onClick={onClose} className="p-2 hover:bg-[var(--bg-surface-hover)] rounded-full transition-colors">
+                <X className="w-5 h-5 text-[var(--text-secondary)]" />
             </button>
           </div>
 
@@ -168,7 +168,7 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {loading ? (
                 <div className="flex justify-center items-center h-full">
-                  <Loader2 className="w-8 h-8 animate-spin text-[#1D9E75]" />
+                  <Loader2 className="w-8 h-8 animate-spin text-[var(--accent-primary)]" />
                 </div>
               ) : messages.length === 0 ? (
                 <div className="text-center text-slate-500 h-full flex items-center justify-center">
@@ -193,8 +193,8 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
                     )}
                     <div className={`px-4 py-2 rounded-2xl max-w-[80%] ${
                         isMe 
-                          ? 'bg-[#1D9E75] text-white rounded-br-none' 
-                          : 'bg-slate-100 dark:bg-[#1E293B] text-[#0B1F1C] dark:text-slate-200 rounded-bl-none border border-slate-200 dark:border-slate-700'
+                          ? 'bg-[var(--accent-primary)] text-white rounded-br-none' 
+                          : 'bg-slate-100 dark:bg-[var(--bg-primary)] text-[var(--text-primary)] dark:text-slate-200 rounded-bl-none border border-[var(--border-subtle)]'
                       }`}>
                       {msg.text}
                     </div>
@@ -206,17 +206,17 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
           </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSend} className="p-4 bg-slate-50 dark:bg-[#1E293B] border-t border-slate-200 dark:border-slate-800 flex gap-2">
+            <form onSubmit={handleSend} className="p-4 bg-slate-50 dark:bg-[var(--bg-primary)] border-t border-[var(--border-subtle)] flex gap-2">
               <input 
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Type a message..."
-                className="flex-1 bg-white dark:bg-[#122926] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] text-[#0B1F1C] dark:text-white"
+                className="flex-1 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl px-4 py-2 outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-[var(--text-primary)]"
               />
               <button 
                 type="submit"
                 disabled={!inputText.trim()}
-                className="bg-[#1D9E75] hover:bg-[#178361] p-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+                className="bg-[var(--accent-primary)] hover:bg-[#178361] p-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
               >
                 <Send className="w-5 h-5 text-white" />
               </button>
