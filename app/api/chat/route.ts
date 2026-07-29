@@ -94,7 +94,7 @@ function findBestResponse(message: string): string {
   }
   
   // Default response for unrecognized questions
-  return "Hmm, I'm not sure about that one 🤔 I can help you with:\n• **Booking or offering rides**\n• **Fare splits and payments**\n• **Safety tips**\n• **Account & profile help**\n• **Vehicle types and routes**\n\nTry asking about any of these! 😊";
+  return "Sorry, I am just a simple bot and I don't understand that. This topic or query is not supported yet! 🚫";
 }
 
 export async function POST(req: Request) {
