@@ -263,25 +263,25 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   };
 
   return (
-    <div className="bg-white dark:bg-[#122926] rounded-2xl border border-slate-200 dark:border-slate-800 p-4 md:p-8 mb-6 md:mb-8 shadow-sm">
+    <div className="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border-subtle)] p-4 md:p-8 mb-6 md:mb-8 shadow-sm">
       <div className="mb-6 md:mb-8">
-        <h2 className="text-xl md:text-2xl font-extrabold text-[#0B1F1C] dark:text-white">Offer a Ride</h2>
-        <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mt-1">Fill in the details to share your journey with campus peers.</p>
+        <h2 className="text-xl md:text-2xl font-extrabold text-[var(--text-primary)]">Offer a Ride</h2>
+        <p className="text-sm md:text-base text-[var(--text-secondary)] mt-1">Fill in the details to share your journey with campus peers.</p>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* ── SECTION: Trip Details ── */}
         <div>
-          <h3 className="text-lg font-bold text-[#0B1F1C] dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+          <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4 border-b border-[var(--border-subtle)] pb-2">
             Trip Details
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div>
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Ride Category</label>
+              <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">Ride Category</label>
               <select 
                 value={formData.ride_category}
                 onChange={(e) => setFormData({...formData, ride_category: e.target.value})}
-                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all"
               >
                 <option value="auto_split">Auto/Cab Fare Split</option>
                 <option value="personal_vehicle">Student Vehicle Pool</option>
@@ -289,11 +289,11 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
             </div>
 
             <div>
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Vehicle Type</label>
+              <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">Vehicle Type</label>
               <select 
                 value={formData.vehicle_type}
                 onChange={(e) => setFormData({...formData, vehicle_type: e.target.value})}
-                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all"
               >
                 {formData.ride_category === 'auto_split' && (
                   <option value="auto">Auto</option>
@@ -307,14 +307,14 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
             <div className="relative z-[100]">
               <div className="flex justify-between items-center mb-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                <label className="text-sm font-semibold text-[var(--text-secondary)]">
                   Origin
                 </label>
                 <button
                   type="button"
                   onClick={handleGetLocation}
                   disabled={gettingLocation}
-                  className="text-xs font-bold text-[#1D9E75] hover:text-[#178361] flex items-center gap-1 bg-[#1D9E75]/10 px-2 py-1 rounded-md transition-colors disabled:opacity-50"
+                  className="text-xs font-bold text-[var(--accent-primary)] hover:text-[var(--accent-primary-hover)] flex items-center gap-1 bg-[var(--accent-primary)]/10 px-2 py-1 rounded-md transition-colors disabled:opacity-50"
                 >
                   {gettingLocation ? <Loader2 className="w-3 h-3 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
                   {gettingLocation ? "Locating..." : "Use Current Location"}
@@ -342,10 +342,10 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                     }
                   }
                 }}
-                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all"
               />
             <div 
-              className="absolute z-[100] w-full mt-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
+              className="absolute z-[100] w-full mt-1 bg-[var(--bg-surface)] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
               style={{ display: showOriginDropdown ? "block" : "none" }}
             >
               {(formData.origin ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.origin.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
@@ -356,7 +356,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                     setFormData({...formData, origin: loc});
                     setShowOriginDropdown(false);
                   }}
-                  className="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-sm text-slate-700 dark:text-slate-200"
+                  className="p-3 hover:bg-[var(--bg-surface-hover)] cursor-pointer text-sm text-slate-700 dark:text-slate-200"
                 >
                   {loc}
                 </div>
@@ -365,7 +365,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           </div>
 
             <div className="relative z-[90]">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+              <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">
                 Destination
               </label>
               <input 
@@ -390,10 +390,10 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                     }
                   }
                 }}
-                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all"
               />
             <div 
-              className="absolute z-[100] w-full mt-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
+              className="absolute z-[100] w-full mt-1 bg-[var(--bg-surface)] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto"
               style={{ display: showDestDropdown ? "block" : "none" }}
             >
               {(formData.destination ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(formData.destination.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
@@ -404,7 +404,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                     setFormData({...formData, destination: loc});
                     setShowDestDropdown(false);
                   }}
-                  className="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-sm text-slate-700 dark:text-slate-200"
+                  className="p-3 hover:bg-[var(--bg-surface-hover)] cursor-pointer text-sm text-slate-700 dark:text-slate-200"
                 >
                   {loc}
                 </div>
@@ -414,7 +414,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
             {possibleRoutes.length > 0 && (
               <div className="col-span-1 md:col-span-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+                <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">
                   Select Your Exact Route
                 </label>
                 <div className="space-y-3">
@@ -423,8 +423,8 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                       key={r.index}
                       className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
                         chosenRouteIndex === r.index 
-                          ? 'border-[#1D9E75] bg-[#1D9E75]/10' 
-                          : 'border-slate-200 dark:border-slate-700 hover:border-[#1D9E75]/50'
+                          ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10' 
+                          : 'border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/50'
                       }`}
                     >
                       <input 
@@ -432,11 +432,11 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                         name="route"
                         checked={chosenRouteIndex === r.index}
                         onChange={() => setChosenRouteIndex(r.index)}
-                        className="mt-1 w-4 h-4 text-[#1D9E75] border-gray-300 focus:ring-[#1D9E75]"
+                        className="mt-1 w-4 h-4 text-[var(--accent-primary)] border-gray-300 focus:ring-[#1D9E75]"
                       />
                       <div>
-                        <div className="font-bold text-[#0B1F1C] dark:text-white">Option {idx + 1}</div>
-                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize leading-relaxed">
+                        <div className="font-bold text-[var(--text-primary)]">Option {idx + 1}</div>
+                        <div className="text-xs text-[var(--text-secondary)] mt-1 capitalize leading-relaxed">
                           Via {r.path.join(' → ')}
                         </div>
                       </div>
@@ -450,37 +450,37 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
         {/* ── SECTION: Schedule & Capacity ── */}
         <div>
-          <h3 className="text-lg font-bold text-[#0B1F1C] dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+          <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4 border-b border-[var(--border-subtle)] pb-2">
             Schedule & Capacity
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Departure Date</label>
+                <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">Departure Date</label>
                 <input 
                   required
                   type="date"
                   min={new Date().toISOString().split('T')[0]}
                   value={formData.departure_date}
                   onChange={(e) => setFormData({...formData, departure_date: e.target.value})}
-                  className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+                  className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all"
                 />
               </div>
               <div>
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Time</label>
+                <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">Time</label>
                 <input 
                   required
                   type="time"
                   min={formData.departure_date === new Date().toISOString().split('T')[0] ? new Date().toTimeString().slice(0, 5) : undefined}
                   value={formData.departure_time}
                   onChange={(e) => setFormData({...formData, departure_time: e.target.value})}
-                  className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+                  className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all"
                 />
               </div>
           </div>
 
             <div>
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+              <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">
                 Available {formData.vehicle_type === 'bike' ? 'Seats (Max: 1)' : `Seats (Max: ${maxSeats})`}
               </label>
               <div className="flex gap-2 flex-wrap">
@@ -491,8 +491,8 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                     onClick={() => setFormData({...formData, total_seats: num})}
                     className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${
                       formData.total_seats === num
-                        ? 'bg-[#1D9E75] text-white shadow-md'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                        ? 'bg-[var(--accent-primary)] text-white shadow-md'
+                        : 'bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] border border-[var(--border-subtle)]'
                     }`}
                   >
                     {num}
@@ -508,27 +508,27 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
         {/* ── SECTION: Pricing ── */}
         <div>
-          <h3 className="text-lg font-bold text-[#0B1F1C] dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+          <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4 border-b border-[var(--border-subtle)] pb-2">
             Pricing
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div>
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Total Trip Cost (₹)</label>
+              <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">Total Trip Cost (₹)</label>
               <input 
                 required
                 type="number"
                 min="0"
                 value={formData.total_cost}
                 onChange={(e) => setFormData({...formData, total_cost: Number(e.target.value)})}
-                className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all"
+                className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all"
               />
             </div>
 
             <div>
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+              <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">
                 {formData.ride_category === 'auto_split' ? "Pricing Method" : "Price Per Seat (Calculated)"}
               </label>
-              <div className="w-full p-4 bg-[#1D9E75]/10 text-[#1D9E75] font-bold border border-[#1D9E75]/20 rounded-xl flex items-center justify-between shadow-sm">
+              <div className="w-full p-4 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] font-bold border border-[var(--accent-primary)]/20 rounded-xl flex items-center justify-between shadow-sm">
                 {formData.ride_category === 'auto_split' ? (
                   <span className="text-sm">Dynamic split based on active passengers</span>
                 ) : (
@@ -547,20 +547,20 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
         {/* ── SECTION: Preferences ── */}
         <div>
-          <h3 className="text-lg font-bold text-[#0B1F1C] dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+          <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4 border-b border-[var(--border-subtle)] pb-2">
             Preferences
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
           {formData.ride_category === "personal_vehicle" && (
             <div>
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block mb-2">Vehicle Number</label>
+              <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">Vehicle Number</label>
               {((formData.vehicle_type === 'car' && userCarNumber) || (formData.vehicle_type === 'bike' && userBikeNumber)) ? (
                 <div className="space-y-3">
                   <select 
                     value={vehicleEntryMode}
                     onChange={(e) => setVehicleEntryMode(e.target.value as 'profile' | 'manual')}
-                    className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all font-medium"
+                    className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all font-medium"
                   >
                     <option value="profile">{formData.vehicle_type === 'car' ? userCarNumber : userBikeNumber} (From Profile)</option>
                     <option value="manual">Use a different vehicle...</option>
@@ -572,7 +572,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                       placeholder="e.g. TS 08 AB 1234"
                       value={formData.vehicle_number}
                       onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
-                      className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all uppercase"
+                      className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all uppercase"
                     />
                   )}
                 </div>
@@ -582,7 +582,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                   placeholder="TS 08 AB 1234"
                   value={formData.vehicle_number}
                   onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
-                  className="w-full p-3 md:p-4 text-sm md:text-base bg-white dark:bg-[#122926] text-[#0B1F1C] dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] transition-all uppercase"
+                  className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all uppercase"
                 />
               )}
             </div>
@@ -643,7 +643,7 @@ function FareSplitterSection({ seats }: { seats: number }) {
 
   return (
     <div
-      className="rounded-xl overflow-hidden mt-4 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#122926]"
+      className="rounded-xl overflow-hidden mt-4 border border-[var(--border-subtle)] bg-[var(--bg-primary)]"
     >
       <button
         type="button"
@@ -673,12 +673,12 @@ function FareSplitterSection({ seats }: { seats: number }) {
                 onClick={() => setVehicle(v)}
                 className="py-2 rounded-xl text-xs font-bold transition-all"
                 style={{
-                  background: vehicle === v ? '#1D9E75' : 'transparent',
+                  background: vehicle === v ? 'var(--accent-primary)' : 'transparent',
                   color: vehicle === v ? 'white' : 'inherit',
-                  borderColor: vehicle === v ? '#1D9E75' : 'inherit',
+                  borderColor: vehicle === v ? 'var(--accent-primary)' : 'inherit',
                 }}
               >
-                {v === 'car' ? '🚗 Car' : '🏍️ Bike'}
+                {v === 'car' ? 'Car' : 'Bike'}
               </button>
             ))}
           </div>
@@ -692,9 +692,9 @@ function FareSplitterSection({ seats }: { seats: number }) {
                   onClick={() => setPassengers(n)}
                   className="w-9 h-9 rounded-xl text-xs font-bold transition-all"
                   style={{
-                    background: passengers === n ? '#1D9E75' : 'transparent',
+                    background: passengers === n ? 'var(--accent-primary)' : 'transparent',
                     color: passengers === n ? 'white' : 'inherit',
-                    borderColor: passengers === n ? '#1D9E75' : 'inherit',
+                    borderColor: passengers === n ? 'var(--accent-primary)' : 'inherit',
                   }}
                 >
                   {n}
@@ -716,7 +716,7 @@ function FareSplitterSection({ seats }: { seats: number }) {
                   max="200"
                   value={manualDistance !== '' ? manualDistance : distance}
                   onChange={e => setManualDistance(e.target.value)}
-                  className="w-16 text-center text-xs font-bold rounded-lg px-2 py-1 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-700 outline-none focus:border-[#1D9E75] focus:ring-1 focus:ring-[#1D9E75] text-[#1D9E75]"
+                  className="w-16 text-center text-xs font-bold rounded-lg px-2 py-1 bg-[var(--bg-surface)] border border-[var(--border-subtle)] outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] text-[var(--accent-primary)]"
                 />
                 <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>km</span>
               </div>
@@ -730,16 +730,16 @@ function FareSplitterSection({ seats }: { seats: number }) {
           </div>
 
           <div
-            className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-700"
+            className="flex items-center justify-between p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]"
           >
             <div>
               <div className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Per Seat</div>
-              <div className="text-xl font-black text-[#0B1F1C] dark:text-white">₹{perSeat}</div>
+              <div className="text-xl font-black text-[var(--text-primary)]">₹{perSeat}</div>
             </div>
-            <div className="w-px h-8 bg-slate-200 dark:bg-slate-700" />
+            <div className="w-px h-8 bg-[var(--border-subtle)]" />
             <div className="text-right">
-              <div className="text-[10px] font-bold uppercase tracking-wide text-[#1D9E75]">Total Fare</div>
-              <div className="text-2xl font-black text-[#1D9E75]">₹{total}</div>
+              <div className="text-[10px] font-bold uppercase tracking-wide text-[var(--accent-primary)]">Total Fare</div>
+              <div className="text-2xl font-black text-[var(--accent-primary)]">₹{total}</div>
             </div>
           </div>
         </div>

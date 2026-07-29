@@ -148,6 +148,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
             </div>
 
             {/* Top Navigation Eradicated as per Strict Mobile-First Directive */}
+          </div>
 
           {/* Header Actions */}
           <div className="flex items-center gap-2">
