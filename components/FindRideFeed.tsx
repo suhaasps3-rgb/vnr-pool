@@ -17,6 +17,7 @@ import DriverProfileModal from "./DriverProfileModal";
 import { isAIMatch, ROUTES, calculateFractionalPrice, findLocIndex, calculateDynamicOverlappingSplit } from "@/lib/matchmaking";
 import { ALL_LOCATIONS as COMMON_LOCATIONS } from "@/lib/locations";
 import DynamicMap from "./DynamicMap";
+import { SkeletonRideCard } from "./SkeletonRideCard";
 
 export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", onSearchChange }: { userId: string, onVehicleSelect: (v: "car" | "auto" | "bike") => void, mode?: "feed" | "offered" | "booked" | "active_trip", onSearchChange?: (origin: string, dest: string) => void }) {
   const [rideCategory, setRideCategory] = useState<"auto_split" | "personal_vehicle" | "all">("all");
@@ -145,6 +146,32 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             return exactMatch || aiMatch;
           }) || [];
         }
+
+        // --- SMART FEED SORTING ALGORITHM ---
+        filteredData = filteredData.sort((a, b) => {
+          let proximityScoreA = 0;
+          let proximityScoreB = 0;
+          
+          // 1. Proximity / Relevancy (if searching)
+          if (searchOrigin || searchDestination) {
+             const exactMatchA = (searchOrigin && a.origin.toLowerCase().includes(searchOrigin.toLowerCase())) || 
+                                 (searchDestination && a.destination.toLowerCase().includes(searchDestination.toLowerCase()));
+             const exactMatchB = (searchOrigin && b.origin.toLowerCase().includes(searchOrigin.toLowerCase())) || 
+                                 (searchDestination && b.destination.toLowerCase().includes(searchDestination.toLowerCase()));
+             if (exactMatchA && !exactMatchB) proximityScoreA -= 100;
+             if (exactMatchB && !exactMatchA) proximityScoreB -= 100;
+          }
+          
+          // 2. Price (lower is better, weight 0.5)
+          const priceDiff = a.price_per_seat - b.price_per_seat;
+          
+          // 3. Departure Time (sooner is better, weight 2.0 per hour difference)
+          const timeA = new Date(a.departure_time).getTime();
+          const timeB = new Date(b.departure_time).getTime();
+          const timeDiffHours = (timeA - timeB) / (1000 * 60 * 60);
+
+          return (proximityScoreA - proximityScoreB) + (priceDiff * 0.5) + (timeDiffHours * 2);
+        });
 
         return filteredData;
       } else if (mode === "offered") {
@@ -695,7 +722,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           // Skeleton Loaders
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="bg-slate-100 dark:bg-slate-800 rounded-xl h-64 animate-pulse" />
+              <SkeletonRideCard key={i} />
             ))}
           </div>
         ) : rides?.length === 0 || (mode === "feed" && hasActiveTrip) ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Clock, ShieldCheck, ChevronRight, Map, MessageCircle } from "lucide-react";
 import { format } from "date-fns";
 import DynamicMap from "./DynamicMap";
@@ -20,14 +20,23 @@ function SeatMap({ total, available }: { total: number; available: number }) {
           <rect x="10" y="13" width="2" height="2.5" rx="0.5" fill={i < booked ? "#EF4444" : "#10B981"} opacity="0.6"/>
         </svg>
       ))}
-      <span
-        className="text-[10px] font-bold ml-1 uppercase tracking-wider"
-        style={{ color: available > 0 ? "#10B981" : "#EF4444" }}
-      >
-        {available > 0
-          ? `${available} ${available === 1 ? 'Seat' : 'Seats'}`
-          : "Full"}
-      </span>
+      <div className="relative overflow-hidden h-4 flex items-center ml-1">
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.span
+            key={available}
+            initial={{ y: 15, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -15, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="text-[10px] font-bold uppercase tracking-wider inline-block"
+            style={{ color: available > 0 ? "#10B981" : "#EF4444" }}
+          >
+            {available > 0
+              ? `${available} ${available === 1 ? 'Seat' : 'Seats'}`
+              : "Full"}
+          </motion.span>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

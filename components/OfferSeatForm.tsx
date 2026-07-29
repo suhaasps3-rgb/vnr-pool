@@ -20,7 +20,10 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   const [showDestDropdown, setShowDestDropdown] = useState(false);
   const [possibleRoutes, setPossibleRoutes] = useState<{index: number, path: string[]}[]>([]);
   const [chosenRouteIndex, setChosenRouteIndex] = useState<number | null>(null);
-
+  
+  // Inline Validation States
+  const [vehicleError, setVehicleError] = useState<string | null>(null);
+  const [timeError, setTimeError] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -85,6 +88,44 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
       setChosenRouteIndex(null);
     }
   }, [formData.origin, formData.destination]);
+
+  // Inline Validation: Departure Time
+  useEffect(() => {
+    if (formData.departure_date && formData.departure_time) {
+      const departureDateTime = new Date(`${formData.departure_date}T${formData.departure_time}`);
+      if (departureDateTime < new Date()) {
+        setTimeError("Cannot schedule a ride in the past.");
+      } else {
+        setTimeError(null);
+      }
+    } else {
+      setTimeError(null);
+    }
+  }, [formData.departure_date, formData.departure_time]);
+
+  // Inline Validation: Vehicle Number
+  useEffect(() => {
+    if (formData.ride_category === 'personal_vehicle') {
+      let vNum = formData.vehicle_number;
+      const hasProfileNumber = (formData.vehicle_type === 'car' && userCarNumber) || (formData.vehicle_type === 'bike' && userBikeNumber);
+      if (hasProfileNumber && vehicleEntryMode === 'profile') {
+         vNum = (formData.vehicle_type === 'car' ? userCarNumber : userBikeNumber) as string;
+      }
+      
+      if (vNum && vNum.length > 0) {
+        const vehicleRegex = /^(AP|AR|AS|BR|CG|GA|GJ|HR|HP|JH|KA|KL|MP|MH|MN|ML|MZ|NL|OD|OR|PB|RJ|SK|TN|TS|TG|TR|UP|UK|WB|AN|CH|DD|DN|DL|JK|LA|LD|PY)\s?[0-9]{2}\s?[A-Z]{1,2}\s?[0-9]{4}$/i;
+        if (!vehicleRegex.test(vNum.trim())) {
+          setVehicleError("Invalid Indian vehicle number format.");
+        } else {
+          setVehicleError(null);
+        }
+      } else {
+        setVehicleError(null);
+      }
+    } else {
+      setVehicleError(null);
+    }
+  }, [formData.vehicle_number, formData.ride_category, formData.vehicle_type, vehicleEntryMode, userCarNumber, userBikeNumber]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -474,10 +515,15 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                   min={formData.departure_date === new Date().toISOString().split('T')[0] ? new Date().toTimeString().slice(0, 5) : undefined}
                   value={formData.departure_time}
                   onChange={(e) => setFormData({...formData, departure_time: e.target.value})}
-                  className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all"
+                  className={`w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-xl outline-none transition-all ${timeError ? 'border-2 border-[var(--accent-danger)] focus:ring-1 focus:ring-[var(--accent-danger)]' : 'border border-[var(--border-subtle)] focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]'}`}
                 />
               </div>
           </div>
+          {timeError && (
+            <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-sm text-[var(--accent-danger)] font-semibold mt-2">
+              {timeError}
+            </motion.p>
+          )}
 
             <div>
               <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">
@@ -582,8 +628,13 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                   placeholder="TS 08 AB 1234"
                   value={formData.vehicle_number}
                   onChange={(e) => setFormData({...formData, vehicle_number: e.target.value})}
-                  className="w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition-all uppercase"
+                  className={`w-full p-3 md:p-4 text-sm md:text-base bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-xl outline-none transition-all uppercase ${vehicleError && (vehicleEntryMode === 'manual' || !((formData.vehicle_type === 'car' && userCarNumber) || (formData.vehicle_type === 'bike' && userBikeNumber))) ? 'border-2 border-[var(--accent-danger)] focus:ring-1 focus:ring-[var(--accent-danger)]' : 'border border-[var(--border-subtle)] focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]'}`}
                 />
+              )}
+              {vehicleError && (
+                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-sm text-[var(--accent-danger)] font-semibold mt-2">
+                  {vehicleError}
+                </motion.p>
               )}
             </div>
           )}
