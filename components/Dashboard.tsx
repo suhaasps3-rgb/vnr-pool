@@ -204,6 +204,11 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
             )}
           </motion.div>
         </AnimatePresence>
+
+        {/* Support Footer */}
+        <div className="mt-12 mb-4 text-center text-xs font-medium text-[var(--text-secondary)]">
+          Need help? Contact <a href="mailto:support.vnrpool2@gmail.com" className="text-[var(--accent-primary)] hover:underline font-bold">support.vnrpool2@gmail.com</a>
+        </div>
       </main>
 
       {/* ─── Fixed Bottom Navigation Bar (Global) ─── */}
