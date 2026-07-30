@@ -1067,37 +1067,6 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   </div>
                 )}
 
-                {/* Route Map Toggle */}
-                <div className="mb-6">
-                  <button 
-                    onClick={(e) => { 
-                      e.stopPropagation(); 
-                      setActiveMapId(activeMapId === ride.id ? null : ride.id); 
-                    }}
-                    className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-2"
-                  >
-                    <MapPin className="w-4 h-4" />
-                    {activeMapId === ride.id ? "Hide Route Map" : "View Route Map"}
-                  </button>
-                  
-                  {activeMapId === ride.id && (
-                    <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-300" onClick={(e) => e.stopPropagation()}>
-                      {(() => {
-                        let waypoints = undefined;
-                        if (ride.chosen_route_index !== null && ride.chosen_route_index !== undefined && ROUTES[ride.chosen_route_index]) {
-                            const fullRoute = ROUTES[ride.chosen_route_index];
-                            const oIdx = findLocIndex(fullRoute, ride.origin);
-                            const dIdx = findLocIndex(fullRoute, ride.destination);
-                            if (oIdx !== -1 && dIdx !== -1 && oIdx <= dIdx) {
-                                waypoints = fullRoute.slice(oIdx, dIdx + 1);
-                            }
-                        }
-                        return <DynamicMap routes={[{ id: ride.id, origin: ride.origin, destination: ride.destination, waypoints: waypoints, color: "#3B82F6", label: "My Route" }]} height="h-64" />;
-                      })()}
-                    </div>
-                  )}
-                </div>
-
                 {/* Co-Passengers List */}
                 {approvedPassengers.length > 0 && (
                   <div className="mb-6 pt-4 border-t border-gray-100 dark:border-white/5">
@@ -1377,7 +1346,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           </motion.div>
         )}
         {/* Route Maps Button Floating */}
-        {visibleRides.length > 0 && mode === 'feed' && (
+        {visibleRides.length > 0 && (
           <div className="fixed bottom-24 left-0 right-0 flex justify-center z-40 pointer-events-none">
             <button
               onClick={() => setShowMultiRouteMap(true)}

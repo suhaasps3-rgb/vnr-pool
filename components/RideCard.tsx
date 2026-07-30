@@ -270,17 +270,20 @@ export default function RideCard({
         </div>
 
         {/* ── Map Toggle ── */}
-        <div className="mb-5">
-          <button
-            onClick={(e) => { e.stopPropagation(); setShowMap(!showMap); }}
-            className="flex items-center gap-1.5 text-xs font-semibold text-[#1D9E75] hover:text-[#178361] transition-colors"
+        <div className="mb-5 pt-4 border-t border-gray-100 dark:border-white/5">
+          <button 
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              setShowMap(!showMap); 
+            }}
+            className={`w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${showMap ? 'bg-[#0F172A] text-white shadow-lg' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10'}`}
           >
-            <Map className="w-3.5 h-3.5" />
+            <Map className="w-4 h-4" />
             {showMap ? "Hide Route Map" : "View Route Map"}
           </button>
 
           {showMap && (
-            <div className="mt-3 rounded-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="mt-4 w-full h-48 md:h-64 rounded-xl overflow-hidden border border-slate-200 dark:border-white/10" onClick={(e) => e.stopPropagation()}>
               {(() => {
                 let waypoints = undefined;
                 if (
@@ -295,7 +298,7 @@ export default function RideCard({
                     waypoints = fullRoute.slice(oIdx, dIdx + 1);
                   }
                 }
-                return <DynamicMap routes={[{ id: ride.id, origin: ride.origin, destination: ride.destination, waypoints: waypoints, color: "#10B981", label: `${ride.driver?.full_name}'s Ride` }]} height="h-48 md:h-64" />;
+                return <DynamicMap routes={[{ id: ride.id, origin: ride.origin, destination: ride.destination, waypoints: waypoints, color: "#10B981", label: `${ride.driver?.full_name}'s Ride` }]} height="h-full" />;
               })()}
             </div>
           )}
