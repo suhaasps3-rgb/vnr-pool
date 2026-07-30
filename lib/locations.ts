@@ -156,7 +156,15 @@ export const DISTANCE_MAP: Record<string, number> = {
   "st martins": 11, "dairy farm road": 14, "fox sagar lake": 11,
   "petbasheerabad": 12, "yellampet": 17, "athvelli": 18, "apparel park": 13, "siva sivani": 12,
   "loyola academy": 18, "army college of dental sciences": 25,
-  "afzalgunj": 24, "aig": 18, "amazon": 22
+  "afzalgunj": 24, "aig": 18, "amazon": 22,
+  
+  // Local Landmarks around VNRVJIET (within 3km radius)
+  "s grand": 1, 
+  "hyd spice": 1, 
+  "pista house bachupally": 2, 
+  "vnr hostel": 0, 
+  "simhapuri kaman": 3, 
+  "bakers heaven": 1
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)
