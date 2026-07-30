@@ -2,9 +2,42 @@ import { DISTANCE_MAP } from './locations';
 
 export const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '').replace('qutbullapur', 'quthbullapur').replace('hitech', 'hitec').replace('hi-tech', 'hitec').replace('balnagar', 'balanagar');
 
+const PARENT_MAPPING: Record<string, string> = {
+  "s grand": "bachupally",
+  "hyderabad spice": "bachupally",
+  "pista house bachupally": "bachupally",
+  "pista house": "bachupally",
+  "pragathi nagar kaman": "pragathi nagar",
+  "simhapuri kaman": "bachupally",
+  "bakers heaven": "bachupally",
+  "dosthi biryani's": "bachupally",
+  "eat magic.in": "bachupally",
+  "kammani telugu kitchen": "bachupally",
+  "biryani factory": "bachupally",
+  "vnr hostel": "vnr vjiet",
+  "mams hospitals": "bachupally",
+  "mamata academy of medical sciences": "bachupally",
+  "reach super speciality hospital": "bachupally",
+  "relief hospital pragathi nagar": "pragathi nagar",
+  "silver oaks international school": "bachupally",
+  "kennedy high the global school": "bachupally",
+  "mallampet lake": "mallampet",
+  "bachupally police station": "bachupally",
+  "angaara restaurant": "nizampet",
+  "allah's kitchen and bar": "nizampet",
+  "taqila lounge and restaurant": "bachupally",
+  "polar bear": "nizampet",
+  "the golden barrel": "bachupally",
+  "dominos": "bachupally"
+};
+
 export const findLocIndex = (route: string[], queryLoc: string) => {
-  const q = queryLoc.toLowerCase().trim();
+  let q = queryLoc.toLowerCase().trim();
   if (!q) return -1;
+  
+  if (PARENT_MAPPING[q]) {
+    q = PARENT_MAPPING[q];
+  }
   let idx = route.findIndex(node => node.toLowerCase().trim() === q);
   if (idx !== -1) return idx;
   const regex = new RegExp(`\\b${q}\\b`, 'i');
