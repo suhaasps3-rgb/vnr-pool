@@ -17,6 +17,8 @@ import DriverProfileModal from "./DriverProfileModal";
 import { isAIMatch, ROUTES, calculateFractionalPrice, findLocIndex, calculateDynamicOverlappingSplit } from "@/lib/matchmaking";
 import { ALL_LOCATIONS as COMMON_LOCATIONS } from "@/lib/locations";
 import DynamicMap from "./DynamicMap";
+import MultiRouteMapModal from "./MultiRouteMapModal";
+import { RouteConfig } from "./MapComponent";
 import { SkeletonRideCard } from "./SkeletonRideCard";
 import { triggerHaptic, playUISound } from "@/lib/interactions";
 
@@ -32,6 +34,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
   const [minSeats, setMinSeats] = useState<number>(1);
   const [selectedRideId, setSelectedRideId] = useState<string | null>(null);
   const [activeMapId, setActiveMapId] = useState<string | null>(null);
+  const [showMultiRouteMap, setShowMultiRouteMap] = useState(false);
   const [selectedRideForBooking, setSelectedRideForBooking] = useState<{ride: any, price: number} | null>(null);
   const [selectedDriverForModal, setSelectedDriverForModal] = useState<{driver: any, vehicleNumber: string} | null>(null);
   const [userGender, setUserGender] = useState<string | null>(null);
@@ -1089,7 +1092,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                                 waypoints = fullRoute.slice(oIdx, dIdx + 1);
                             }
                         }
-                        return <DynamicMap origin={ride.origin} destination={ride.destination} waypoints={waypoints} />;
+                        return <DynamicMap routes={[{ id: ride.id, origin: ride.origin, destination: ride.destination, waypoints: waypoints, color: "#3B82F6", label: "My Route" }]} height="h-64" />;
                       })()}
                     </div>
                   )}
@@ -1209,6 +1212,35 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                       )}
 
                     </div>
+                  </div>
+
+                  {/* Individual Ride Map Toggle */}
+                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
+                    <button 
+                      onClick={() => {
+                        if (activeMapId === ride.id) setActiveMapId(null);
+                        else setActiveMapId(ride.id);
+                      }}
+                      className={`w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${activeMapId === ride.id ? 'bg-[#0F172A] text-white shadow-lg' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10'}`}
+                    >
+                      <LocateFixed className="w-4 h-4" />
+                      {activeMapId === ride.id ? 'Hide Route Map' : 'View Route Map'}
+                    </button>
+                    
+                    {activeMapId === ride.id && (
+                      <div className="mt-4 w-full h-48 md:h-64 rounded-xl overflow-hidden border border-slate-200 dark:border-white/10">
+                        <DynamicMap 
+                          routes={[{
+                            id: ride.id,
+                            origin: ride.origin,
+                            destination: ride.destination,
+                            color: "#10B981", // Emerald Green for individual routes
+                            label: `${ride.driver?.full_name}'s Ride`
+                          }]} 
+                          height="h-full"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -1344,6 +1376,37 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           })}
           </motion.div>
         )}
+        {/* Route Maps Button Floating */}
+        {visibleRides.length > 0 && mode === 'feed' && (
+          <div className="fixed bottom-24 left-0 right-0 flex justify-center z-40 pointer-events-none">
+            <button
+              onClick={() => setShowMultiRouteMap(true)}
+              className="pointer-events-auto bg-[#0F172A] border border-white/10 text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/50 hover:bg-slate-800 transition-all"
+            >
+              <LocateFixed className="w-4 h-4 text-blue-400" />
+              Route Maps
+              <span className="bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full ml-1">
+                {visibleRides.length}
+              </span>
+            </button>
+          </div>
+        )}
+
+        {/* Multi Route Modal */}
+        <MultiRouteMapModal
+          isOpen={showMultiRouteMap}
+          onClose={() => setShowMultiRouteMap(false)}
+          routes={visibleRides.map((r, i) => {
+            const colors = ["#10B981", "#3B82F6", "#F43F5E", "#8B5CF6", "#F59E0B"];
+            return {
+              id: r.id,
+              origin: r.origin,
+              destination: r.destination,
+              color: colors[i % colors.length],
+              label: `${r.driver?.full_name}'s Ride`
+            };
+          })}
+        />
         </>
         );
       })()}

@@ -13,49 +13,74 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-interface MapComponentProps {
+// Custom dot icon for waypoints/origins to make it look sleek
+const customDotIcon = (color: string) => L.divIcon({
+  className: 'custom-dot-icon',
+  html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px ${color}80;"></div>`,
+  iconSize: [12, 12],
+  iconAnchor: [6, 6]
+});
+
+export interface RouteConfig {
+  id: string;
   origin: string;
   destination: string;
   waypoints?: string[];
+  color: string;
+  label?: string;
+}
+
+interface MapComponentProps {
+  routes: RouteConfig[];
+  height?: string;
 }
 
 function ChangeView({ bounds }: { bounds: L.LatLngBounds | null }) {
   const map = useMap();
   useEffect(() => {
-    if (bounds) {
-      map.fitBounds(bounds, { padding: [50, 50] });
+    if (bounds && bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
     }
   }, [bounds, map]);
   return null;
 }
 
-export default function MapComponent({ origin, destination, waypoints }: MapComponentProps) {
-  const [routeData, setRouteData] = useState<{
+export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96" }: MapComponentProps) {
+  const [renderedRoutes, setRenderedRoutes] = useState<{
+    id: string;
     originCoords: [number, number];
     destCoords: [number, number];
     routeCoords: [number, number][];
-    waypointCoords?: { name: string, coords: [number, number] }[];
-  } | null>(null);
+    color: string;
+    label?: string;
+  }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    async function fetchRoute() {
+    if (!routes || routes.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+
+    async function fetchRoutes() {
       try {
         setLoading(true);
+        setError("");
+        
+        const fetchedRoutes = [];
+        
         // Helper to geocode with fallback
         const geocode = async (locName: string) => {
-          // Hardcode VNR VJIET for 100% accuracy since it's the anchor of the app
-          if (locName.toLowerCase().includes("vnr") || locName.toLowerCase().includes("vjiet") || locName.toLowerCase().includes("bachupally")) {
+          if (locName.toLowerCase().includes("vnr") || locName.toLowerCase().includes("vjiet") || locName.toLowerCase().includes("bachupally (vnr)")) {
             return { lat: 17.5388, lon: 78.3868 };
           }
-          
           let queries = [
             `${locName} Hyderabad`,
             `${locName.split(' ')[0]} Hyderabad`
           ];
-
-          // If location has more than 2 words, try first two words
           const words = locName.split(' ');
           if (words.length > 2) {
             queries.splice(1, 0, `${words[0]} ${words[1]} Hyderabad`);
@@ -69,110 +94,154 @@ export default function MapComponent({ origin, destination, waypoints }: MapComp
               return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
             }
           }
-          
           throw new Error(`Could not find location: ${locName}`);
         };
 
-        const oCoords = await geocode(origin);
-        const dCoords = await geocode(destination);
+        // Process sequentially with a delay to respect OSRM/Nominatim free tier limits
+        for (const route of routes) {
+          if (!isMounted) break;
+          
+          try {
+            const oCoords = await geocode(route.origin);
+            const dCoords = await geocode(route.destination);
 
-        const oLat = oCoords.lat;
-        const oLon = oCoords.lon;
-        const dLat = dCoords.lat;
-        const dLon = dCoords.lon;
-
-        let allCoords = [{lat: oLat, lon: oLon}];
-        let wpCoords = [];
-        
-        if (waypoints && waypoints.length > 0) {
-          for (const wp of waypoints) {
-            if (wp.toLowerCase() === origin.toLowerCase() || wp.toLowerCase() === destination.toLowerCase()) continue;
-            try {
-              const c = await geocode(wp);
-              wpCoords.push({ name: wp, coords: [c.lat, c.lon] as [number, number] });
-              allCoords.push(c);
-            } catch (err) {
-              console.warn("Could not geocode waypoint", wp);
+            let allCoords = [{lat: oCoords.lat, lon: oCoords.lon}];
+            
+            if (route.waypoints && route.waypoints.length > 0) {
+              for (const wp of route.waypoints) {
+                if (wp.toLowerCase() === route.origin.toLowerCase() || wp.toLowerCase() === route.destination.toLowerCase()) continue;
+                try {
+                  const c = await geocode(wp);
+                  allCoords.push(c);
+                  // Artificial delay to prevent rate limit on Nominatim
+                  await new Promise(r => setTimeout(r, 600));
+                } catch (err) {
+                  console.warn("Could not geocode waypoint", wp);
+                }
+              }
             }
+            allCoords.push({lat: dCoords.lat, lon: dCoords.lon});
+
+            // Fetch Route from OSRM
+            const coordsString = allCoords.map(c => `${c.lon},${c.lat}`).join(';');
+            const routeRes = await fetch(`https://router.project-osrm.org/route/v1/driving/${coordsString}?overview=full&geometries=geojson`);
+            const routeDataAPI = await routeRes.json();
+            
+            if (routeDataAPI.code === "Ok" && routeDataAPI.routes && routeDataAPI.routes.length > 0) {
+              const routeCoords = routeDataAPI.routes[0].geometry.coordinates.map((coord: [number, number]) => [coord[1], coord[0]]);
+              fetchedRoutes.push({
+                id: route.id,
+                originCoords: [oCoords.lat, oCoords.lon] as [number, number],
+                destCoords: [dCoords.lat, dCoords.lon] as [number, number],
+                routeCoords,
+                color: route.color,
+                label: route.label || route.origin
+              });
+            }
+          } catch (e) {
+            console.error(`Failed to fetch route ${route.id}`, e);
+          }
+          
+          // 600ms delay between OSRM requests
+          await new Promise(r => setTimeout(r, 600));
+        }
+
+        if (isMounted) {
+          if (fetchedRoutes.length === 0) {
+            setError("Could not load any routes.");
+          } else {
+            setRenderedRoutes(fetchedRoutes);
           }
         }
-        allCoords.push({lat: dLat, lon: dLon});
-
-        // Fetch Route from OSRM
-        const coordsString = allCoords.map(c => `${c.lon},${c.lat}`).join(';');
-        const routeRes = await fetch(`https://router.project-osrm.org/route/v1/driving/${coordsString}?overview=full&geometries=geojson`);
-        const routeDataAPI = await routeRes.json();
-        
-        if (routeDataAPI.code !== "Ok" || !routeDataAPI.routes || routeDataAPI.routes.length === 0) {
-          throw new Error("Could not find a driving route between these locations.");
-        }
-
-        // GeoJSON uses [lon, lat], Leaflet uses [lat, lon]
-        const routeCoords = routeDataAPI.routes[0].geometry.coordinates.map((coord: [number, number]) => [coord[1], coord[0]]);
-
-        setRouteData({
-          originCoords: [oLat, oLon],
-          destCoords: [dLat, dLon],
-          routeCoords,
-          waypointCoords: wpCoords
-        });
       } catch (err: any) {
-        setError(err.message);
+        if (isMounted) setError(err.message);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
 
-    fetchRoute();
-  }, [origin, destination]);
+    fetchRoutes();
+
+    return () => { isMounted = false; };
+  }, [routes]);
 
   if (loading) {
     return (
-      <div className="w-full h-64 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-2xl flex items-center justify-center">
-        <span className="text-slate-400">Loading map...</span>
+      <div className={`w-full ${height} bg-slate-900 animate-pulse rounded-2xl flex flex-col items-center justify-center border border-white/5`}>
+        <div className="w-8 h-8 border-4 border-[#3B82F6] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <span className="text-slate-400 font-medium tracking-wide">Mapping Routes...</span>
       </div>
     );
   }
 
-  if (error || !routeData) {
+  if (error || renderedRoutes.length === 0) {
     return (
-      <div className="w-full h-64 bg-red-50 dark:bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-200 dark:border-red-500/20">
-        <span className="text-red-500 text-sm font-medium">{error || "Failed to load route map."}</span>
+      <div className={`w-full ${height} bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-500/20`}>
+        <span className="text-red-400 text-sm font-medium">{error || "Failed to load route map."}</span>
       </div>
     );
   }
 
-  const bounds = L.latLngBounds([routeData.originCoords, routeData.destCoords]);
+  // Calculate master bounds encompassing all routes
+  let masterBounds = L.latLngBounds([]);
+  renderedRoutes.forEach(r => {
+    masterBounds.extend(r.originCoords);
+    masterBounds.extend(r.destCoords);
+    r.routeCoords.forEach(c => masterBounds.extend(c));
+  });
 
   return (
-    <div className="w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 relative">
-      <div className="absolute top-4 right-4 z-[400] bg-[#0F172A] text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-lg">
-        Route Map
-      </div>
+    <div className={`w-full ${height} rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 relative`}>
       <MapContainer 
-        center={routeData.originCoords} 
+        center={renderedRoutes[0].originCoords} 
         zoom={13} 
-        scrollWheelZoom={false} 
-        style={{ height: '100%', width: '100%' }}
+        scrollWheelZoom={true} 
+        style={{ height: '100%', width: '100%', backgroundColor: '#0f172a' }}
         className="z-0"
       >
-        <ChangeView bounds={bounds} />
+        <ChangeView bounds={masterBounds} />
+        {/* CartoDB Dark Matter Tiles for Premium Look */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        <Marker position={routeData.originCoords}>
-          <Popup>{origin} (Origin)</Popup>
-        </Marker>
-        {routeData.waypointCoords && routeData.waypointCoords.map((wp, idx) => (
-          <Marker key={idx} position={wp.coords}>
-            <Popup>{wp.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</Popup>
-          </Marker>
+        
+        {renderedRoutes.map((r) => (
+          <div key={r.id}>
+            {/* Origin Dot */}
+            <Marker position={r.originCoords} icon={customDotIcon(r.color)}>
+              <Popup className="dark-popup">
+                <div className="font-bold text-sm">{r.label}</div>
+                <div className="text-xs text-slate-500">Origin</div>
+              </Popup>
+            </Marker>
+            
+            {/* Destination Dot */}
+            <Marker position={r.destCoords} icon={customDotIcon(r.color)}>
+              <Popup className="dark-popup">
+                <div className="font-bold text-sm">Destination</div>
+              </Popup>
+            </Marker>
+
+            {/* Dotted Polyline */}
+            <Polyline 
+              positions={r.routeCoords} 
+              color={r.color} 
+              weight={5} 
+              opacity={0.9}
+              dashArray="1, 10" // This creates a beautiful dotted effect similar to Uber/Rapido
+              lineCap="round"
+              lineJoin="round"
+            />
+            {/* Subtle glow underneath */}
+            <Polyline 
+              positions={r.routeCoords} 
+              color={r.color} 
+              weight={12} 
+              opacity={0.15}
+            />
+          </div>
         ))}
-        <Marker position={routeData.destCoords}>
-          <Popup>{destination} (Destination)</Popup>
-        </Marker>
-        <Polyline positions={routeData.routeCoords} color="#3B82F6" weight={5} opacity={0.8} />
       </MapContainer>
     </div>
   );
