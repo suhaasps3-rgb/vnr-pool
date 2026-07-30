@@ -33,6 +33,14 @@ export const DISTANCE_MAP: Record<string, number> = {
   "old alwal ig statue": 21, "father balaiah ngr": 19, "qutbullapur": 14, "chintal shapur signal": 12, "gajularamaram": 10,
   "vnr vjiet": 0,
   
+  // Curated 5km Radius Landmarks (Bachupally/Pragathi Nagar)
+  "s grand": 2, "hyderabad spice": 3, "pista house bachupally": 1, "pragathi nagar kaman": 2,
+  "simhapuri kaman": 1, "bakers heaven": 0, "dosthi biryani's": 0, "eat magic.in": 0,
+  "kammani telugu kitchen": 0, "biryani factory": 1, "vnr hostel": 0,
+  "mams hospitals": 1, "mamata academy of medical sciences": 1, "reach super speciality hospital": 2,
+  "relief hospital pragathi nagar": 3, "silver oaks international school": 2,
+  "kennedy high the global school": 3, "mallampet lake": 4, "bachupally police station": 1,
+  
   // Extra locations from user request
   "nampally": 21, "kachiguda": 24, "chikkadpally": 23,
   "suraram": 16, "jeedimetla": 15, "chintal": 14, "shamshabad": 45,
@@ -156,15 +164,7 @@ export const DISTANCE_MAP: Record<string, number> = {
   "st martins": 11, "dairy farm road": 14, "fox sagar lake": 11,
   "petbasheerabad": 12, "yellampet": 17, "athvelli": 18, "apparel park": 13, "siva sivani": 12,
   "loyola academy": 18, "army college of dental sciences": 25,
-  "afzalgunj": 24, "aig": 18, "amazon": 22,
-  
-  // Local Landmarks around VNRVJIET (within 3km radius)
-  "s grand": 1, 
-  "hyd spice": 1, 
-  "pista house bachupally": 2, 
-  "vnr hostel": 0, 
-  "simhapuri kaman": 3, 
-  "bakers heaven": 1
+  "afzalgunj": 24, "aig": 18, "amazon": 22
 };
 
 export const ALL_LOCATIONS = Object.keys(DISTANCE_MAP)

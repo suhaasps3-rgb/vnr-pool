@@ -13,6 +13,29 @@ function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon
   return R * c; // Distance in km
 }
 
+// Precision Geofencing Database (Custom POIs)
+const CUSTOM_POIS = [
+  { name: "S Grand", lat: 17.525, lon: 78.385, neighbourhood: "Bachupally", radius: 0.3 },
+  { name: "Hyderabad Spice", lat: 17.5185, lon: 78.3965, neighbourhood: "Bachupally", radius: 0.3 },
+  { name: "Pista House Bachupally", lat: 17.5300, lon: 78.3800, neighbourhood: "Bachupally", radius: 0.3 },
+  { name: "Pragathi Nagar Kaman", lat: 17.5408, lon: 78.3938, neighbourhood: "Pragathi Nagar", radius: 0.4 },
+  { name: "Simhapuri Kaman", lat: 17.5350, lon: 78.3850, neighbourhood: "Bachupally", radius: 0.3 },
+  { name: "Bakers Heaven", lat: 17.5380, lon: 78.3860, neighbourhood: "Bachupally", radius: 0.2 },
+  { name: "Dosthi Biryani's", lat: 17.5395, lon: 78.3852, neighbourhood: "Bachupally", radius: 0.2 },
+  { name: "Eat Magic.in", lat: 17.5398, lon: 78.3855, neighbourhood: "Bachupally", radius: 0.2 },
+  { name: "Kammani Telugu Kitchen", lat: 17.5385, lon: 78.3845, neighbourhood: "Bachupally", radius: 0.2 },
+  { name: "Biryani Factory", lat: 17.5400, lon: 78.3860, neighbourhood: "Bachupally", radius: 0.2 },
+  { name: "VNR Hostel", lat: 17.5392, lon: 78.3865, neighbourhood: "Bachupally", radius: 0.2 },
+  { name: "Mamata Academy of Medical Sciences", lat: 17.531, lon: 78.381, neighbourhood: "Bachupally", radius: 0.6 },
+  { name: "Reach Super Speciality Hospital", lat: 17.528, lon: 78.382, neighbourhood: "Bachupally", radius: 0.4 },
+  { name: "Relief Hospital Pragathi Nagar", lat: 17.541, lon: 78.395, neighbourhood: "Pragathi Nagar", radius: 0.4 },
+  { name: "Silver Oaks International School", lat: 17.5455, lon: 78.3755, neighbourhood: "Bachupally", radius: 0.5 },
+  { name: "Kennedy High The Global School", lat: 17.5332, lon: 78.3661, neighbourhood: "Bachupally", radius: 0.5 },
+  { name: "Mallampet Lake", lat: 17.5500, lon: 78.3600, neighbourhood: "Mallampet", radius: 0.8 },
+  { name: "Bachupally Police Station", lat: 17.5420, lon: 78.3780, neighbourhood: "Bachupally", radius: 0.3 },
+  { name: "VNR VJIET", lat: 17.53905, lon: 78.38546, neighbourhood: "Bachupally", radius: 1.5 } // Catch-all 1.5km for main campus (lowest priority)
+];
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const lat = searchParams.get('lat');
@@ -82,21 +105,27 @@ export async function GET(request: Request) {
       precisionLabel = neighbourhood;
     }
 
-    // ── VNR VJIET SNAP LOGIC ──────────────────────────────────
-    // VNR VJIET coordinates
-    const VNR_LAT = 17.53905;
-    const VNR_LON = 78.38546;
-    const distanceToVNR = getDistanceFromLatLonInKm(Number(lat), Number(lon), VNR_LAT, VNR_LON);
-    
-    // If within 1.5km of VNR VJIET, force snap to VNR VJIET
+    // ── CUSTOM GEOFENCING SNAP LOGIC ──────────────────────────────────
     let finalPoiLabel = precisionLabel;
     let finalPoiName = poiName;
     let finalNeighbourhood = neighbourhood;
     
-    if (distanceToVNR < 1.5) {
-      finalPoiLabel = "VNR VJIET";
-      finalPoiName = "VNR VJIET";
-      finalNeighbourhood = "Bachupally";
+    // Find the closest custom POI
+    let closestPoi = null;
+    let minDistance = Infinity;
+
+    for (const poi of CUSTOM_POIS) {
+      const dist = getDistanceFromLatLonInKm(Number(lat), Number(lon), poi.lat, poi.lon);
+      if (dist <= poi.radius && dist < minDistance) {
+        minDistance = dist;
+        closestPoi = poi;
+      }
+    }
+
+    if (closestPoi) {
+      finalPoiLabel = closestPoi.name;
+      finalPoiName = closestPoi.name;
+      finalNeighbourhood = closestPoi.neighbourhood;
     }
 
     return NextResponse.json({
