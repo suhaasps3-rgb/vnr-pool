@@ -47,7 +47,7 @@ export default function RouteScene() {
   if (!route) return null;
 
   return (
-    <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none pt-32 md:pt-0">
+    <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none pt-32 md:pt-0 z-[60]">
       <motion.svg
         ref={svgRef}
         viewBox="0 0 800 800"
