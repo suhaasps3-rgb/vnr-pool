@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
+import { createPortal } from "react-dom";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2, Calendar, LocateFixed } from "lucide-react";
@@ -1345,37 +1346,40 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           })}
           </motion.div>
         )}
-        {/* Route Maps Button Floating */}
-        {visibleRides.length > 0 && (
-          <div className="fixed bottom-24 left-0 right-0 flex justify-center z-40 pointer-events-none">
-            <button
-              onClick={() => setShowMultiRouteMap(true)}
-              className="pointer-events-auto bg-[#0F172A] border border-white/10 text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/50 hover:bg-slate-800 transition-all"
-            >
-              <LocateFixed className="w-4 h-4 text-blue-400" />
-              Route Maps
-              <span className="bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full ml-1">
-                {visibleRides.length}
-              </span>
-            </button>
-          </div>
+        {/* Route Maps Button Floating - Using Portal to escape Framer Motion transforms */}
+        {visibleRides.length > 0 && typeof window !== 'undefined' && createPortal(
+          <>
+            <div className="fixed bottom-24 left-0 right-0 flex justify-center z-40 pointer-events-none">
+              <button
+                onClick={() => setShowMultiRouteMap(true)}
+                className="pointer-events-auto bg-[#0F172A] border border-white/10 text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/50 hover:bg-slate-800 transition-all"
+              >
+                <LocateFixed className="w-4 h-4 text-blue-400" />
+                Route Maps
+                <span className="bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full ml-1">
+                  {visibleRides.length}
+                </span>
+              </button>
+            </div>
+            
+            {/* Multi Route Modal */}
+            <MultiRouteMapModal
+              isOpen={showMultiRouteMap}
+              onClose={() => setShowMultiRouteMap(false)}
+              routes={visibleRides.map((r, i) => {
+                const colors = ["#10B981", "#3B82F6", "#F43F5E", "#8B5CF6", "#F59E0B"];
+                return {
+                  id: r.id,
+                  origin: r.origin,
+                  destination: r.destination,
+                  color: colors[i % colors.length],
+                  label: `${r.driver?.full_name}'s Ride`
+                };
+              })}
+            />
+          </>,
+          document.body
         )}
-
-        {/* Multi Route Modal */}
-        <MultiRouteMapModal
-          isOpen={showMultiRouteMap}
-          onClose={() => setShowMultiRouteMap(false)}
-          routes={visibleRides.map((r, i) => {
-            const colors = ["#10B981", "#3B82F6", "#F43F5E", "#8B5CF6", "#F59E0B"];
-            return {
-              id: r.id,
-              origin: r.origin,
-              destination: r.destination,
-              color: colors[i % colors.length],
-              label: `${r.driver?.full_name}'s Ride`
-            };
-          })}
-        />
         </>
         );
       })()}
