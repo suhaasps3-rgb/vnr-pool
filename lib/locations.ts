@@ -40,6 +40,8 @@ export const DISTANCE_MAP: Record<string, number> = {
   "mams hospitals": 1, "mamata academy of medical sciences": 1, "reach super speciality hospital": 2,
   "relief hospital pragathi nagar": 3, "silver oaks international school": 2,
   "kennedy high the global school": 3, "mallampet lake": 4, "bachupally police station": 1,
+  "pista house": 1, "angaara restaurant": 3, "allah's kitchen and bar": 2,
+  "taqila lounge and restaurant": 1, "polar bear": 3, "the golden barrel": 2, "dominos": 1,
   
   // Extra locations from user request
   "nampally": 21, "kachiguda": 24, "chikkadpally": 23,
