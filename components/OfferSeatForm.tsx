@@ -281,11 +281,18 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
       queryClient.invalidateQueries({ queryKey: ["activeTripGlobal"] });
       queryClient.invalidateQueries({ queryKey: ["activeTrip"] });
       // Reset form
+      // Reset form
       setFormData({
-        ...formData,
+        ride_category: "auto_split",
         origin: "",
+        destination: "VNR VJIET Campus Gate 1",
         departure_date: "",
         departure_time: "",
+        vehicle_type: "auto",
+        vehicle_number: "",
+        total_seats: 3,
+        total_cost: 200,
+        is_women_only: false,
       });
     } catch (err: any) {
       toast.error(err.message || "Failed to offer ride.");

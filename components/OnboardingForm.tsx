@@ -40,46 +40,17 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
         toast.error("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");
         return;
       }
-      
-      const otp = Math.floor(1000 + Math.random() * 9000).toString();
-      setGeneratedOtp(otp);
-      
-      // Always show toast as a guaranteed fallback in case OS notifications are blocked
-      toast.success(`(Simulated SMS) Your OTP is: ${otp}`, { duration: 8000 });
-      
-      // Also attempt to show native notification
-      if ("Notification" in window) {
-        if (Notification.permission === "granted") {
-          new Notification("VNR Pool Verification", { body: `Your code is ${otp}` });
-        } else if (Notification.permission !== "denied") {
-          Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-              new Notification("VNR Pool Verification", { body: `Your code is ${otp}` });
-            }
-          });
-        }
-      }
-      
       setStep(4);
       return;
     }
-    
-    if (step === 4) {
-      if (enteredOtp !== generatedOtp) {
-        toast.error("Invalid OTP. Please try again.");
-        return;
-      }
-      setStep(5);
-      return;
-    }
 
-    setStep(s => Math.min(s + 1, 5));
+    setStep(s => Math.min(s + 1, 4));
   };
   const handlePrev = () => setStep(s => Math.max(s - 1, 1));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (step !== 5) return handleNext();
+    if (step !== 4) return handleNext();
 
     setLoading(true);
     const supabase = createClient();
@@ -231,30 +202,6 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
                 className="space-y-4"
               >
                 <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Verify Mobile Number</label>
-                  <p className="text-xs text-gray-500 mb-2">We've sent a 4-digit code to {formData.mobile_number}</p>
-                  <input 
-                    required
-                    type="text"
-                    maxLength={4}
-                    value={enteredOtp}
-                    onChange={e => setEnteredOtp(e.target.value)}
-                    placeholder="1234"
-                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-center tracking-widest font-bold"
-                  />
-                </div>
-              </motion.div>
-            )}
-
-            {step === 5 && (
-              <motion.div 
-                key="step5"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="space-y-4"
-              >
-                <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Gender</label>
                   <div className="grid grid-cols-3 gap-2">
                     {['male', 'female', 'other'].map(g => (
@@ -291,10 +238,10 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
             <motion.button
               whileTap={{ scale: 0.95 }}
               type="submit"
-              disabled={loading || (step === 5 && !formData.gender)}
+              disabled={loading || (step === 4 && !formData.gender)}
               className="ui-button-primary px-6 py-3 rounded-xl flex items-center gap-2"
             >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : step === 5 ? (
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : step === 4 ? (
                 <>Finish <Check className="w-5 h-5" /></>
               ) : (
                 <>Next <ArrowRight className="w-5 h-5" /></>
