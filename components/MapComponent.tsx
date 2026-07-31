@@ -79,6 +79,8 @@ const geocode = async (locName: string) => {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encoded}`);
       const data = await res.json();
       if (data && data.length > 0) {
+        // Strict delay after successful API hit to prevent 429 Rate Limiting
+        await new Promise(r => setTimeout(r, 800));
         return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
       }
     } catch (err) {
