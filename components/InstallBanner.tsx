@@ -76,7 +76,7 @@ export default function InstallBanner() {
   return (
     <div className="fixed bottom-0 left-0 right-0 p-4 z-[9999] animate-in slide-in-from-bottom-full duration-500">
       <div className="bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] rounded-2xl p-4 flex items-center gap-4 max-w-md mx-auto">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-lg">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center flex-shrink-0 shadow-lg">
           <Download className="w-6 h-6 text-white" />
         </div>
         

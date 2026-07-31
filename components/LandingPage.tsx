@@ -164,12 +164,12 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="md:col-span-2 bg-gradient-to-br from-purple-50/50 dark:from-purple-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
+              className="md:col-span-2 bg-gradient-to-br from-sky-50/50 dark:from-sky-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
             >
-              <Users className="w-10 h-10 text-purple-500 mb-6" />
+              <Users className="w-10 h-10 text-sky-500 mb-6" />
               <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Female-Only Rides</h4>
               <p className="text-slate-600 dark:text-slate-300 font-medium">Dedicated filters to find and offer rides exclusively for female students for maximum comfort.</p>
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/10 blur-3xl rounded-full group-hover:bg-purple-500/20 transition-colors"></div>
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-sky-500/10 blur-3xl rounded-full group-hover:bg-sky-500/20 transition-colors"></div>
             </motion.div>
 
             <motion.div 

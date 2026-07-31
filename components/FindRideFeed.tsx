@@ -978,7 +978,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 )}
                 
                 {mode === "feed" && isAIMatch(ride.origin, ride.destination, searchOrigin, searchDestination, ride.chosen_route_index) && (
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-purple-700 dark:text-purple-300 px-3 md:px-4 py-1 rounded-full text-[8px] md:text-[10px] font-black tracking-widest border border-purple-500/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse z-10">
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-sky-500/20 to-blue-500/20 text-sky-700 dark:text-sky-300 px-3 md:px-4 py-1 rounded-full text-[8px] md:text-[10px] font-black tracking-widest border border-sky-500/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(14,165,233,0.4)] animate-pulse z-10">
                     ✨ AI MATCH: PERFECT ROUTE OVERLAY
                   </div>
                 )}
