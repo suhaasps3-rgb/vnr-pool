@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { DISTANCE_MAP } from '@/lib/locations';
 
 export async function POST(req: Request) {
   try {
@@ -28,14 +29,19 @@ export async function POST(req: Request) {
 
     const systemPrompt = `You are a highly intelligent transport pricing AI acting as a neutral third-party for a college carpool app in Hyderabad, India. 
 Your goal is to suggest a perfectly fair total trip fare that drivers and students will instantly agree on.
-Consider factors like typical auto/cab rates in Hyderabad, distance between locations, and typical traffic.
+Consider factors like typical auto/cab rates in Hyderabad, the exact distance provided, and typical traffic.
 Respond ONLY with a valid JSON object containing exactly two keys:
-"reasoning": A short, 1-2 sentence explanation of why this fare is fair (e.g. mentioning surge, traffic, or distance).
+"reasoning": A short, 1-2 sentence explanation of why this fare is fair (e.g. mentioning distance, surge, or traffic).
 "suggested_total_fare": A number representing the total trip cost in Indian Rupees (₹) to be split among passengers.`;
+
+    // Attempt to lookup approximate distance from our dictionary
+    const distKey = origin.toLowerCase() === "vnr vjiet campus gate 1" || origin.toLowerCase().includes("vnr") ? destination.toLowerCase() : origin.toLowerCase();
+    const distanceKm = DISTANCE_MAP[distKey] || "unknown";
 
     const userPrompt = `Calculate a fair fare for this ride:
 Origin: ${origin}
 Destination: ${destination}
+Approximate Distance: ${distanceKm} km
 Vehicle Type: ${vehicle_type}
 Number of Passengers: ${passengers}`;
 
