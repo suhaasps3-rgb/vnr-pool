@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { createPortal } from "react-dom";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2, Calendar, LocateFixed } from "lucide-react";
+import { MessageCircle, Shield, Loader2, MapPin, Clock, User, Users, Ban, Trash2, Calendar, LocateFixed, Share2 } from "lucide-react";
 import ChatModal from "./ChatModal";
 import RateUser from "./RateUser";
 import RideCard from "./RideCard";
@@ -1185,18 +1185,31 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   </div>
                 </div>
 
-                {/* Individual Ride Map Toggle */}
+                {/* Individual Ride Map Toggle & WhatsApp Share */}
                 <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
-                  <button 
-                    onClick={() => {
-                      if (activeMapId === ride.id) setActiveMapId(null);
-                      else setActiveMapId(ride.id);
-                    }}
-                    className={`w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${activeMapId === ride.id ? 'bg-[#0F172A] text-white shadow-lg' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10'}`}
-                  >
-                    <LocateFixed className="w-4 h-4" />
-                    {activeMapId === ride.id ? 'Hide Route Map' : 'View Route Map'}
-                  </button>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => {
+                        if (activeMapId === ride.id) setActiveMapId(null);
+                        else setActiveMapId(ride.id);
+                      }}
+                      className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${activeMapId === ride.id ? 'bg-[#0F172A] text-white shadow-lg' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10'}`}
+                    >
+                      <LocateFixed className="w-4 h-4" />
+                      {activeMapId === ride.id ? 'Hide Map' : 'Route Map'}
+                    </button>
+
+                    <button 
+                      onClick={() => {
+                        const text = `🚗 Ride available on VNR Pool!\n📍 ${ride.origin} to ${ride.destination}\n🕒 ${format(new Date(ride.departure_time), "MMM d, h:mm a")}\n💺 ${ride.available_seats} seats left for ₹${displayPrice}\nBook it now on the app!`;
+                        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                      }}
+                      className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      Share on WhatsApp
+                    </button>
+                  </div>
                   
                   {activeMapId === ride.id && (
                     <div className="mt-4 w-full h-48 md:h-64 rounded-xl overflow-hidden border border-slate-200 dark:border-white/10">
