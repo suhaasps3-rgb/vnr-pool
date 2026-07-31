@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Car, CalendarCheck, User, Activity,
-  UserX, LogOut, Zap
+  UserX, LogOut, Zap, Phone, Mail
 } from "lucide-react";
 import FindRideFeed from "./FindRideFeed";
 import OfferSeatForm from "./OfferSeatForm";
@@ -205,10 +205,37 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
           </motion.div>
         </AnimatePresence>
 
-        {/* Support Footer */}
-        <div className="mt-12 mb-4 text-center text-xs font-medium text-[var(--text-secondary)]">
-          Need help? Contact <a href="mailto:support.vnrpool2@gmail.com" className="text-[var(--accent-primary)] hover:underline font-bold">support.vnrpool2@gmail.com</a>
-        </div>
+        {/* Polished Support Footer */}
+        <footer className="mt-16 mb-8 w-full">
+          <div className="bg-slate-50/50 dark:bg-white/[0.02] border-t border-[var(--border-subtle)] px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-10 rounded-3xl shadow-sm">
+            {/* Left Side: Brand */}
+            <div className="text-center md:text-left max-w-sm">
+              <h2 className="text-2xl font-black text-[var(--accent-primary)] mb-2 tracking-tight">VNR Pool</h2>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed">
+                Exclusive ride-sharing platform for VNR VJIET students.
+              </p>
+            </div>
+
+            {/* Right Side: Contact Pills */}
+            <div className="flex flex-col items-center md:items-end gap-3 w-full md:w-auto">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">Support</span>
+              
+              <a href="tel:+919949953311" className="flex items-center justify-center md:justify-start gap-3 px-6 py-3 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200/60 dark:border-white/10 rounded-full transition-all text-sm font-bold text-slate-700 dark:text-slate-300 w-full md:w-auto min-w-[280px]">
+                <Phone className="w-4 h-4 text-blue-500" />
+                +91 99499 53311
+              </a>
+
+              <a href="mailto:support.vnrpool2@gmail.com" className="flex items-center justify-center md:justify-start gap-3 px-6 py-3 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200/60 dark:border-white/10 rounded-full transition-all text-sm font-bold text-slate-700 dark:text-slate-300 w-full md:w-auto min-w-[280px]">
+                <Mail className="w-4 h-4 text-blue-500" />
+                support.vnrpool2@gmail.com
+              </a>
+            </div>
+          </div>
+          
+          <div className="text-center pt-8 pb-20 text-xs font-semibold text-slate-400 dark:text-slate-500 border-t border-[var(--border-subtle)]/50 mt-4 mx-6">
+            Made with ❤️ for VNR VJIET
+          </div>
+        </footer>
       </main>
 
       {/* ─── Fixed Bottom Navigation Bar (Global) ─── */}
