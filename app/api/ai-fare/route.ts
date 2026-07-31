@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 Your goal is to suggest a perfectly fair total trip fare that drivers and students will instantly agree on.
 Consider factors like typical auto/cab rates in Hyderabad, the exact distance provided, and typical traffic.
 Respond ONLY with a valid JSON object containing exactly two keys:
-"reasoning": A short, 1-2 sentence explanation of why this fare is fair (e.g. mentioning distance, surge, or traffic).
+"reasoning": A short, 1-2 sentence explanation of why this fare is fair. YOU MUST INCLUDE THE EXACT FINAL PRICE IN THIS SENTENCE (e.g. "Based on a distance of 10km, a fair total fare is ₹250.").
 "suggested_total_fare": A number representing the total trip cost in Indian Rupees (₹) to be split among passengers.`;
 
     // Attempt to lookup approximate distance from our dictionary
@@ -67,9 +67,12 @@ Number of Passengers: ${passengers}`;
       throw new Error("AI returned invalid JSON");
     }
 
+    const finalFare = typeof parsedResult.suggested_total_fare === 'number' ? parsedResult.suggested_total_fare : parseInt(parsedResult.suggested_total_fare) || 200;
+    const finalReasoning = parsedResult.reasoning ? `${parsedResult.reasoning} (Suggested Total: ₹${finalFare})` : `AI suggested based on distance and traffic. (Suggested Total: ₹${finalFare})`;
+
     return NextResponse.json({
-      reasoning: parsedResult.reasoning || "AI suggested based on distance and traffic.",
-      suggested_total_fare: typeof parsedResult.suggested_total_fare === 'number' ? parsedResult.suggested_total_fare : parseInt(parsedResult.suggested_total_fare) || 200
+      reasoning: finalReasoning,
+      suggested_total_fare: finalFare
     });
 
   } catch (error: any) {
