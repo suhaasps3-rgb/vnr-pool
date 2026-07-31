@@ -593,18 +593,20 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
             <h3 className="text-lg font-bold text-[var(--text-primary)]">
               Pricing
             </h3>
-            <button 
-              type="button" 
-              onClick={fetchAIFare}
-              disabled={aiLoading}
-              className="text-xs font-bold bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 px-3 py-1.5 rounded-lg border border-sky-200 dark:border-sky-500/20 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-colors flex items-center gap-1.5 shadow-sm"
-            >
-              {aiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "✨"}
-              {aiLoading ? "Calculating..." : "AI Fair Fare Suggestion"}
-            </button>
+            {formData.ride_category === 'personal_vehicle' && (
+              <button 
+                type="button" 
+                onClick={fetchAIFare}
+                disabled={aiLoading}
+                className="text-xs font-bold bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 px-3 py-1.5 rounded-lg border border-sky-200 dark:border-sky-500/20 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-colors flex items-center gap-1.5 shadow-sm"
+              >
+                {aiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "✨"}
+                {aiLoading ? "Calculating..." : "AI Fair Fare Suggestion"}
+              </button>
+            )}
           </div>
           
-          {aiReasoning && (
+          {formData.ride_category === 'personal_vehicle' && aiReasoning && (
             <motion.div 
               initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
               className="mb-6 p-3 bg-sky-50 dark:bg-sky-500/10 text-sky-800 dark:text-sky-300 text-sm font-medium rounded-xl border border-sky-200 dark:border-sky-500/20 leading-relaxed shadow-sm"
