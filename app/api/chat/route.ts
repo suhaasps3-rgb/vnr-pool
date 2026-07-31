@@ -1,104 +1,5 @@
 import { NextResponse } from 'next/server';
 
-// Smart keyword-based AI responses for VNR Pool
-// No external API needed — instant, free, unlimited
-
-interface QA {
-  keywords: string[];
-  response: string;
-}
-
-const knowledgeBase: QA[] = [
-  {
-    keywords: ['book', 'ride', 'seat', 'reserve', 'find ride', 'how to book'],
-    response: "To book a ride, tap the **Find Ride** tab 🔍 You'll see all available rides. Pick one that matches your route and timing, then hit **Book Seat**. The driver will get notified instantly! Make sure to arrive at the pickup point on time 🚗"
-  },
-  {
-    keywords: ['offer', 'drive', 'give ride', 'post ride', 'driver', 'offer seat'],
-    response: "Want to offer a ride? Go to the **Offer Seat** tab 🚙 Fill in your route (origin & destination), set the date/time, pick your vehicle type, and set available seats. Students looking for rides on your route will be able to book instantly!"
-  },
-  {
-    keywords: ['fare', 'split', 'cost', 'price', 'money', 'pay', 'payment', 'upi', 'charge', 'fee'],
-    response: "The fare is split **fairly** among all passengers based on distance 💰 For example, if a car ride costs ₹200 and there are 4 riders, each pays ₹50. Payments are made **directly to the driver via UPI** — VNR Pool doesn't handle any money. Check the fare calculator on the dashboard for estimates!"
-  },
-  {
-    keywords: ['safe', 'security', 'trust', 'verify', 'id', 'danger', 'risk'],
-    response: "Your safety is our top priority! 🛡️ Here are some tips:\n• Always **verify the driver's college ID** before boarding\n• Share your **live location** with a friend via WhatsApp\n• Only ride with verified **@vnrvjiet.in** students\n• Rate your driver after every ride — low-rated users get flagged\n• Report any issues to the college transport committee"
-  },
-  {
-    keywords: ['cancel', 'remove', 'delete', 'undo', 'cancel ride', 'cancel booking'],
-    response: "To cancel a booking, go to **My Rides** tab, find your upcoming ride, and tap **Cancel**. Please cancel early so the driver can find another rider! Frequent cancellations may affect your rating 📋"
-  },
-  {
-    keywords: ['rate', 'rating', 'review', 'feedback', 'star'],
-    response: "After each ride, you can rate your driver/rider with 1-5 stars ⭐ Good ratings build trust in the community. Drivers with consistently low ratings may be flagged. Be honest but fair with your ratings!"
-  },
-  {
-    keywords: ['sign up', 'register', 'join', 'account', 'create account', 'new'],
-    response: "To join VNR Pool:\n1️⃣ Enter your **@vnrvjiet.in** college email\n2️⃣ Set a password and verify your email\n3️⃣ Complete your profile (name, roll no, branch, mobile)\n4️⃣ Verify your mobile number with OTP\n5️⃣ You're in! Start finding or offering rides 🎉"
-  },
-  {
-    keywords: ['route', 'area', 'location', 'kompally', 'miyapur', 'kphb', 'bachupally', 'kukatpally', 'where'],
-    response: "VNR Pool covers rides between **VNR VJIET college** and popular neighborhoods like Kompally, Miyapur, Bachupally, KPHB, Kukatpally, Nizampet, Pragathi Nagar, and more! 🗺️ Just enter your origin and destination when booking or offering a ride."
-  },
-  {
-    keywords: ['vehicle', 'car', 'bike', 'auto', 'type'],
-    response: "We support 3 vehicle types:\n🚗 **Car** — Most comfortable, fits 3-4 passengers\n🛺 **Auto** — Budget-friendly, fits 2-3 passengers\n🏍️ **Bike** — Fastest, 1 passenger only\nChoose based on your comfort and budget!"
-  },
-  {
-    keywords: ['profile', 'edit', 'update', 'change', 'name', 'number', 'branch'],
-    response: "To update your profile, go to the **Profile** tab in the bottom navigation. You can edit your name, branch, and contact details. Your roll number and email are locked after verification 🔒"
-  },
-  {
-    keywords: ['block', 'report', 'complaint', 'problem', 'issue', 'harass'],
-    response: "If you face any issues:\n🚫 **Block** the user from the ride card or their profile\n📢 **Report** serious issues to the college transport committee\n⚠️ Blocked users can't see your rides or book with you\nYour safety matters most! Don't hesitate to report any problems."
-  },
-  {
-    keywords: ['notification', 'alert', 'remind', 'bell'],
-    response: "Tap the 🔔 bell icon in the top navigation to see all your notifications — booking confirmations, ride updates, and reminders. Enable browser notifications for real-time alerts!"
-  },
-  {
-    keywords: ['hello', 'hi', 'hey', 'howdy', 'yo', 'sup', 'good morning', 'good evening'],
-    response: "Hey there! 👋 I'm Veer, your VNR Pool assistant. I can help you with booking rides, understanding fare splits, safety tips, and navigating the app. What would you like to know? 😊"
-  },
-  {
-    keywords: ['thanks', 'thank you', 'thx', 'appreciate'],
-    response: "You're welcome! 😊 Happy to help. If you have any more questions about VNR Pool, just ask. Have a great ride! 🚗✨"
-  },
-  {
-    keywords: ['who are you', 'what are you', 'your name', 'veer'],
-    response: "I'm **Veer** 🤖 — your AI-powered assistant for VNR Pool! I'm here to help you navigate the app, understand how rides work, and answer any questions about the platform. Think of me as your friendly VNRPool guide! 🎓"
-  },
-];
-
-function findBestResponse(message: string): string {
-  const msg = message.toLowerCase().trim();
-  
-  let bestMatch = { score: 0, response: '' };
-  
-  for (const qa of knowledgeBase) {
-    let score = 0;
-    for (const keyword of qa.keywords) {
-      // Use regex with word boundaries to prevent partial word matches (e.g. 'hi' in 'Rohit')
-      const regex = new RegExp(`\\b${keyword.toLowerCase()}\\b`, 'i');
-      if (regex.test(msg)) {
-        // Longer keyword matches are worth more
-        score += keyword.length;
-      }
-    }
-    if (score > bestMatch.score) {
-      bestMatch = { score, response: qa.response };
-    }
-  }
-  
-  if (bestMatch.score > 0) {
-    return bestMatch.response;
-  }
-  
-  // Default response for unrecognized questions
-  return "Sorry, I am just a simple bot and I don't understand that topic. 🚫\n\nPlease ask me questions related to the VNR Pool website, such as:\n• How to book or offer a ride\n• How fare splitting works\n• App safety features\n• Updating your profile";
-}
-
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
@@ -107,15 +8,57 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
     }
 
-    const lastMessage = messages[messages.length - 1]?.content || '';
-    const reply = findBestResponse(lastMessage);
+    const apiKey = process.env.FEATHERLESS_API_KEY || "rc_7c2451b1ce5a74cb3b87d044ad37e627a913127e927e159748313e33254fdd90";
 
-    // Small delay to feel natural
-    await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 400));
+    const systemPrompt = `You are Veer, the friendly and helpful AI assistant for the VNR Pool app (an exclusive ride-sharing platform for VNR VJIET students).
+Keep your answers short, punchy, and very helpful. Use emojis naturally.
+Never invent policies. Stick strictly to these facts:
+- Rides are strictly for @vnrvjiet.in verified students.
+- Fares are split fairly using our dynamic AI fare splitter based on distance and vehicle type (Car, Auto, Bike).
+- Payments are made directly to the driver via UPI outside the app. VNR Pool does not handle money.
+- Users can block/report suspicious behavior to ensure safety.
+- Booking and offering rides happens through the "Find Ride" and "Offer Ride" tabs on the dashboard.
+- Users verify their accounts using an 8-digit OTP sent to their college email.
+If the user asks something completely unrelated to the app, college, or rides, politely redirect them back to VNR Pool topics.`;
+
+    // Format messages for Featherless (OpenAI compatible)
+    const formattedMessages = [
+      { role: 'system', content: systemPrompt },
+      ...messages.map((m: any) => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.content
+      }))
+    ];
+
+    // Using Llama-3 8B or Qwen 7B for fast chat responses
+    const model = "meta-llama/Meta-Llama-3-8B-Instruct"; // Or "Qwen/Qwen2.5-7B-Instruct"
+
+    const response = await fetch('https://api.featherless.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: formattedMessages,
+        temperature: 0.7,
+        max_tokens: 150
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error("Featherless Chat API Error:", errText);
+      throw new Error(`Featherless API returned ${response.status}`);
+    }
+
+    const data = await response.json();
+    const reply = data.choices[0].message.content;
 
     return NextResponse.json({ reply });
   } catch (err: any) {
     console.error('Chat API error:', err);
-    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json({ error: 'Something went wrong connecting to Veer.' }, { status: 500 });
   }
 }
