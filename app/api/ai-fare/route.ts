@@ -39,8 +39,8 @@ Destination: ${destination}
 Vehicle Type: ${vehicle_type}
 Number of Passengers: ${passengers}`;
 
-    // Using a lightweight, fast open-source model available on Featherless
-    const model = "meta-llama/Meta-Llama-3-8B-Instruct";
+    // Using a lightweight, fast open-source model available on Featherless (ungated)
+    const model = "Qwen/Qwen2.5-7B-Instruct";
 
     const response = await fetch('https://api.featherless.ai/v1/chat/completions', {
       method: 'POST',
