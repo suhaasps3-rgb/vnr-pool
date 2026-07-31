@@ -21,6 +21,10 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
   const [possibleRoutes, setPossibleRoutes] = useState<{index: number, path: string[]}[]>([]);
   const [chosenRouteIndex, setChosenRouteIndex] = useState<number | null>(null);
   
+  // AI Fare States
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiReasoning, setAiReasoning] = useState<string | null>(null);
+  
   // Inline Validation States
   const [vehicleError, setVehicleError] = useState<string | null>(null);
   const [timeError, setTimeError] = useState<string | null>(null);
@@ -102,6 +106,37 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
       setTimeError(null);
     }
   }, [formData.departure_date, formData.departure_time]);
+
+  const fetchAIFare = async () => {
+    if (!formData.origin || !formData.destination) {
+      toast.error("Please select Origin and Destination first.");
+      return;
+    }
+    setAiLoading(true);
+    setAiReasoning(null);
+    try {
+      const res = await fetch('/api/ai-fare', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          origin: formData.origin,
+          destination: formData.destination,
+          vehicle_type: formData.vehicle_type,
+          passengers: formData.total_seats
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to fetch AI Fare");
+      
+      setFormData(prev => ({ ...prev, total_cost: data.suggested_total_fare }));
+      setAiReasoning(data.reasoning);
+      toast.success("AI updated the fair fare!");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to calculate AI fare");
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   // Inline Validation: Vehicle Number
   useEffect(() => {
@@ -554,9 +589,31 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
 
         {/* ── SECTION: Pricing ── */}
         <div>
-          <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4 border-b border-[var(--border-subtle)] pb-2">
-            Pricing
-          </h3>
+          <div className="flex items-center justify-between mb-4 border-b border-[var(--border-subtle)] pb-2">
+            <h3 className="text-lg font-bold text-[var(--text-primary)]">
+              Pricing
+            </h3>
+            <button 
+              type="button" 
+              onClick={fetchAIFare}
+              disabled={aiLoading}
+              className="text-xs font-bold bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 px-3 py-1.5 rounded-lg border border-sky-200 dark:border-sky-500/20 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-colors flex items-center gap-1.5 shadow-sm"
+            >
+              {aiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "✨"}
+              {aiLoading ? "Calculating..." : "AI Fair Fare Suggestion"}
+            </button>
+          </div>
+          
+          {aiReasoning && (
+            <motion.div 
+              initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
+              className="mb-6 p-3 bg-sky-50 dark:bg-sky-500/10 text-sky-800 dark:text-sky-300 text-sm font-medium rounded-xl border border-sky-200 dark:border-sky-500/20 leading-relaxed shadow-sm"
+            >
+              <span className="font-bold block mb-1">🤖 AI Pricing Engine:</span>
+              {aiReasoning}
+            </motion.div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div>
               <label className="text-sm font-semibold text-[var(--text-secondary)] block mb-2">Total Trip Cost (₹)</label>
