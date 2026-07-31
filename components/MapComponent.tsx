@@ -200,10 +200,10 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96" }
         className="z-0"
       >
         <ChangeView bounds={masterBounds} />
-        {/* CartoDB Dark Matter Tiles for Premium Look */}
+        {/* Google Maps Standard Tiles */}
         <TileLayer
-          attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; Google Maps'
+          url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
         />
         
         {renderedRoutes.map((r) => (
@@ -223,22 +223,23 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96" }
               </Popup>
             </Marker>
 
-            {/* Dotted Polyline */}
+            {/* Outer shadow/border (Google Maps style) */}
+            <Polyline 
+              positions={r.routeCoords} 
+              color={r.color} 
+              weight={8} 
+              opacity={0.3}
+              lineCap="round"
+              lineJoin="round"
+            />
+            {/* Solid Route Line */}
             <Polyline 
               positions={r.routeCoords} 
               color={r.color} 
               weight={5} 
-              opacity={0.9}
-              dashArray="1, 10" // This creates a beautiful dotted effect similar to Uber/Rapido
+              opacity={1}
               lineCap="round"
               lineJoin="round"
-            />
-            {/* Subtle glow underneath */}
-            <Polyline 
-              positions={r.routeCoords} 
-              color={r.color} 
-              weight={12} 
-              opacity={0.15}
             />
           </div>
         ))}
