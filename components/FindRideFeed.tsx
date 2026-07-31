@@ -1362,10 +1362,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         {/* Route Maps Button Floating - Using Portal to escape Framer Motion transforms */}
         {visibleRides.length > 0 && typeof window !== 'undefined' && createPortal(
           <>
-            <div className="fixed top-24 right-4 md:right-8 flex justify-end z-50 pointer-events-none">
+            <motion.div 
+              drag 
+              dragMomentum={false}
+              whileDrag={{ scale: 1.05 }}
+              className="fixed top-24 right-4 md:right-8 z-50 cursor-grab active:cursor-grabbing touch-none"
+            >
               <button
                 onClick={() => setShowMultiRouteMap(true)}
-                className="pointer-events-auto bg-[#0F172A] border border-white/10 text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/50 hover:bg-slate-800 transition-all"
+                className="bg-[#0F172A] border border-white/10 text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/50 hover:bg-slate-800 transition-colors pointer-events-auto"
               >
                 <LocateFixed className="w-4 h-4 text-blue-400" />
                 Route Maps
@@ -1373,7 +1378,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   {visibleRides.length}
                 </span>
               </button>
-            </div>
+            </motion.div>
             
             {/* Multi Route Modal */}
             <MultiRouteMapModal
