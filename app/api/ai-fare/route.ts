@@ -10,22 +10,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const apiKey = process.env.FEATHERLESS_API_KEY;
-
-    // Fallback if API key is not set (so the UI doesn't crash during testing)
-    if (!apiKey) {
-      console.warn("FEATHERLESS_API_KEY is not set. Returning mock AI response.");
-      
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const mockFare = vehicle_type === 'car' ? 250 : vehicle_type === 'auto' ? 150 : 80;
-      
-      return NextResponse.json({
-        reasoning: "AI Mock Response: Based on current traffic conditions from " + origin + " to " + destination + ", there is a slight surge. The suggested fair price for a " + vehicle_type + " is ₹" + mockFare + ".",
-        suggested_total_fare: mockFare
-      });
-    }
+    const apiKey = process.env.FEATHERLESS_API_KEY || "rc_7c2451b1ce5a74cb3b87d044ad37e627a913127e927e159748313e33254fdd90";
 
     const systemPrompt = `You are a highly intelligent transport pricing AI acting as a neutral third-party for a college carpool app in Hyderabad, India. 
 Your goal is to suggest a perfectly fair total trip fare that drivers and students will instantly agree on.
