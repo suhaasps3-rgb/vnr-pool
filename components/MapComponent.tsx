@@ -66,7 +66,7 @@ const geocode = async (locName: string) => {
   if (OVERRIDES[l]) return OVERRIDES[l];
   if (l.includes("vnr") || l.includes("vjiet")) return OVERRIDES["vnr vjiet"];
 
-  // 2. Nominatim fallback with smarter regional queries
+  // 2. Proxy through our backend for reliability and caching
   let queries = [
     `${locName}, Hyderabad, Telangana, India`,
     `${locName}, Telangana, India`,
@@ -76,35 +76,23 @@ const geocode = async (locName: string) => {
   for (const query of queries) {
     const encoded = encodeURIComponent(query);
     try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encoded}`);
+      const res = await fetch(`/api/geocode/forward?q=${encoded}`);
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) {
-          await new Promise(r => setTimeout(r, 800));
+          // Small delay so we don't spam our own API simultaneously
+          await new Promise(r => setTimeout(r, 200));
           return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
         }
       }
     } catch (err) {
-      console.warn("Nominatim query failed, trying fallback...", query);
+      console.warn("Proxy query failed", query);
     }
     
-    // Fallback to Open-Meteo Geocoding API which is highly reliable and free
-    try {
-      const meteoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encoded}&count=1&format=json`);
-      if (meteoRes.ok) {
-        const meteoData = await meteoRes.json();
-        if (meteoData.results && meteoData.results.length > 0) {
-          await new Promise(r => setTimeout(r, 800));
-          return { lat: parseFloat(meteoData.results[0].latitude), lon: parseFloat(meteoData.results[0].longitude) };
-        }
-      }
-    } catch (err) {
-      console.warn("Open-Meteo query failed", query);
-    }
-    
-    // Artificial delay to prevent rate limit on Nominatim
-    await new Promise(r => setTimeout(r, 600));
+    // Artificial delay before retry
+    await new Promise(r => setTimeout(r, 200));
   }
+  
   throw new Error(`Could not find location: ${locName}. Rate limit may be exceeded.`);
 };
 
