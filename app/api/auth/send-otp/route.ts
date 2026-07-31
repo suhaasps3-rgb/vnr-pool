@@ -116,7 +116,7 @@ export async function POST(req: Request) {
       html = `
         <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; text-align: center;">
           <h2>Welcome to VNR Pool!</h2>
-          <p>Your 6-digit verification code is:</p>
+          <p>Your 8-digit verification code is:</p>
           <h1 style="letter-spacing: 4px; background: #f3f4f6; padding: 16px; border-radius: 8px; color: #111;">${email_otp}</h1>
           <p style="margin-top: 20px; color: #666; font-size: 12px;">If you didn't request this, you can safely ignore this email.</p>
         </div>
