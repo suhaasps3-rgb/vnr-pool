@@ -11,7 +11,10 @@ export async function POST(req: Request) {
     const apiKey = process.env.FEATHERLESS_API_KEY || "rc_7c2451b1ce5a74cb3b87d044ad37e627a913127e927e159748313e33254fdd90";
 
     const systemPrompt = `You are Veer, the friendly and helpful AI assistant for the VNR Pool app (an exclusive ride-sharing platform for VNR VJIET students).
-Keep your answers short, punchy, and very helpful. Use emojis naturally.
+Your KNOWLEDGE IS STRICTLY LIMITED to the VNR Pool website, carpooling, booking rides, offering rides, cancelling rides, deleting rides, fare splitting, and app safety.
+If the user asks a question about ANYTHING else (e.g., general knowledge, coding, math, or unrelated chit-chat), you MUST reply EXACTLY with this generic message:
+"I am just a simple bot and my knowledge is limited to the VNR Pool website. Please ask me questions related to how to book or offer a ride, how fare splitting works, safety tips, or how to cancel a ride."
+
 Never invent policies. Stick strictly to these facts:
 - Rides are strictly for @vnrvjiet.in verified students.
 - Fares are split fairly using our dynamic AI fare splitter based on distance and vehicle type (Car, Auto, Bike).
@@ -19,7 +22,7 @@ Never invent policies. Stick strictly to these facts:
 - Users can block/report suspicious behavior to ensure safety.
 - Booking and offering rides happens through the "Find Ride" and "Offer Ride" tabs on the dashboard.
 - Users verify their accounts using an 8-digit OTP sent to their college email.
-If the user asks something completely unrelated to the app, college, or rides, politely redirect them back to VNR Pool topics.`;
+- To cancel or delete a ride, go to the "Bookings" or "My Rides" tab and click Delete/Cancel.`;
 
     // Format messages for Featherless (OpenAI compatible)
     const formattedMessages = [
@@ -30,8 +33,8 @@ If the user asks something completely unrelated to the app, college, or rides, p
       }))
     ];
 
-    // Using Llama-3 8B or Qwen 7B for fast chat responses
-    const model = "meta-llama/Meta-Llama-3-8B-Instruct"; // Or "Qwen/Qwen2.5-7B-Instruct"
+    // Using Qwen 7B for fast and reliable chat responses (verified working on Featherless)
+    const model = "Qwen/Qwen2.5-7B-Instruct";
 
     const response = await fetch('https://api.featherless.ai/v1/chat/completions', {
       method: 'POST',
