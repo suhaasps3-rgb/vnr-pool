@@ -1366,18 +1366,19 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               drag 
               dragMomentum={false}
               whileDrag={{ scale: 1.05 }}
-              className="fixed top-24 right-4 md:right-8 z-50 cursor-grab active:cursor-grabbing touch-none"
+              style={{ touchAction: "none" }}
+              className="fixed top-24 right-4 md:right-8 z-[100]"
             >
-              <button
+              <div
                 onClick={() => setShowMultiRouteMap(true)}
-                className="bg-[#0F172A] border border-white/10 text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/50 hover:bg-slate-800 transition-colors pointer-events-auto"
+                className="bg-[#0F172A] border border-white/10 text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/50 hover:bg-slate-800 transition-colors cursor-grab active:cursor-grabbing pointer-events-auto select-none"
               >
-                <LocateFixed className="w-4 h-4 text-blue-400" />
-                Route Maps
-                <span className="bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full ml-1">
+                <LocateFixed className="w-4 h-4 text-blue-400 pointer-events-none" />
+                <span className="pointer-events-none">Route Maps</span>
+                <span className="bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full ml-1 pointer-events-none">
                   {visibleRides.length}
                 </span>
-              </button>
+              </div>
             </motion.div>
             
             {/* Multi Route Modal */}
