@@ -1201,7 +1201,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
 
                     <button 
                       onClick={() => {
-                        const text = `🚗 Ride available on VNR Pool!\n📍 ${ride.origin} to ${ride.destination}\n🕒 ${format(new Date(ride.departure_time), "MMM d, h:mm a")}\n💺 ${ride.available_seats} seats left for ₹${displayPrice}\nBook it now on the app!`;
+                        const text = `🚗 Ride available on VNR Pool!\n📍 ${ride.origin} to ${ride.destination}\n🕒 ${format(new Date(ride.departure_time), "MMM d, h:mm a")}\n💺 ${ride.available_seats} seats left for ₹${displayPrice}\n\nBook it now: https://vnr-pool-omega.vercel.app`;
                         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
                       }}
                       className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20"
