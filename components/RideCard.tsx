@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Clock, ShieldCheck, ChevronRight, Map, MessageCircle, Share2 } from "lucide-react";
 import { format } from "date-fns";
-import DynamicMap from "./DynamicMap";
+import DynamicRouteMap from "./DynamicRouteMap";
 import { ROUTES, findLocIndex } from "@/lib/matchmaking";
 
 // ── Seat Visual Map ────────────────────────────────────────
@@ -285,7 +285,7 @@ export default function RideCard({
           {showMap && (
             <div className="mt-4 w-full h-48 md:h-64 rounded-xl overflow-hidden border border-slate-200 dark:border-white/10" onClick={(e) => e.stopPropagation()}>
               {(() => {
-                let waypoints = undefined;
+                let waypoints: string[] = [];
                 if (
                   ride.chosen_route_index !== null &&
                   ride.chosen_route_index !== undefined &&
@@ -294,11 +294,21 @@ export default function RideCard({
                   const fullRoute = ROUTES[ride.chosen_route_index];
                   const oIdx = findLocIndex(fullRoute, ride.origin);
                   const dIdx = findLocIndex(fullRoute, ride.destination);
-                  if (oIdx !== -1 && dIdx !== -1 && oIdx <= dIdx) {
-                    waypoints = fullRoute.slice(oIdx, dIdx + 1);
+                  
+                  if (oIdx !== -1 && dIdx !== -1) {
+                    if (oIdx <= dIdx) {
+                      waypoints = fullRoute.slice(oIdx, dIdx + 1);
+                    } else {
+                      waypoints = fullRoute.slice(dIdx, oIdx + 1).reverse();
+                    }
                   }
                 }
-                return <DynamicMap routes={[{ id: ride.id, origin: ride.origin, destination: ride.destination, waypoints: waypoints, color: "#EF4444", label: `${ride.driver?.full_name}'s Ride` }]} height="h-full" />;
+                
+                if (waypoints.length === 0) {
+                   waypoints = [ride.origin, ride.destination];
+                }
+                
+                return <DynamicRouteMap waypoints={waypoints} className="h-full w-full" />;
               })()}
             </div>
           )}
