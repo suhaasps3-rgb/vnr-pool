@@ -21,11 +21,12 @@ export async function POST(req: Request) {
     let baseFare = Math.round(distanceKm * baseRate);
     
     // Hardcode outlier exceptions provided by user (typically long-distance ORR/toll routes)
-    if (distKey.includes('attapur')) baseFare = vehicle_type === 'car' ? 1026 : 410;
+    if (distKey.includes('attapur')) baseFare = vehicle_type === 'car' ? 1026 : 300;
     if (distKey.includes('rasoolpura')) baseFare = vehicle_type === 'car' ? 450 : 180;
     if (distKey.includes('bowenpally')) baseFare = vehicle_type === 'car' ? 347 : 138;
     if (distKey.includes('cbit')) baseFare = vehicle_type === 'car' ? 685 : 274;
     if (distKey.includes('dammaiguda')) baseFare = vehicle_type === 'car' ? 755 : 302;
+    if (distKey.includes('dilsukhnagar') && vehicle_type === 'bike') baseFare = 330;
 
     const systemPrompt = `You are a highly intelligent transport pricing AI acting as a neutral third-party for a college carpool app in Hyderabad, India. 
 Your goal is to suggest a perfectly fair total trip fare that drivers and students will instantly agree on.

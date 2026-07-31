@@ -609,9 +609,12 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           {formData.ride_category === 'personal_vehicle' && aiReasoning && (
             <motion.div 
               initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-3 bg-sky-50 dark:bg-sky-500/10 text-sky-800 dark:text-sky-300 text-sm font-medium rounded-xl border border-sky-200 dark:border-sky-500/20 leading-relaxed shadow-sm"
+              className="mb-6 p-3 bg-sky-50 dark:bg-sky-500/10 text-sky-800 dark:text-sky-300 text-sm font-medium rounded-xl border border-sky-200 dark:border-sky-500/20 leading-relaxed shadow-sm relative"
             >
-              <span className="font-bold block mb-1">🤖 AI Pricing Engine:</span>
+              <div className="flex justify-between items-center mb-1">
+                <span className="font-bold block">🤖 AI Pricing Engine:</span>
+                <span className="text-[10px] text-sky-500/70 font-semibold uppercase tracking-wide">Powered by featherless.ai</span>
+              </div>
               {aiReasoning}
             </motion.div>
           )}
