@@ -1183,35 +1183,35 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
 
                     </div>
                   </div>
+                </div>
 
-                  {/* Individual Ride Map Toggle */}
-                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
-                    <button 
-                      onClick={() => {
-                        if (activeMapId === ride.id) setActiveMapId(null);
-                        else setActiveMapId(ride.id);
-                      }}
-                      className={`w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${activeMapId === ride.id ? 'bg-[#0F172A] text-white shadow-lg' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10'}`}
-                    >
-                      <LocateFixed className="w-4 h-4" />
-                      {activeMapId === ride.id ? 'Hide Route Map' : 'View Route Map'}
-                    </button>
-                    
-                    {activeMapId === ride.id && (
-                      <div className="mt-4 w-full h-48 md:h-64 rounded-xl overflow-hidden border border-slate-200 dark:border-white/10">
-                        <DynamicMap 
-                          routes={[{
-                            id: ride.id,
-                            origin: ride.origin,
-                            destination: ride.destination,
-                            color: "#10B981", // Emerald Green for individual routes
-                            label: `${ride.driver?.full_name}'s Ride`
-                          }]} 
-                          height="h-full"
-                        />
-                      </div>
-                    )}
-                  </div>
+                {/* Individual Ride Map Toggle */}
+                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
+                  <button 
+                    onClick={() => {
+                      if (activeMapId === ride.id) setActiveMapId(null);
+                      else setActiveMapId(ride.id);
+                    }}
+                    className={`w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${activeMapId === ride.id ? 'bg-[#0F172A] text-white shadow-lg' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10'}`}
+                  >
+                    <LocateFixed className="w-4 h-4" />
+                    {activeMapId === ride.id ? 'Hide Route Map' : 'View Route Map'}
+                  </button>
+                  
+                  {activeMapId === ride.id && (
+                    <div className="mt-4 w-full h-48 md:h-64 rounded-xl overflow-hidden border border-slate-200 dark:border-white/10">
+                      <DynamicMap 
+                        routes={[{
+                          id: ride.id,
+                          origin: ride.origin,
+                          destination: ride.destination,
+                          color: "#10B981", // Emerald Green for individual routes
+                          label: `${ride.driver?.full_name}'s Ride`
+                        }]} 
+                        height="h-full"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Driver Controls */}
