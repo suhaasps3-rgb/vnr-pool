@@ -15,31 +15,37 @@ function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon
 
 // Precision Geofencing Database (Custom POIs)
 const CUSTOM_POIS = [
-  { name: "S Grand", lat: 17.525, lon: 78.385, neighbourhood: "Bachupally", radius: 0.3 },
-  { name: "Hyderabad Spice", lat: 17.5185, lon: 78.3965, neighbourhood: "Bachupally", radius: 0.3 },
-  { name: "Pista House Bachupally", lat: 17.5300, lon: 78.3800, neighbourhood: "Bachupally", radius: 0.3 },
-  { name: "Pragathi Nagar Kaman", lat: 17.5408, lon: 78.3938, neighbourhood: "Pragathi Nagar", radius: 0.4 },
-  { name: "Simhapuri Kaman", lat: 17.5350, lon: 78.3850, neighbourhood: "Bachupally", radius: 0.3 },
-  { name: "Bakers Heaven", lat: 17.5380, lon: 78.3860, neighbourhood: "Bachupally", radius: 0.2 },
-  { name: "Dosthi Biryani's", lat: 17.5395, lon: 78.3852, neighbourhood: "Bachupally", radius: 0.2 },
-  { name: "Eat Magic.in", lat: 17.5398, lon: 78.3855, neighbourhood: "Bachupally", radius: 0.2 },
-  { name: "Kammani Telugu Kitchen", lat: 17.5385, lon: 78.3845, neighbourhood: "Bachupally", radius: 0.2 },
-  { name: "Biryani Factory", lat: 17.5400, lon: 78.3860, neighbourhood: "Bachupally", radius: 0.2 },
-  { name: "Angaara Restaurant", lat: 17.5180, lon: 78.3970, neighbourhood: "Nizampet", radius: 0.2 },
-  { name: "Allah's Kitchen and Bar", lat: 17.5200, lon: 78.3900, neighbourhood: "Nizampet", radius: 0.2 },
-  { name: "Taqila Lounge and Restaurant", lat: 17.5250, lon: 78.3880, neighbourhood: "Bachupally", radius: 0.2 },
-  { name: "Polar Bear", lat: 17.5150, lon: 78.3900, neighbourhood: "Nizampet", radius: 0.2 },
-  { name: "The Golden Barrel", lat: 17.5210, lon: 78.3920, neighbourhood: "Bachupally", radius: 0.2 },
-  { name: "Dominos", lat: 17.5300, lon: 78.3850, neighbourhood: "Bachupally", radius: 0.2 },
-  { name: "VNR Hostel", lat: 17.5392, lon: 78.3865, neighbourhood: "Bachupally", radius: 0.2 },
-  { name: "Mamata Academy of Medical Sciences", lat: 17.531, lon: 78.381, neighbourhood: "Bachupally", radius: 0.6 },
-  { name: "Reach Super Speciality Hospital", lat: 17.528, lon: 78.382, neighbourhood: "Bachupally", radius: 0.4 },
-  { name: "Relief Hospital Pragathi Nagar", lat: 17.541, lon: 78.395, neighbourhood: "Pragathi Nagar", radius: 0.4 },
-  { name: "Silver Oaks International School", lat: 17.5455, lon: 78.3755, neighbourhood: "Bachupally", radius: 0.5 },
-  { name: "Kennedy High The Global School", lat: 17.5332, lon: 78.3661, neighbourhood: "Bachupally", radius: 0.5 },
-  { name: "Mallampet Lake", lat: 17.5500, lon: 78.3600, neighbourhood: "Mallampet", radius: 0.8 },
-  { name: "Bachupally Police Station", lat: 17.5420, lon: 78.3780, neighbourhood: "Bachupally", radius: 0.3 },
-  { name: "VNR VJIET", lat: 17.53905, lon: 78.38546, neighbourhood: "Bachupally", radius: 1.5 } // Catch-all 1.5km for main campus (lowest priority)
+  { name: "S Grand", lat: 17.525, lon: 78.385, neighbourhood: "Bachupally", radius: 0.05, priority: 1 },
+  { name: "Hyderabad Spice", lat: 17.5185, lon: 78.3965, neighbourhood: "Bachupally", radius: 0.05, priority: 1 },
+  { name: "Pista House Bachupally", lat: 17.5300, lon: 78.3800, neighbourhood: "Bachupally", radius: 0.05, priority: 1 },
+  { name: "Pragathi Nagar Kaman", lat: 17.5408, lon: 78.3938, neighbourhood: "Pragathi Nagar", radius: 0.1, priority: 1 },
+  { name: "Simhapuri Kaman", lat: 17.5350, lon: 78.3850, neighbourhood: "Bachupally", radius: 0.1, priority: 1 },
+  
+  // Adjusted bakery/restaurant coordinates away from VNR VJIET campus center
+  { name: "Bakers Heaven", lat: 17.5310, lon: 78.3810, neighbourhood: "Bachupally", radius: 0.05, priority: 2 },
+  { name: "Dosthi Biryani's", lat: 17.5312, lon: 78.3815, neighbourhood: "Bachupally", radius: 0.05, priority: 2 },
+  { name: "Eat Magic.in", lat: 17.5315, lon: 78.3812, neighbourhood: "Bachupally", radius: 0.05, priority: 2 },
+  { name: "Kammani Telugu Kitchen", lat: 17.5305, lon: 78.3805, neighbourhood: "Bachupally", radius: 0.08, priority: 2 },
+  { name: "Biryani Factory", lat: 17.5320, lon: 78.3820, neighbourhood: "Bachupally", radius: 0.05, priority: 2 },
+  
+  { name: "Angaara Restaurant", lat: 17.5180, lon: 78.3970, neighbourhood: "Nizampet", radius: 0.05, priority: 1 },
+  { name: "Allah's Kitchen and Bar", lat: 17.5200, lon: 78.3900, neighbourhood: "Nizampet", radius: 0.05, priority: 1 },
+  { name: "Taqila Lounge and Restaurant", lat: 17.5250, lon: 78.3880, neighbourhood: "Bachupally", radius: 0.05, priority: 1 },
+  { name: "Polar Bear", lat: 17.5150, lon: 78.3900, neighbourhood: "Nizampet", radius: 0.05, priority: 1 },
+  { name: "The Golden Barrel", lat: 17.5210, lon: 78.3920, neighbourhood: "Bachupally", radius: 0.05, priority: 1 },
+  { name: "Dominos", lat: 17.5300, lon: 78.3850, neighbourhood: "Bachupally", radius: 0.05, priority: 1 },
+  { name: "VNR Hostel", lat: 17.5392, lon: 78.3865, neighbourhood: "Bachupally", radius: 0.15, priority: 5 },
+  
+  { name: "Mamata Academy of Medical Sciences", lat: 17.531, lon: 78.381, neighbourhood: "Bachupally", radius: 0.2, priority: 1 },
+  { name: "Reach Super Speciality Hospital", lat: 17.528, lon: 78.382, neighbourhood: "Bachupally", radius: 0.1, priority: 1 },
+  { name: "Relief Hospital Pragathi Nagar", lat: 17.541, lon: 78.395, neighbourhood: "Pragathi Nagar", radius: 0.1, priority: 1 },
+  { name: "Silver Oaks International School", lat: 17.5455, lon: 78.3755, neighbourhood: "Bachupally", radius: 0.15, priority: 1 },
+  { name: "Kennedy High The Global School", lat: 17.5332, lon: 78.3661, neighbourhood: "Bachupally", radius: 0.15, priority: 1 },
+  { name: "Mallampet Lake", lat: 17.5500, lon: 78.3600, neighbourhood: "Mallampet", radius: 0.3, priority: 1 },
+  { name: "Bachupally Police Station", lat: 17.5420, lon: 78.3780, neighbourhood: "Bachupally", radius: 0.1, priority: 1 },
+  
+  // VNR VJIET strictly overrides anything if the user is inside the 500m campus radius
+  { name: "VNR VJIET", lat: 17.53905, lon: 78.38546, neighbourhood: "Bachupally", radius: 0.5, priority: 100 } 
 ];
 
 export async function GET(request: Request) {
@@ -116,15 +122,24 @@ export async function GET(request: Request) {
     let finalPoiName = poiName;
     let finalNeighbourhood = neighbourhood;
     
-    // Find the closest custom POI
+    // Find the highest priority matching POI. If tie, use closest.
     let closestPoi = null;
     let minDistance = Infinity;
+    let maxPriority = -1;
 
     for (const poi of CUSTOM_POIS) {
       const dist = getDistanceFromLatLonInKm(Number(lat), Number(lon), poi.lat, poi.lon);
-      if (dist <= poi.radius && dist < minDistance) {
-        minDistance = dist;
-        closestPoi = poi;
+      const priority = poi.priority || 0;
+      
+      if (dist <= poi.radius) {
+        if (priority > maxPriority) {
+          maxPriority = priority;
+          minDistance = dist;
+          closestPoi = poi;
+        } else if (priority === maxPriority && dist < minDistance) {
+          minDistance = dist;
+          closestPoi = poi;
+        }
       }
     }
 
