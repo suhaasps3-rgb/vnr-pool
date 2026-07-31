@@ -173,24 +173,21 @@ export function getPossibleRoutes(rideOrigin: string, rideDest: string): { index
 
   const validRoutes: { index: number, path: string[] }[] = [];
 
-  const addRoute = (index: number, route: string[], startIndex: number, endIndex: number) => {
-    validRoutes.push({ index, path: route.slice(startIndex, endIndex + 1) });
-  };
-
   if (rD.includes("vnr") || rD.includes("campus")) {
     ROUTES.forEach((route, index) => {
       const dIndex = findLocIndex(route, rO);
       const vnrIndex = findLocIndex(route, rD);
       if (dIndex !== -1 && vnrIndex !== -1 && dIndex <= vnrIndex) {
-        addRoute(index, route, dIndex, vnrIndex);
+        validRoutes.push({ index, path: route.slice(dIndex, vnrIndex + 1) });
       }
     });
   } else if (rO.includes("vnr") || rO.includes("campus")) {
     ROUTES.forEach((route, index) => {
       const vnrIndex = findLocIndex(route, rO);
       const dIndex = findLocIndex(route, rD);
-      if (dIndex !== -1 && vnrIndex !== -1 && vnrIndex <= dIndex) {
-        addRoute(index, route, vnrIndex, dIndex);
+      if (dIndex !== -1 && vnrIndex !== -1 && vnrIndex >= dIndex) {
+        // Reverse the path since they are traveling AWAY from campus
+        validRoutes.push({ index, path: route.slice(dIndex, vnrIndex + 1).reverse() });
       }
     });
   }
