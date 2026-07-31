@@ -1371,7 +1371,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             >
               <div
                 onClick={() => setShowMultiRouteMap(true)}
-                className="bg-[#0F172A] border border-white/10 text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/50 hover:bg-slate-800 transition-colors cursor-grab active:cursor-grabbing pointer-events-auto select-none"
+                className="bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/10 dark:shadow-black/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-grab active:cursor-grabbing pointer-events-auto select-none"
               >
                 <LocateFixed className="w-4 h-4 text-blue-400 pointer-events-none" />
                 <span className="pointer-events-none">Route Maps</span>

@@ -81,18 +81,23 @@ export default function AIChatBot() {
   return (
     <>
       {/* Floating Button */}
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setOpen(true)}
-        className="fixed bottom-[84px] md:bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-2xl flex items-center justify-center transition-colors"
-        style={{ display: open ? "none" : "flex" }}
-        aria-label="Open AI Assistant"
+      <motion.div
+        drag
+        dragMomentum={false}
+        whileDrag={{ scale: 1.05 }}
+        style={{ display: open ? "none" : "flex", touchAction: "none" }}
+        className="fixed bottom-[84px] md:bottom-6 right-6 z-[100]"
       >
-        <MessageCircle className="w-6 h-6" />
-        {/* Pulse ring */}
-        <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-30 animate-ping" />
-      </motion.button>
+        <div
+          onClick={() => setOpen(true)}
+          className="w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-2xl flex items-center justify-center transition-colors cursor-grab active:cursor-grabbing pointer-events-auto select-none"
+          aria-label="Open AI Assistant"
+        >
+          <MessageCircle className="w-6 h-6 pointer-events-none" />
+          {/* Pulse ring */}
+          <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-30 animate-ping pointer-events-none" />
+        </div>
+      </motion.div>
 
       {/* Chat Window */}
       <AnimatePresence>
