@@ -51,16 +51,29 @@ const geocode = async (locName: string) => {
   const l = locName.toLowerCase();
   
   // 1. Hardcoded overrides for strictly known problem locations & campus
-  const OVERRIDES: Record<string, {lat: number, lon: number}> = {
-    "vnr vjiet": { lat: 17.5390, lon: 78.3855 },
-    "bachupally (vnr)": { lat: 17.5390, lon: 78.3855 },
-    "vnr vjiet, bachupally": { lat: 17.5390, lon: 78.3855 },
-    "adibatla": { lat: 17.2309, lon: 78.5559 },
-    "tcs adibatla": { lat: 17.2285, lon: 78.5539 },
-    "eat magic.in": { lat: 17.5315, lon: 78.3812 },
-    "dsl virtue mall uppal": { lat: 17.3995, lon: 78.5583 },
-    "nexus mall kukatpally": { lat: 17.4842, lon: 78.3889 },
-    "nexus mall, hyd": { lat: 17.4842, lon: 78.3889 },
+  const OVERRIDES: Record<string, { lat: number; lon: number }> = {
+    "vnr vjiet": { lat: 17.53905, lon: 78.38546 },
+    "vnr vjiet, bachupally": { lat: 17.53905, lon: 78.38546 },
+    "s grand": { lat: 17.525, lon: 78.385 },
+    "pragathi nagar kaman": { lat: 17.5408, lon: 78.3938 },
+    "pragathi nagar": { lat: 17.5200154, lon: 78.3968876 },
+    "hyderabad spice": { lat: 17.5185, lon: 78.3965 },
+    "angaara restaurant": { lat: 17.5180, lon: 78.3970 },
+    "nizampet": { lat: 17.5180, lon: 78.3970 },
+    "bachupally": { lat: 17.525, lon: 78.385 },
+    "kphb": { lat: 17.4939602, lon: 78.4008412 },
+    "jntu": { lat: 17.4940885, lon: 78.3935576 },
+    "ameerpet": { lat: 17.4375012, lon: 78.4482505 },
+    "nampally": { lat: 17.3923995, lon: 78.4701477 },
+    "secunderabad": { lat: 17.4337246, lon: 78.5006827 },
+    "kukatpally": { lat: 17.4930841, lon: 78.4054408 },
+    "miyapur": { lat: 17.4981608, lon: 78.3567628 },
+    "dilsukhnagar": { lat: 17.3684433, lon: 78.5228597 },
+    "lb nagar": { lat: 17.3501617, lon: 78.5510938 },
+    "madhapur": { lat: 17.4408924, lon: 78.3916304 },
+    "hitech city": { lat: 17.469728, lon: 78.3852406 },
+    "gachibowli": { lat: 17.4436222, lon: 78.3519638 },
+    "kondapur": { lat: 17.4587912, lon: 78.3730556 }
   };
 
   if (OVERRIDES[l]) return OVERRIDES[l];
@@ -93,7 +106,9 @@ const geocode = async (locName: string) => {
     await new Promise(r => setTimeout(r, 200));
   }
   
-  throw new Error(`Could not find location: ${locName}. Rate limit may be exceeded.`);
+  // Return fallback center of Hyderabad instead of crashing the app
+  console.warn(`Could not find location: ${locName}. Using fallback center.`);
+  return { lat: 17.3850, lon: 78.4867 };
 };
 
 export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96", interactiveMultiMode = false }: MapComponentProps) {
