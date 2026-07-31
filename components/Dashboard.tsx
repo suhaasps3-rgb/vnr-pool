@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Car, CalendarCheck, User, Activity,
-  UserX, LogOut, Zap, Phone, Mail, X, ChevronRight, Settings
+  UserX, LogOut, Zap, Phone, Mail, X, ChevronRight, Settings, Plus, List
 } from "lucide-react";
 import FindRideFeed from "./FindRideFeed";
 import OfferSeatForm from "./OfferSeatForm";
@@ -28,9 +28,9 @@ interface NavTab {
 }
 
 const BASE_TABS: NavTab[] = [
-  { id: "find", label: "Find Ride", icon: Search },
-  { id: "offer", label: "Offer Ride", icon: Car },
-  { id: "my-rides", label: "Bookings", icon: CalendarCheck },
+  { id: "find", label: "Search", icon: Search },
+  { id: "offer", label: "Offer", icon: Plus },
+  { id: "my-rides", label: "Rides", icon: List },
 ];
 
 export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void; userId: string }) {
@@ -339,12 +339,28 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               const Icon = tab.icon;
               const isLiveTrip = tab.id === "active";
 
+              if (tab.id === "offer") {
+                return (
+                  <div key={tab.id} className="flex-1 flex flex-col items-center justify-center relative">
+                    <button
+                      onClick={() => setActiveTab(tab.id)}
+                      className="absolute -top-5 bg-white dark:bg-[#1f1f1f] w-14 h-14 rounded-full flex items-center justify-center shadow-[0_-2px_15px_rgba(0,0,0,0.08)] dark:shadow-[0_-2px_15px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-white/5 transition-transform hover:scale-105 active:scale-95"
+                    >
+                      <Icon className={cn("w-7 h-7", isActive ? "text-[var(--accent-primary)]" : "text-slate-500 dark:text-slate-400")} />
+                    </button>
+                    <span className={cn("absolute bottom-2 text-[11px] font-semibold tracking-wide leading-none", isActive ? "text-[var(--accent-primary)]" : "text-[var(--text-secondary)]")}>
+                      {tab.label}
+                    </span>
+                  </div>
+                );
+              }
+
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "flex-1 flex flex-col items-center justify-center gap-1 relative transition-colors duration-150 py-2 rounded-xl mx-0.5 min-h-[48px]",
+                    "flex-1 flex flex-col items-center justify-center gap-1 relative transition-colors duration-150 py-2 rounded-xl mx-0.5 min-h-[64px]",
                     isActive
                       ? "text-[var(--accent-primary)]"
                       : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -355,9 +371,9 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                     <span className="absolute top-2 right-2 w-2 h-2 bg-[var(--accent-warning)] rounded-full animate-pulse" />
                   )}
 
-                  <span className="relative z-10 flex flex-col items-center gap-1">
-                    <Icon className="w-5 h-5" />
-                    <span className="text-[10px] font-medium tracking-wide leading-none">
+                  <span className="relative z-10 flex flex-col items-center gap-1.5 mt-2">
+                    <Icon className="w-6 h-6" />
+                    <span className="text-[11px] font-semibold tracking-wide leading-none">
                       {tab.label}
                     </span>
                   </span>
