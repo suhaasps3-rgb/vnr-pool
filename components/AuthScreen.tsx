@@ -15,7 +15,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
-  const [authMode, setAuthMode] = useState<"login" | "signup" | "forgot_password" | "verify_otp">("login");
+  const [authMode, setAuthMode] = useState<"login" | "signup" | "forgot_password" | "verify_otp" | "verify_signup_otp">("login");
   const supabase = createClient();
 
   const COLLEGE_EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@vnrvjiet\.in$/i;
@@ -52,7 +52,8 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || 'Failed to send signup email');
         
-        toast.success("Check your email for the confirmation link!");
+        toast.success("Verification code sent to your email!");
+        setAuthMode("verify_signup_otp");
       } else if (authMode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -78,6 +79,12 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
         setPassword("");
         setConfirmPassword("");
         setOtp("");
+      } else if (authMode === "verify_signup_otp") {
+        const { error: verifyError } = await supabase.auth.verifyOtp({ email, token: otp, type: 'signup' });
+        if (verifyError) throw verifyError;
+        
+        toast.success("Account successfully created and verified!");
+        onAuthSuccess();
       }
     } catch (err: any) {
       toast.error(err.message || "Authentication failed");
@@ -140,7 +147,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
               type="email"
               required
               value={email}
-              disabled={authMode === "verify_otp"}
+              disabled={authMode === "verify_otp" || authMode === "verify_signup_otp"}
               onChange={e => { setEmail(e.target.value); validateEmail(e.target.value); }}
               onBlur={e => validateEmail(e.target.value)}
               placeholder="rollno@vnrvjiet.in"
@@ -170,6 +177,20 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              />
+            </div>
+          )}
+
+          {authMode === "verify_signup_otp" && (
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">6-Digit Verification Code</label>
+              <input 
+                type="text"
+                required
+                value={otp}
+                onChange={e => setOtp(e.target.value)}
+                placeholder="123456"
+                className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all tracking-widest text-center font-bold"
               />
             </div>
           )}
@@ -219,7 +240,8 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
               authMode === "login" ? "Sign In" : 
-              authMode === "signup" ? "Create Account" : "Verify & Reset"
+              authMode === "signup" ? "Create Account" : 
+              authMode === "verify_signup_otp" ? "Verify Code" : "Verify & Reset"
             )}
           </motion.button>
         </form>
