@@ -216,7 +216,7 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96" }
             <Marker position={r.originCoords} icon={customDotIcon(r.color)}>
               <Popup className="dark-popup">
                 <div className="font-bold text-sm">{r.label}</div>
-                <div className="text-xs text-slate-500 mt-0.5">Origin: <span className="text-slate-800 dark:text-slate-200 font-medium">{r.originName}</span></div>
+                <div className="text-xs text-slate-500 mt-0.5">Origin: <span className="text-slate-800 font-bold">{r.originName}</span></div>
               </Popup>
             </Marker>
             
@@ -224,7 +224,7 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96" }
             <Marker position={r.destCoords} icon={customDotIcon(r.color)}>
               <Popup className="dark-popup">
                 <div className="font-bold text-sm">{r.label}</div>
-                <div className="text-xs text-slate-500 mt-0.5">Destination: <span className="text-slate-800 dark:text-slate-200 font-medium">{r.destName}</span></div>
+                <div className="text-xs text-slate-500 mt-0.5">Destination: <span className="text-slate-800 font-bold">{r.destName}</span></div>
               </Popup>
             </Marker>
 
