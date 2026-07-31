@@ -12,29 +12,35 @@ export async function POST(req: Request) {
 
     const apiKey = process.env.FEATHERLESS_API_KEY || "rc_7c2451b1ce5a74cb3b87d044ad37e627a913127e927e159748313e33254fdd90";
 
-    const systemPrompt = `You are a highly intelligent transport pricing AI acting as a neutral third-party for a college carpool app in Hyderabad, India. 
-Your goal is to suggest a perfectly fair total trip fare that drivers and students will instantly agree on.
-Consider factors like typical auto/cab rates in Hyderabad, the exact distance provided, and typical traffic.
-To calibrate your pricing, use these exact reference rates for a Car (Student Vehicle Pool) to VNR VJIET:
-- Attapur (28km) = ₹1026
-- Rasoolpura = ₹450
-- Yusufguda Temple (19km) = ₹362
-- Suchitra (15km) = ₹287
-- Bowenpally (16km) = ₹347
-- BITS Pilani Hyderabad = ₹605
-Extrapolate logically for other distances and vehicle types (autos should be cheaper than cars, bikes even cheaper).
-Respond ONLY with a valid JSON object containing exactly two keys:
-"reasoning": A short, 1-2 sentence explanation of why this fare is fair. YOU MUST INCLUDE THE EXACT FINAL PRICE IN THIS SENTENCE (e.g. "Based on a distance of 10km, a fair total fare is ₹250.").
-"suggested_total_fare": A number representing the total trip cost in Indian Rupees (₹) to be split among passengers.`;
-
     // Attempt to lookup approximate distance from our dictionary
     const distKey = origin.toLowerCase() === "vnr vjiet campus gate 1" || origin.toLowerCase().includes("vnr") ? destination.toLowerCase() : origin.toLowerCase();
-    const distanceKm = DISTANCE_MAP[distKey] || "unknown";
+    const distanceKm = DISTANCE_MAP[distKey] || 15; // default to 15 if unknown
+
+    // Mathematically pre-calculate the base fare so the AI doesn't hallucinate exponential curves
+    let baseRate = vehicle_type === 'car' ? 19 : vehicle_type === 'auto' ? 14 : 9;
+    let baseFare = Math.round(distanceKm * baseRate);
+    
+    // Hardcode outlier exceptions provided by user
+    if (distKey.includes('attapur') && vehicle_type === 'car') baseFare = 1026;
+    if (distKey.includes('rasoolpura') && vehicle_type === 'car') baseFare = 450;
+    if (distKey.includes('bowenpally') && vehicle_type === 'car') baseFare = 347;
+
+    const systemPrompt = `You are a highly intelligent transport pricing AI acting as a neutral third-party for a college carpool app in Hyderabad, India. 
+Your goal is to suggest a perfectly fair total trip fare that drivers and students will instantly agree on.
+We have pre-calculated the mathematically strict base fare for this trip based on the exact distance and vehicle type.
+The base calculated fare is ₹${baseFare}.
+You must suggest a final fare that is exactly equal to (or within 5% of) this base fare, adjusting only slightly for realistic traffic conditions if needed.
+Respond ONLY with a valid JSON object containing exactly two keys:
+"reasoning": A short, 1-2 sentence explanation of why this fare is fair. YOU MUST INCLUDE THE EXACT FINAL PRICE IN THIS SENTENCE (e.g. "Based on a distance of 10km and moderate traffic, a fair total fare is ₹250.").
+"suggested_total_fare": A number representing the total trip cost in Indian Rupees (₹) to be split among passengers.`;
+
+
 
     const userPrompt = `Calculate a fair fare for this ride:
 Origin: ${origin}
 Destination: ${destination}
 Approximate Distance: ${distanceKm} km
+Base Fare Calculated: ₹${baseFare}
 Vehicle Type: ${vehicle_type}
 Number of Passengers: ${passengers}`;
 
