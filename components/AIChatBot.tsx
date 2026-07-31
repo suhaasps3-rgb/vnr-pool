@@ -111,7 +111,7 @@ export default function AIChatBot() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-slate-900 dark:text-white text-sm">Veer — AI Assistant</p>
-                <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Powered by Gemini ✨</p>
+                <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Powered by featherless.ai ✨</p>
               </div>
               <button
                 onClick={() => setOpen(false)}
