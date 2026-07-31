@@ -1205,7 +1205,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                           id: ride.id,
                           origin: ride.origin,
                           destination: ride.destination,
-                          color: "#10B981", // Emerald Green for individual routes
+                          color: "#EF4444", // Solid Red for individual routes
                           label: `${ride.driver?.full_name}'s Ride`
                         }]} 
                         height="h-full"

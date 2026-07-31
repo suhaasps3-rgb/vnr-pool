@@ -298,7 +298,7 @@ export default function RideCard({
                     waypoints = fullRoute.slice(oIdx, dIdx + 1);
                   }
                 }
-                return <DynamicMap routes={[{ id: ride.id, origin: ride.origin, destination: ride.destination, waypoints: waypoints, color: "#10B981", label: `${ride.driver?.full_name}'s Ride` }]} height="h-full" />;
+                return <DynamicMap routes={[{ id: ride.id, origin: ride.origin, destination: ride.destination, waypoints: waypoints, color: "#EF4444", label: `${ride.driver?.full_name}'s Ride` }]} height="h-full" />;
               })()}
             </div>
           )}
