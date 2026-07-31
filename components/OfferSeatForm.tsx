@@ -592,11 +592,12 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
         </div>
 
         {/* ── SECTION: Preferences ── */}
-        <div>
-          <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4 border-b border-[var(--border-subtle)] pb-2">
-            Preferences
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        {(userGender === 'female' || formData.ride_category === "personal_vehicle") && (
+          <div>
+            <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4 border-b border-[var(--border-subtle)] pb-2">
+              Preferences
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
           {formData.ride_category === "personal_vehicle" && (
             <div>
@@ -653,8 +654,9 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
               </div>
             </label>
           )}
+            </div>
           </div>
-        </div>
+        )}
 
         <motion.button
           whileTap={{ scale: 0.98 }}
