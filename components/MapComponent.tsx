@@ -50,6 +50,8 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96" }
     id: string;
     originCoords: [number, number];
     destCoords: [number, number];
+    originName: string;
+    destName: string;
     routeCoords: [number, number][];
     color: string;
     label?: string;
@@ -133,6 +135,8 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96" }
                 id: route.id,
                 originCoords: [oCoords.lat, oCoords.lon] as [number, number],
                 destCoords: [dCoords.lat, dCoords.lon] as [number, number],
+                originName: route.origin,
+                destName: route.destination,
                 routeCoords,
                 color: route.color,
                 label: route.label || route.origin
@@ -212,14 +216,15 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96" }
             <Marker position={r.originCoords} icon={customDotIcon(r.color)}>
               <Popup className="dark-popup">
                 <div className="font-bold text-sm">{r.label}</div>
-                <div className="text-xs text-slate-500">Origin</div>
+                <div className="text-xs text-slate-500 mt-0.5">Origin: <span className="text-slate-800 dark:text-slate-200 font-medium">{r.originName}</span></div>
               </Popup>
             </Marker>
             
             {/* Destination Dot */}
             <Marker position={r.destCoords} icon={customDotIcon(r.color)}>
               <Popup className="dark-popup">
-                <div className="font-bold text-sm">Destination</div>
+                <div className="font-bold text-sm">{r.label}</div>
+                <div className="text-xs text-slate-500 mt-0.5">Destination: <span className="text-slate-800 dark:text-slate-200 font-medium">{r.destName}</span></div>
               </Popup>
             </Marker>
 
