@@ -1103,7 +1103,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 )}
 
                 {/* Footer: Details & CTA */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-4 border-t border-gray-100 dark:border-white/5 gap-4">
+                <div className="flex flex-col pt-4 border-t border-gray-100 dark:border-white/5 gap-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="bg-slate-100 text-slate-600 dark:bg-[#0F172A] dark:text-slate-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 border border-slate-200 dark:border-white/10">
                       {ride.ride_category === 'auto_split' ? "🚕 Auto/Cab" : "🏍️ Student Vehicle"}
@@ -1349,7 +1349,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         {/* Route Maps Button Floating - Using Portal to escape Framer Motion transforms */}
         {visibleRides.length > 0 && typeof window !== 'undefined' && createPortal(
           <>
-            <div className="fixed bottom-24 left-0 right-0 flex justify-center z-40 pointer-events-none">
+            <div className="fixed top-24 right-4 md:right-8 flex justify-end z-50 pointer-events-none">
               <button
                 onClick={() => setShowMultiRouteMap(true)}
                 className="pointer-events-auto bg-[#0F172A] border border-white/10 text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/50 hover:bg-slate-800 transition-all"
