@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Car, CalendarCheck, User, Activity,
-  UserX, LogOut, Zap, Phone, Mail
+  UserX, LogOut, Zap, Phone, Mail, X, ChevronRight, Settings
 } from "lucide-react";
 import FindRideFeed from "./FindRideFeed";
 import OfferSeatForm from "./OfferSeatForm";
@@ -31,13 +31,13 @@ const BASE_TABS: NavTab[] = [
   { id: "find", label: "Find Ride", icon: Search },
   { id: "offer", label: "Offer Ride", icon: Car },
   { id: "my-rides", label: "Bookings", icon: CalendarCheck },
-  { id: "profile", label: "Profile", icon: User },
 ];
 
 export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void; userId: string }) {
   const [activeTab, setActiveTab] = useState<TabType>("find");
   const [selectedVehicle, setSelectedVehicle] = useState<"car" | "auto" | "bike">("car");
   const [showBlockedModal, setShowBlockedModal] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const supabase = createClient();
   const queryClient = useQueryClient();
 
@@ -132,9 +132,14 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             {/* Logo + Greeting */}
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden border border-slate-200 dark:border-slate-800">
-                <img src="/vnr_logo.png" alt="VNR Logo" className="w-full h-full object-cover" />
+            <button 
+              onClick={() => setShowMenu(true)}
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity text-left"
+            >
+              <div className="w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0 border border-blue-200 dark:border-blue-800">
+                <span className="text-blue-600 dark:text-blue-400 font-bold text-sm">
+                  {firstName.charAt(0).toUpperCase()}
+                </span>
               </div>
               <div className="hidden sm:block">
                 <p className="text-[13px] font-bold leading-none text-[var(--text-primary)]">
@@ -145,36 +150,123 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   VNRPool rides active
                 </span>
               </div>
-            </div>
+            </button>
 
             {/* Top Navigation Eradicated as per Strict Mobile-First Directive */}
           </div>
 
           {/* Header Actions */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowBlockedModal(true)}
-              className="p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-xl transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]"
-              title="Blocked Users"
-            >
-              <UserX className="w-5 h-5" />
-            </button>
-            <div className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
-              <ThemeToggle />
-            </div>
             <div className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
               <NotificationBell userId={userId} />
             </div>
-            <button
-              onClick={onSignOut}
-              className="p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-xl transition-colors text-[var(--accent-danger)] hover:bg-[var(--accent-danger)]/10"
-              title="Sign Out"
-            >
-              <LogOut className="w-5 h-5" />
-            </button>
           </div>
         </div>
       </header>
+
+      {/* ─── Side Menu (Profile Drawer) ─── */}
+      <AnimatePresence>
+        {showMenu && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowMenu(false)}
+              className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 bottom-0 w-80 bg-white dark:bg-[#111111] z-[70] shadow-2xl flex flex-col border-r border-gray-200 dark:border-white/10"
+            >
+              <div className="p-5 border-b border-gray-100 dark:border-white/5 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Menu</h2>
+                <button 
+                  onClick={() => setShowMenu(false)}
+                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-gray-500"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-6 border-b border-gray-100 dark:border-white/5">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center flex-shrink-0 border border-blue-200 dark:border-blue-800">
+                    <span className="text-blue-600 dark:text-blue-400 font-bold text-xl">
+                      {firstName.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg text-gray-900 dark:text-white">{userProfile?.full_name || 'VNRian'}</h3>
+                    <p className="text-sm text-yellow-500 font-medium flex items-center gap-1">
+                      ⭐ Member
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto py-4">
+                <div className="px-4 space-y-1">
+                  <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                    <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300 font-medium">
+                      <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-500">
+                        <Zap className="w-5 h-5" />
+                      </div>
+                      Theme
+                    </div>
+                    <ThemeToggle />
+                  </div>
+
+                  <button 
+                    onClick={() => {
+                      setActiveTab("profile");
+                      setShowMenu(false);
+                    }}
+                    className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300 font-medium">
+                      <div className="p-2 bg-slate-100 dark:bg-white/10 rounded-lg text-slate-500 dark:text-slate-400">
+                        <User className="w-5 h-5" />
+                      </div>
+                      Edit Profile
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+
+                  <button 
+                    onClick={() => {
+                      setShowBlockedModal(true);
+                      setShowMenu(false);
+                    }}
+                    className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300 font-medium">
+                      <div className="p-2 bg-slate-100 dark:bg-white/10 rounded-lg text-slate-500 dark:text-slate-400">
+                        <UserX className="w-5 h-5" />
+                      </div>
+                      Blocked Users
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-4 border-t border-gray-100 dark:border-white/5">
+                <button 
+                  onClick={onSignOut}
+                  className="w-full flex items-center gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors text-red-600 dark:text-red-400 font-bold"
+                >
+                  <LogOut className="w-5 h-5" />
+                  Sign Out
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* ─── Main Content ─── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-28 relative z-10 min-h-screen">
