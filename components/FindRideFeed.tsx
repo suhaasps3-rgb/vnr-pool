@@ -959,7 +959,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 200, damping: 20 } } 
                 }}
                 whileHover={{ scale: 1.02, boxShadow: "0 15px 30px -5px rgba(0, 0, 0, 0.15)" }}
-                className={`ui-card p-4 md:p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''} ${ride.status === 'completed' ? 'border-emerald-200 dark:border-emerald-500/30' : ''} ${ride.is_women_only ? '!bg-pink-50/80 dark:!bg-[#2a131f] !border-pink-200 dark:!border-pink-900/50' : ''}`}
+                className={`ui-card p-4 md:p-6 relative overflow-hidden group mb-4 ${ride.status === 'cancelled' ? 'grayscale opacity-75' : ''} ${ride.status === 'completed' ? 'border-emerald-200 dark:border-emerald-500/30' : ''} ${ride.is_women_only ? '!bg-fuchsia-100/90 dark:!bg-[#2a131f] !border-fuchsia-300 dark:!border-pink-900/50' : ''}`}
               >
                 {ride.status === 'cancelled' && (
                   <div className="absolute top-4 right-4 bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold border border-red-200 dark:border-red-500/30 z-10">
