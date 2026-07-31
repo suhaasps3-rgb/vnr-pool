@@ -76,25 +76,44 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96" }
         
         // Helper to geocode with fallback
         const geocode = async (locName: string) => {
-          if (locName.toLowerCase().includes("vnr") || locName.toLowerCase().includes("vjiet") || locName.toLowerCase().includes("bachupally (vnr)")) {
-            return { lat: 17.5388, lon: 78.3868 };
-          }
+          const l = locName.toLowerCase();
+          
+          // 1. Hardcoded overrides for strictly known problem locations & campus
+          const OVERRIDES: Record<string, {lat: number, lon: number}> = {
+            "vnr vjiet": { lat: 17.5390, lon: 78.3855 },
+            "bachupally (vnr)": { lat: 17.5390, lon: 78.3855 },
+            "vnr vjiet, bachupally": { lat: 17.5390, lon: 78.3855 },
+            "adibatla": { lat: 17.2309, lon: 78.5559 },
+            "tcs adibatla": { lat: 17.2285, lon: 78.5539 },
+            "eat magic.in": { lat: 17.5315, lon: 78.3812 },
+            "dsl virtue mall uppal": { lat: 17.3995, lon: 78.5583 },
+            "nexus mall kukatpally": { lat: 17.4842, lon: 78.3889 },
+            "nexus mall, hyd": { lat: 17.4842, lon: 78.3889 },
+          };
+
+          if (OVERRIDES[l]) return OVERRIDES[l];
+          if (l.includes("vnr") || l.includes("vjiet")) return OVERRIDES["vnr vjiet"];
+
+          // 2. Nominatim fallback with smarter regional queries
           let queries = [
-            `${locName} Hyderabad`,
-            `${locName.split(' ')[0]} Hyderabad`
+            `${locName}, Hyderabad, Telangana, India`,
+            `${locName}, Telangana, India`,
+            `${locName}, India`
           ];
-          const words = locName.split(' ');
-          if (words.length > 2) {
-            queries.splice(1, 0, `${words[0]} ${words[1]} Hyderabad`);
-          }
 
           for (const query of queries) {
             const encoded = encodeURIComponent(query);
-            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encoded}`);
-            const data = await res.json();
-            if (data && data.length > 0) {
-              return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+            try {
+              const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encoded}`);
+              const data = await res.json();
+              if (data && data.length > 0) {
+                return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+              }
+            } catch (err) {
+              console.warn("Geocode query failed", query);
             }
+            // Artificial delay to prevent rate limit on Nominatim
+            await new Promise(r => setTimeout(r, 600));
           }
           throw new Error(`Could not find location: ${locName}`);
         };
