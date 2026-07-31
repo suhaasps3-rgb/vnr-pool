@@ -51,10 +51,14 @@ export default function MultiRouteMapModal({ isOpen, onClose, routes, title = "R
           
           {/* Map Container */}
           <div className="flex-1 w-full relative bg-slate-900">
-            <DynamicMap routes={routes} height="h-full" />
+            <DynamicMap routes={routes} height="h-full" interactiveMultiMode={true} />
             
             {/* Legend / Overlay */}
-            <div className="absolute bottom-6 left-6 right-6 z-[400] pointer-events-none">
+            <div className="absolute bottom-6 left-6 right-6 z-[400] pointer-events-none flex flex-col items-center gap-3">
+              <div className="bg-blue-500/90 backdrop-blur-md px-4 py-1.5 rounded-full text-white text-xs font-bold shadow-lg flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                Click any dot to reveal its full route path
+              </div>
               <div className="flex flex-wrap gap-2 justify-center">
                 {routes.map(r => (
                   <div key={r.id} className="bg-[#0F172A]/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-2 pointer-events-auto shadow-lg">
