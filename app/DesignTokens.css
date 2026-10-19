@@ -1,11 +1,11 @@
 :root {
-  --hero-bg: #FCFCFD;
-  --hero-road: #2A2A2A;
-  --hero-accent: #4F7CFF;
-  --hero-glow: rgba(79, 124, 255, 0.45);
-  --hero-success: #34C759;
-  --hero-destination: #FFD84D;
-  --hero-glass-bg: rgba(255, 255, 255, 0.7);
+  --hero-bg: #FAF6EF;
+  --hero-road: #3A322B;
+  --hero-accent: #E8501F;
+  --hero-glow: rgba(232, 80, 31, 0.40);
+  --hero-success: #1F9D6B;
+  --hero-destination: #F2B01E;
+  --hero-glass-bg: rgba(255, 251, 245, 0.72);
   --hero-glass-border: rgba(255, 255, 255, 0.5);
   
   --shadow-soft: 0 4px 24px -4px rgba(0, 0, 0, 0.05);
@@ -20,13 +20,13 @@
 }
 
 .dark {
-  --hero-bg: #0B0E14;
-  --hero-road: #475569;
-  --hero-accent: #4F7CFF;
-  --hero-glow: rgba(79, 124, 255, 0.7);
-  --hero-success: #34C759;
-  --hero-destination: #FFD84D;
-  --hero-glass-bg: rgba(15, 23, 42, 0.6);
+  --hero-bg: #110E0B;
+  --hero-road: #5A4F45;
+  --hero-accent: #FF6B3D;
+  --hero-glow: rgba(255, 107, 61, 0.65);
+  --hero-success: #1F9D6B;
+  --hero-destination: #F2B01E;
+  --hero-glass-bg: rgba(28, 22, 17, 0.62);
   --hero-glass-border: rgba(255, 255, 255, 0.08);
   
   --shadow-soft: 0 4px 24px -4px rgba(0, 0, 0, 0.3);

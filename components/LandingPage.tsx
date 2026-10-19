@@ -29,7 +29,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-2"
         >
-          <div className="w-10 h-10 bg-[var(--hero-accent)] rounded-xl flex items-center justify-center font-black text-xl text-white shadow-[0_0_20px_rgba(79,124,255,0.3)]">
+          <div className="w-10 h-10 bg-[var(--hero-accent)] rounded-xl flex items-center justify-center font-black text-xl text-white shadow-[0_0_20px_rgba(232,80,31,0.3)]">
             V
           </div>
           <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">VNR Pool</span>
@@ -84,7 +84,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
             </div>
             <button 
               onClick={() => setShowAuthModal(true)}
-              className="w-full md:w-auto px-8 py-5 rounded-2xl bg-[var(--hero-accent)] hover:bg-[var(--hero-accent)]/90 text-white font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-500/20"
+              className="w-full md:w-auto px-8 py-5 rounded-2xl bg-[var(--hero-accent)] hover:bg-[var(--hero-accent)]/90 text-white font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-[var(--hero-accent)]/25"
             >
               <Search className="w-5 h-5" /> Search
             </button>
@@ -108,7 +108,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className="bg-white/60 dark:bg-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 hover:border-[var(--hero-accent)]/30 dark:hover:border-[var(--hero-accent)]/50 p-6 rounded-3xl transition-all shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(79,124,255,0.1)] dark:hover:shadow-[0_20px_40px_-15px_rgba(79,124,255,0.3)] group"
+                className="bg-white/60 dark:bg-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 hover:border-[var(--hero-accent)]/30 dark:hover:border-[var(--hero-accent)]/50 p-6 rounded-3xl transition-all shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(232,80,31,0.12)] dark:hover:shadow-[0_20px_40px_-15px_rgba(232,80,31,0.3)] group"
               >
                 <div className="flex justify-between items-start mb-6">
                   <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 flex items-center justify-center font-bold text-lg text-slate-700 dark:text-slate-200">
@@ -151,7 +151,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="md:col-span-2 bg-gradient-to-br from-indigo-50/50 dark:from-indigo-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
+              className="md:col-span-2 bg-gradient-to-br from-orange-50/60 dark:from-orange-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
             >
               <Shield className="w-10 h-10 text-[var(--hero-accent)] mb-6" />
               <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">100% Verified Identity</h4>
@@ -164,12 +164,12 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="md:col-span-2 bg-gradient-to-br from-sky-50/50 dark:from-sky-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
+              className="md:col-span-2 bg-gradient-to-br from-amber-50/60 dark:from-amber-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
             >
-              <Users className="w-10 h-10 text-sky-500 mb-6" />
+              <Users className="w-10 h-10 text-[var(--hero-accent)] mb-6" />
               <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Female-Only Rides</h4>
               <p className="text-slate-600 dark:text-slate-300 font-medium">Dedicated filters to find and offer rides exclusively for female students for maximum comfort.</p>
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-sky-500/10 blur-3xl rounded-full group-hover:bg-sky-500/20 transition-colors"></div>
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[var(--hero-accent)]/10 blur-3xl rounded-full group-hover:bg-[var(--hero-accent)]/20 transition-colors"></div>
             </motion.div>
 
             <motion.div 

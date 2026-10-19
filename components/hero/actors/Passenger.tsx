@@ -92,7 +92,7 @@ export default function Passenger({ data }: { data: PassengerData }) {
           <g transform="translate(0, -45)">
             <rect x="-60" y="-30" width="120" height="40" rx="8" fill="var(--hero-glass-bg)" stroke="var(--hero-glass-border)" />
             <text x="0" y="-14" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#0f172a">{data.name}</text>
-            <text x="0" y="2" textAnchor="middle" fontSize="10" fill="#34C759">₹{data.savings} Saved</text>
+            <text x="0" y="2" textAnchor="middle" fontSize="10" fill="var(--hero-success)">₹{data.savings} Saved</text>
           </g>
         </motion.g>
       </motion.g>

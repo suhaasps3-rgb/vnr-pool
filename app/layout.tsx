@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import ClientLayoutProviders from "@/components/ClientLayoutProviders";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
+const display = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ['500', '700', '800'], variable: '--font-display' });
 const inter = Inter({ subsets: ["latin"], weight: ['400', '500', '700'] });
 
 export const metadata: Metadata = {
@@ -29,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} min-h-screen bg-[#F5F5F0] text-[#0B1F1C] dark:bg-[#0B1F1C] dark:text-[#F5F5F0] antialiased overflow-x-hidden`}
+        className={`${inter.className} ${display.variable} min-h-screen bg-[#F5F5F0] text-[#0B1F1C] dark:bg-[#0B1F1C] dark:text-[#F5F5F0] antialiased overflow-x-hidden`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <ClientLayoutProviders>
