@@ -211,7 +211,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowAuthModal(false)}
-              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              className="absolute inset-0 bg-stone-900/40 backdrop-blur-sm"
             ></motion.div>
             
             <motion.div
@@ -220,7 +220,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative z-10 w-full max-w-md"
             >
-              <div className="bg-white dark:bg-[#0B0E14] rounded-3xl shadow-2xl border border-slate-100 dark:border-white/10 overflow-hidden relative">
+              <div className="bg-[#FFFCF7] dark:bg-[#17120E] rounded-[2rem] shadow-[0_30px_80px_-30px_rgba(60,30,10,0.35)] ring-1 ring-stone-900/5 dark:ring-white/10 overflow-hidden relative">
                 <button 
                   onClick={() => setShowAuthModal(false)}
                   className="absolute top-4 right-4 z-20 p-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors text-slate-600 dark:text-slate-400"
