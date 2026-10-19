@@ -43,7 +43,7 @@ export default function Vehicle() {
     tl.to(vehicleRef.current, {
       motionPath: {
         path: route.path,
-        autoRotate: true,
+        autoRotate: 90, // car front points up (-y), so offset the tangent by 90°
       },
       duration: 4.2,
       ease: "power2.inOut"
@@ -92,8 +92,8 @@ export default function Vehicle() {
       <circle cx="10" cy="-25" r="2" fill="var(--hero-destination)" />
       
       {/* Headlight beams */}
-      <path d="M -10 -25 L -20 -60 L 0 -60 Z" fill="url(#beam-gradient)" opacity="0.3" />
-      <path d="M 10 -25 L 0 -60 L 20 -60 Z" fill="url(#beam-gradient)" opacity="0.3" />
+      <path d="M -10 -25 L -17 -48 L -3 -48 Z" fill="url(#beam-gradient)" opacity="0.3" />
+      <path d="M 10 -25 L 3 -48 L 17 -48 Z" fill="url(#beam-gradient)" opacity="0.3" />
       
       <defs>
         <linearGradient id="beam-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
