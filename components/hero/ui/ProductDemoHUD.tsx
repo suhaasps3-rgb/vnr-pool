@@ -16,7 +16,7 @@ export default function ProductDemoHUD() {
   const springTransition = { type: "spring", stiffness: 350, damping: 25 } as const;
 
   return (
-    <div className="absolute top-4 md:top-1/2 left-1/2 transform -translate-x-1/2 md:-translate-y-1/2 z-50 pointer-events-none w-[320px]">
+    <div className="absolute top-4 md:top-8 left-1/2 -translate-x-1/2 z-[70] pointer-events-none w-[300px] max-w-[calc(100%-2rem)]">
       <AnimatePresence mode="wait">
         
         {phase === "SEARCHING" && (
@@ -26,7 +26,7 @@ export default function ProductDemoHUD() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -15 }}
             transition={springTransition}
-            className="bg-[var(--hero-glass-bg)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col items-center gap-4 text-center"
+            className="bg-[var(--hero-card-solid)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col items-center gap-4 text-center"
           >
             <motion.div 
               animate={{ rotate: 360 }} 
@@ -52,7 +52,7 @@ export default function ProductDemoHUD() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -15 }}
             transition={springTransition}
-            className="bg-[var(--hero-glass-bg)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col gap-4 w-full"
+            className="bg-[var(--hero-card-solid)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col gap-4 w-full"
           >
             <div className="flex items-center gap-3 mb-2">
               <CheckCircle2 className="w-6 h-6 text-[var(--hero-success)] drop-shadow-[0_0_8px_rgba(31,157,107,0.4)]" />
@@ -91,7 +91,7 @@ export default function ProductDemoHUD() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -15 }}
             transition={springTransition}
-            className="bg-[var(--hero-glass-bg)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col items-center gap-4 text-center"
+            className="bg-[var(--hero-card-solid)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col items-center gap-4 text-center"
           >
             <motion.div 
               animate={{ scale: [1, 1.1, 1] }} 
@@ -114,7 +114,7 @@ export default function ProductDemoHUD() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -15 }}
             transition={springTransition}
-            className="bg-[var(--hero-glass-bg)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col items-center gap-4 text-center"
+            className="bg-[var(--hero-card-solid)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col items-center gap-4 text-center"
           >
             <div className="w-12 h-12 bg-[var(--hero-success)]/10 border border-[var(--hero-success)]/30 rounded-full flex items-center justify-center">
               <ArrowRightCircle className="w-6 h-6 text-[var(--hero-success)]" />
@@ -136,7 +136,7 @@ export default function ProductDemoHUD() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -15 }}
             transition={springTransition}
-            className="bg-[var(--hero-glass-bg)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col items-center gap-4 text-center"
+            className="bg-[var(--hero-card-solid)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col items-center gap-4 text-center"
           >
             <div className="w-12 h-12 bg-[var(--hero-success)]/10 border border-[var(--hero-success)]/30 rounded-full flex items-center justify-center">
               <CheckCircle2 className="w-6 h-6 text-[var(--hero-success)]" />

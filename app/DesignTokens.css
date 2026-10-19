@@ -1,5 +1,7 @@
 :root {
   --hero-bg: #FAF6EF;
+  --hero-card-solid: #FFFCF7;
+  --hero-ink: #1c1917;
   --hero-road: #3A322B;
   --hero-accent: #E8501F;
   --hero-glow: rgba(232, 80, 31, 0.40);
@@ -21,6 +23,8 @@
 
 .dark {
   --hero-bg: #110E0B;
+  --hero-card-solid: #1E1812;
+  --hero-ink: #fafaf9;
   --hero-road: #5A4F45;
   --hero-accent: #FF6B3D;
   --hero-glow: rgba(255, 107, 61, 0.65);

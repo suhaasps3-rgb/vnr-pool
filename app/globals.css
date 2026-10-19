@@ -10,6 +10,8 @@
 :root {
   /* --- Hero Landing Page Tokens --- */
   --hero-bg: #FAF6EF;
+  --hero-card-solid: #FFFCF7;
+  --hero-ink: #1c1917;
   --hero-accent: #E8501F;
   --hero-success: #1F9D6B;
   --hero-road: #3A322B;
@@ -47,6 +49,8 @@
 .dark {
   /* --- Hero Landing Page Tokens --- */
   --hero-bg: #110E0B;
+  --hero-card-solid: #1E1812;
+  --hero-ink: #fafaf9;
   --hero-accent: #FF6B3D;
   --hero-success: #2BC48A;
   --hero-road: #5A4F45;
