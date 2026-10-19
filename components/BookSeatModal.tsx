@@ -119,12 +119,12 @@ export default function BookSeatModal({
 
             <div className="p-6 overflow-y-auto flex-1 min-h-0">
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-[var(--border-subtle)]">
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-stone-800/50 rounded-xl border border-[var(--border-subtle)]">
                   <span className="text-[var(--text-secondary)] font-medium">Driver</span>
                   <span className="font-bold text-[var(--text-primary)]">{ride.driver?.full_name}</span>
                 </div>
                 
-                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-[var(--border-subtle)]">
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-stone-800/50 rounded-xl border border-[var(--border-subtle)]">
                   <span className="text-[var(--text-secondary)] font-medium">Departure</span>
                   <span className="font-bold text-[var(--text-primary)]">
                     {ride.departure_time ? format(new Date(ride.departure_time), "h:mm a, MMM d") : "N/A"}
@@ -137,7 +137,7 @@ export default function BookSeatModal({
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--accent-primary)]" />
                       {isFromVnr ? (
-                        <div className="w-full pl-10 pr-4 py-2.5 bg-white/50 dark:bg-slate-800/50 border border-[var(--border-subtle)] rounded-lg text-sm font-semibold text-[var(--text-secondary)] capitalize cursor-not-allowed flex items-center">
+                        <div className="w-full pl-10 pr-4 py-2.5 bg-white/50 dark:bg-stone-800/50 border border-[var(--border-subtle)] rounded-lg text-sm font-semibold text-[var(--text-secondary)] capitalize cursor-not-allowed flex items-center">
                           {ride.origin}
                         </div>
                       ) : (
@@ -163,7 +163,7 @@ export default function BookSeatModal({
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--accent-primary)]" />
                       {isToVnr ? (
-                        <div className="w-full pl-10 pr-4 py-2.5 bg-white/50 dark:bg-slate-800/50 border border-[var(--border-subtle)] rounded-lg text-sm font-semibold text-[var(--text-secondary)] capitalize cursor-not-allowed flex items-center">
+                        <div className="w-full pl-10 pr-4 py-2.5 bg-white/50 dark:bg-stone-800/50 border border-[var(--border-subtle)] rounded-lg text-sm font-semibold text-[var(--text-secondary)] capitalize cursor-not-allowed flex items-center">
                           {ride.destination}
                         </div>
                       ) : (
@@ -196,7 +196,7 @@ export default function BookSeatModal({
                   )}
                 </div>
 
-                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-[var(--border-subtle)]">
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-stone-800/50 rounded-xl border border-[var(--border-subtle)]">
                   <div>
                     <span className="text-[var(--text-primary)] font-medium">Dynamic Split Price</span>
                     <p className="text-[10px] text-slate-500 mt-0.5">Based on your route segment & co-passengers</p>

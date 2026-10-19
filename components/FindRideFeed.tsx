@@ -618,7 +618,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         className="absolute top-0 left-0 right-0 flex justify-center items-center overflow-hidden transition-all duration-300 z-[100] pointer-events-none"
         style={{ height: `${pullY}px`, opacity: Math.min(1, pullY / 80) }}
       >
-        <div className={`rounded-full bg-white dark:bg-[#1E293B] shadow-lg p-2 transition-transform ${isRefreshing ? 'animate-spin' : ''}`}
+        <div className={`rounded-full bg-white dark:bg-[#241D17] shadow-lg p-2 transition-transform ${isRefreshing ? 'animate-spin' : ''}`}
              style={{ transform: `rotate(${pullY * 2}deg)` }}>
           <Loader2 className="w-6 h-6 text-[var(--accent-primary)]" />
         </div>
@@ -626,7 +626,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         {/* FULL SCREEN OVERLAY LOCK FOR ACTIVE TRIPS */}
         {mode === "feed" && hasActiveTrip && (
           <div className="flex flex-col items-center justify-center py-12 px-6 animate-in fade-in duration-300">
-            <div className="bg-white/90 dark:bg-[#1E293B] p-10 rounded-3xl shadow-2xl border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]/20 max-w-md w-full text-center backdrop-blur-xl">
+            <div className="bg-white/90 dark:bg-[#241D17] p-10 rounded-3xl shadow-2xl border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]/20 max-w-md w-full text-center backdrop-blur-xl">
               <div className="w-20 h-20 bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner">
               🚗
             </div>
@@ -659,8 +659,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
 
           {/* Functional Search Bar */}
           {/* Functional Search Bar */}
-          <div className="flex flex-col md:flex-row gap-3 p-3 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-stretch shadow-sm relative z-[60]">
-            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--hero-accent)] dark:hover:border-[var(--hero-accent)]/50 focus-within:border-[#E8501F] focus-within:ring-2 focus-within:ring-[var(--hero-accent)]/25 dark:focus-within:ring-[var(--hero-accent)] transition-all duration-300 group z-[60]">
+          <div className="flex flex-col md:flex-row gap-3 p-3 bg-white/60 dark:bg-[#17120E]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-stretch shadow-sm relative z-[60]">
+            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#241D17] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--hero-accent)] dark:hover:border-[var(--hero-accent)]/50 focus-within:border-[#E8501F] focus-within:ring-2 focus-within:ring-[var(--hero-accent)]/25 dark:focus-within:ring-[var(--hero-accent)] transition-all duration-300 group z-[60]">
               <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
               <input 
                 type="text" 
@@ -696,7 +696,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 {gettingLocation ? <Loader2 className="w-5 h-5 animate-spin" /> : <LocateFixed className="w-5 h-5" />}
               </button>
               <div 
-                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-[60]"
+                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#241D17] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-[60]"
                 style={{ display: showOriginDropdown ? "block" : "none" }}
               >
                 {(searchOrigin ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(searchOrigin.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
@@ -715,7 +715,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               </div>
             </div>
             
-            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--hero-accent)] dark:hover:border-[var(--hero-accent)]/50 focus-within:border-[#E8501F] focus-within:ring-2 focus-within:ring-[var(--hero-accent)]/25 dark:focus-within:ring-[var(--hero-accent)] transition-all duration-300 group z-[55]">
+            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#241D17] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--hero-accent)] dark:hover:border-[var(--hero-accent)]/50 focus-within:border-[#E8501F] focus-within:ring-2 focus-within:ring-[var(--hero-accent)]/25 dark:focus-within:ring-[var(--hero-accent)] transition-all duration-300 group z-[55]">
               <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
               <input 
                 type="text" 
@@ -742,7 +742,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 className="bg-transparent outline-none w-full text-sm text-slate-900 dark:text-white placeholder-slate-400 group-focus-within:placeholder-slate-300" 
               />
               <div 
-                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-[55]"
+                className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#241D17] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-[55]"
                 style={{ display: showDestDropdown ? "block" : "none" }}
               >
                 {(searchDestination ? COMMON_LOCATIONS.filter(loc => loc.toLowerCase().includes(searchDestination.toLowerCase())) : COMMON_LOCATIONS).map(loc => (
@@ -761,7 +761,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               </div>
             </div>
             
-            <div className="flex-[0.5] relative min-w-0 md:min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--hero-accent)] dark:hover:border-[var(--hero-accent)]/50 focus-within:border-[#E8501F] focus-within:ring-2 focus-within:ring-[var(--hero-accent)]/25 dark:focus-within:ring-[var(--hero-accent)] transition-all duration-300">
+            <div className="flex-[0.5] relative min-w-0 md:min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#241D17] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--hero-accent)] dark:hover:border-[var(--hero-accent)]/50 focus-within:border-[#E8501F] focus-within:ring-2 focus-within:ring-[var(--hero-accent)]/25 dark:focus-within:ring-[var(--hero-accent)] transition-all duration-300">
               <Calendar className="w-5 h-5 text-slate-400 shrink-0 pointer-events-none" />
               <input 
                 type="date"
@@ -774,9 +774,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           </div>
 
           {/* Filters Bar Redesign */}
-          <div className="flex flex-wrap gap-3 mb-6 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md p-3 rounded-2xl border border-slate-200 dark:border-white/5 shadow-sm">
+          <div className="flex flex-wrap gap-3 mb-6 bg-white/60 dark:bg-[#17120E]/80 backdrop-blur-md p-3 rounded-2xl border border-slate-200 dark:border-white/5 shadow-sm">
         <select 
-          className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-[#E8501F] hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 shadow-sm cursor-pointer"
+          className="bg-white dark:bg-[#241D17] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-[#E8501F] hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 shadow-sm cursor-pointer"
           value={rideCategory}
           onChange={(e) => setRideCategory(e.target.value as any)}
         >
@@ -786,7 +786,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         </select>
 
         {userGender === 'female' && (
-          <label className="flex items-center gap-2 cursor-pointer bg-white dark:bg-[#1E293B] border border-pink-200 dark:border-pink-500/20 rounded-xl px-4 py-2 text-pink-700 dark:text-pink-400 shadow-sm transition-all duration-300 hover:shadow-md hover:border-pink-300 dark:hover:bg-pink-500/10">
+          <label className="flex items-center gap-2 cursor-pointer bg-white dark:bg-[#241D17] border border-pink-200 dark:border-pink-500/20 rounded-xl px-4 py-2 text-pink-700 dark:text-pink-400 shadow-sm transition-all duration-300 hover:shadow-md hover:border-pink-300 dark:hover:bg-pink-500/10">
             <input 
               type="checkbox"
               checked={womenOnly}
@@ -1006,7 +1006,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                           vehicleNumber: ride.vehicle_number,
                         });
                       }}
-                      className="shrink-0 cursor-pointer w-10 h-10 md:w-12 md:h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-lg md:text-xl overflow-hidden shadow-sm hover:scale-105 transition-transform border-2 border-transparent hover:border-[var(--hero-accent)]"
+                      className="shrink-0 cursor-pointer w-10 h-10 md:w-12 md:h-12 bg-slate-200 dark:bg-stone-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-lg md:text-xl overflow-hidden shadow-sm hover:scale-105 transition-transform border-2 border-transparent hover:border-[var(--hero-accent)]"
                     >
                       {ride.driver?.avatar_url ? (
                         <img src={ride.driver.avatar_url} alt={ride.driver.full_name || "Driver"} className="w-full h-full object-cover" />
@@ -1044,8 +1044,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 <div className="flex gap-4 md:gap-6 mb-4 md:mb-6">
                   {/* Timeline Node */}
                   <div className="flex flex-col items-center mt-1">
-                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full border-2 border-[#10B981] bg-white dark:bg-[#1E293B] z-10"></div>
-                    <div className="w-0.5 h-8 md:h-10 bg-gray-200 dark:bg-slate-700 -my-1"></div>
+                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full border-2 border-[#10B981] bg-white dark:bg-[#241D17] z-10"></div>
+                    <div className="w-0.5 h-8 md:h-10 bg-gray-200 dark:bg-stone-700 -my-1"></div>
                     <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#E8501F] z-10"></div>
                   </div>
                   
@@ -1097,7 +1097,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                       {approvedPassengers.map((b: any) => (
                         <div key={b.id} className="flex flex-col gap-1">
                           <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-100 dark:border-emerald-500/20 w-fit">
-                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xs shadow-sm overflow-hidden border border-white dark:border-slate-800">
+                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-stone-700 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xs shadow-sm overflow-hidden border border-white dark:border-stone-800">
                               {b.passenger?.avatar_url ? (
                                 <img src={b.passenger.avatar_url} alt={b.passenger.full_name || "Passenger"} className="w-full h-full object-cover" />
                               ) : (
@@ -1110,7 +1110,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                             </span>
                           </div>
                           {b.pickup_location && b.dropoff_location && (
-                            <div className="w-full text-[10px] font-medium text-slate-500 pl-2 border-l-2 border-slate-200 dark:border-slate-700">
+                            <div className="w-full text-[10px] font-medium text-slate-500 pl-2 border-l-2 border-slate-200 dark:border-stone-700">
                               Route: {b.pickup_location} → {b.dropoff_location}
                             </div>
                           )}
@@ -1123,7 +1123,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 {/* Footer: Details & CTA */}
                 <div className="flex flex-col pt-4 border-t border-gray-100 dark:border-white/5 gap-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="bg-slate-100 text-slate-600 dark:bg-[#0F172A] dark:text-slate-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 border border-slate-200 dark:border-white/10">
+                    <span className="bg-slate-100 text-slate-600 dark:bg-[#17120E] dark:text-slate-300 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 border border-slate-200 dark:border-white/10">
                       {ride.ride_category === 'auto_split' ? "🚕 Auto/Cab" : "🏍️ Student Vehicle"}
                     </span>
                     {ride.is_women_only && (
@@ -1169,7 +1169,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                       {(isApproved || ride.driver_id === userId) && ride.status !== 'cancelled' && (
                         <button 
                           onClick={() => setSelectedRideId(ride.id)}
-                          className="p-3 bg-slate-100 hover:bg-slate-200 dark:bg-[#0F172A] dark:hover:bg-slate-800 text-[#E8501F] dark:text-[#E8501F] rounded-xl transition-colors"
+                          className="p-3 bg-slate-100 hover:bg-slate-200 dark:bg-[#17120E] dark:hover:bg-slate-800 text-[#E8501F] dark:text-[#E8501F] rounded-xl transition-colors"
                         >
                           <MessageCircle className="w-5 h-5" />
                         </button>
@@ -1184,7 +1184,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                             }
                             setSelectedRideForBooking({ ride, price: displayPrice });
                           }}
-                          className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${hasActiveTrip || isProcessing ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-slate-800 dark:text-slate-500' : 'ui-button-primary'}`}
+                          className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${hasActiveTrip || isProcessing ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-stone-800 dark:text-slate-500' : 'ui-button-primary'}`}
                           disabled={hasActiveTrip || isProcessing}
                         >
                           Book Seat
@@ -1393,7 +1393,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
             >
               <div
                 onClick={() => setShowMultiRouteMap(true)}
-                className="bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/10 dark:shadow-black/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-grab active:cursor-grabbing pointer-events-auto select-none"
+                className="bg-white dark:bg-[#17120E] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/10 dark:shadow-black/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-grab active:cursor-grabbing pointer-events-auto select-none"
               >
                 <LocateFixed className="w-4 h-4 text-[var(--hero-accent)] pointer-events-none" />
                 <span className="pointer-events-none">Route Maps</span>

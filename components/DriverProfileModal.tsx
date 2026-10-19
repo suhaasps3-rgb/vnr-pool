@@ -65,13 +65,13 @@ export default function DriverProfileModal({ driver, vehicleNumber, onClose }: D
 
           {/* Stats Grid */}
           <div className="w-full grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 flex flex-col items-center justify-center border border-[var(--border-subtle)]">
+            <div className="bg-slate-50 dark:bg-stone-800/50 rounded-xl p-4 flex flex-col items-center justify-center border border-[var(--border-subtle)]">
               <Star className="w-6 h-6 text-yellow-500 mb-2" fill="currentColor" />
               <div className="text-xl font-bold text-[var(--text-primary)]">{rating}</div>
               <div className="text-xs text-slate-500">{(driver?.rating_count || 0)} Ratings</div>
             </div>
             
-            <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 flex flex-col items-center justify-center border border-[var(--border-subtle)]">
+            <div className="bg-slate-50 dark:bg-stone-800/50 rounded-xl p-4 flex flex-col items-center justify-center border border-[var(--border-subtle)]">
               <Car className="w-6 h-6 text-[var(--accent-primary)] mb-2" />
               <div className="text-lg font-bold text-[var(--text-primary)] mt-0.5">{vehicleNumber || "N/A"}</div>
               <div className="text-xs text-slate-500 mt-0.5">Vehicle</div>
@@ -88,7 +88,7 @@ export default function DriverProfileModal({ driver, vehicleNumber, onClose }: D
               Call {driver.mobile_number}
             </a>
           ) : (
-            <div className="w-full flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800/50 text-slate-500 py-3.5 rounded-xl text-sm font-semibold border border-[var(--border-subtle)]">
+            <div className="w-full flex items-center justify-center gap-2 bg-slate-100 dark:bg-stone-800/50 text-slate-500 py-3.5 rounded-xl text-sm font-semibold border border-[var(--border-subtle)]">
               <Phone className="w-4 h-4" />
               Phone number is shared once your booking is approved
             </div>

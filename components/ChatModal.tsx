@@ -218,9 +218,9 @@ export default function ChatModal({ rideId, userId, onClose }: { rideId: string,
             {Object.values(typingUsers).some(Boolean) && (
               <div className="flex items-start">
                 <div className="px-4 py-3 rounded-2xl bg-slate-100 dark:bg-[var(--bg-primary)] border border-[var(--border-subtle)] flex items-center gap-1.5 rounded-bl-none">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: "0ms" }}></span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: "150ms" }}></span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-stone-500 animate-bounce" style={{ animationDelay: "0ms" }}></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-stone-500 animate-bounce" style={{ animationDelay: "150ms" }}></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-stone-500 animate-bounce" style={{ animationDelay: "300ms" }}></span>
                 </div>
               </div>
             )}

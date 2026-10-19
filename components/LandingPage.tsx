@@ -64,8 +64,8 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
             viewport={{ once: true, margin: "-100px" }}
             className="max-w-4xl mx-auto mb-32 mt-4 md:-mt-16 relative z-30"
           >
-          <div className="bg-white md:bg-white/70 dark:bg-slate-900 md:dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 p-4 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col md:flex-row items-center gap-4">
-            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 dark:bg-slate-800/80 px-6 py-4 rounded-2xl border border-slate-100 dark:border-slate-700">
+          <div className="bg-white md:bg-white/70 dark:bg-stone-900 md:dark:bg-stone-900/60 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 p-4 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col md:flex-row items-center gap-4">
+            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 dark:bg-stone-800/80 px-6 py-4 rounded-2xl border border-slate-100 dark:border-stone-700">
               <MapPin className="w-5 h-5 text-slate-400" />
               <div className="flex flex-col">
                 <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">From</span>
@@ -75,7 +75,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
             <div className="hidden md:flex text-slate-300">
               <ArrowRight className="w-5 h-5" />
             </div>
-            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 dark:bg-slate-800/80 px-6 py-4 rounded-2xl border border-slate-100 dark:border-slate-700">
+            <div className="flex-1 flex items-center gap-3 w-full bg-slate-50/80 dark:bg-stone-800/80 px-6 py-4 rounded-2xl border border-slate-100 dark:border-stone-700">
               <MapPin className="w-5 h-5 text-[var(--hero-accent)]" />
               <div className="flex flex-col">
                 <span className="text-[10px] font-bold tracking-wider text-[var(--hero-accent)]/70 uppercase">To</span>
@@ -108,10 +108,10 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className="bg-white/60 dark:bg-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 hover:border-[var(--hero-accent)]/30 dark:hover:border-[var(--hero-accent)]/50 p-6 rounded-3xl transition-all shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(232,80,31,0.12)] dark:hover:shadow-[0_20px_40px_-15px_rgba(232,80,31,0.3)] group"
+                className="bg-white/60 dark:bg-stone-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 hover:border-[var(--hero-accent)]/30 dark:hover:border-[var(--hero-accent)]/50 p-6 rounded-3xl transition-all shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(232,80,31,0.12)] dark:hover:shadow-[0_20px_40px_-15px_rgba(232,80,31,0.3)] group"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 flex items-center justify-center font-bold text-lg text-slate-700 dark:text-slate-200">
+                  <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-stone-700/50 border border-slate-200 dark:border-stone-600 flex items-center justify-center font-bold text-lg text-slate-700 dark:text-slate-200">
                     {ride.driver}
                   </div>
                   <div className="text-right">
@@ -124,13 +124,13 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
                     <MapPin className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                     <span className="font-medium text-slate-600 dark:text-slate-300">{ride.origin}</span>
                   </div>
-                  <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 ml-2"></div>
+                  <div className="w-px h-4 bg-slate-200 dark:bg-stone-700 ml-2"></div>
                   <div className="flex items-center gap-3">
                     <MapPin className="w-4 h-4 text-[var(--hero-accent)]" />
                     <span className="font-bold text-slate-800 dark:text-slate-100">{ride.dest}</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-700/50 pt-4">
+                <div className="flex items-center justify-between border-t border-slate-100 dark:border-stone-700/50 pt-4">
                   <div className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 font-medium">
                     <Clock className="w-4 h-4" /> {ride.time}
                   </div>
@@ -151,7 +151,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="md:col-span-2 bg-gradient-to-br from-orange-50/60 dark:from-orange-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
+              className="md:col-span-2 bg-gradient-to-br from-orange-50/60 dark:from-orange-900/20 to-white/60 dark:to-stone-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
             >
               <Shield className="w-10 h-10 text-[var(--hero-accent)] mb-6" />
               <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">100% Verified Identity</h4>
@@ -164,7 +164,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="md:col-span-2 bg-gradient-to-br from-amber-50/60 dark:from-amber-900/20 to-white/60 dark:to-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
+              className="md:col-span-2 bg-gradient-to-br from-amber-50/60 dark:from-amber-900/20 to-white/60 dark:to-stone-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden group shadow-sm"
             >
               <Users className="w-10 h-10 text-[var(--hero-accent)] mb-6" />
               <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Female-Only Rides</h4>
@@ -177,7 +177,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="md:col-span-4 bg-white/60 dark:bg-slate-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm"
+              className="md:col-span-4 bg-white/60 dark:bg-stone-800/40 backdrop-blur-xl border border-slate-200/60 dark:border-white/10 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm"
             >
               <div>
                 <Zap className="w-10 h-10 text-amber-500 mb-6" />
@@ -197,7 +197,7 @@ export default function LandingPage({ onLogin }: { onLogin: () => void }) {
       </main>
 
       {/* FOOTER */}
-      <footer className="relative z-10 border-t border-slate-200/60 dark:border-slate-800 bg-[var(--hero-bg)] py-12 text-center text-slate-500 dark:text-slate-400 font-medium text-sm flex flex-col gap-2">
+      <footer className="relative z-10 border-t border-slate-200/60 dark:border-stone-800 bg-[var(--hero-bg)] py-12 text-center text-slate-500 dark:text-slate-400 font-medium text-sm flex flex-col gap-2">
         <p>&copy; {new Date().getFullYear()} VNR Pool. For VNR VJIET Students.</p>
         <p>Contact: <a href="mailto:support.vnrpool2@gmail.com" className="hover:text-[var(--hero-accent)] transition-colors">support.vnrpool2@gmail.com</a></p>
       </footer>
