@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, ShieldCheck, Zap } from "lucide-react";
 
@@ -25,7 +29,11 @@ export default function HowItWorksModal({ isOpen, onClose }: HowItWorksModalProp
     },
   ];
 
-  return (
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -41,7 +49,7 @@ export default function HowItWorksModal({ isOpen, onClose }: HowItWorksModalProp
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-lg bg-white dark:bg-[#0B0E14] border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-lg bg-[#FFFCF7] dark:bg-[#17120E] border border-stone-200 dark:border-white/10 rounded-[2rem] shadow-2xl overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-white/5">
@@ -89,6 +97,7 @@ export default function HowItWorksModal({ isOpen, onClose }: HowItWorksModalProp
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
