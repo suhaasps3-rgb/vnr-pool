@@ -16,7 +16,7 @@ export default function ProductDemoHUD() {
   const springTransition = { type: "spring", stiffness: 350, damping: 25 } as const;
 
   return (
-    <div className="absolute top-4 md:top-8 left-1/2 -translate-x-1/2 z-[70] pointer-events-none w-[300px] max-w-[calc(100%-2rem)]">
+    <div className="absolute top-4 md:top-1/2 left-1/2 -translate-x-1/2 md:-translate-y-1/2 z-[70] pointer-events-none w-[300px] max-w-[calc(100%-2rem)]">
       <AnimatePresence mode="wait">
         
         {phase === "SEARCHING" && (
