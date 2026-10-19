@@ -90,8 +90,8 @@ export default function Passenger({ data }: { data: PassengerData }) {
           <circle cx="0" cy="0" r="30" fill="transparent" />
           
           <g transform="translate(0, -45)">
-            <rect x="-60" y="-30" width="120" height="40" rx="8" fill="var(--hero-glass-bg)" stroke="var(--hero-glass-border)" />
-            <text x="0" y="-14" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#0f172a">{data.name}</text>
+            <rect x="-60" y="-30" width="120" height="40" rx="8" fill="var(--hero-card-solid)" stroke="var(--hero-road)" strokeOpacity="0.2" />
+            <text x="0" y="-14" textAnchor="middle" fontSize="12" fontWeight="bold" fill="var(--hero-ink)">{data.name}</text>
             <text x="0" y="2" textAnchor="middle" fontSize="10" fill="var(--hero-success)">₹{data.savings} Saved</text>
           </g>
         </motion.g>
