@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import ClientLayoutProviders from "@/components/ClientLayoutProviders";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
-const display = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ['500', '700', '800'], variable: '--font-display' });
-const inter = Inter({ subsets: ["latin"], weight: ['400', '500', '700'] });
+const display = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ['400', '500', '600', '700', '800'], variable: '--font-display' });
 
 export const metadata: Metadata = {
   title: "VNR Pool - Hyperlocal Ride Pooling",
@@ -30,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} ${display.variable} min-h-screen bg-[#F5F5F0] text-[#0B1F1C] dark:bg-[#0B1F1C] dark:text-[#F5F5F0] antialiased overflow-x-hidden`}
+        className={`${display.className} ${display.variable} min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased overflow-x-hidden`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <ClientLayoutProviders>

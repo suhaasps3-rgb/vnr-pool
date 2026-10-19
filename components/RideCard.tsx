@@ -59,11 +59,11 @@ function VehicleTag({ type, vehicleNumber }: { type: string; vehicleNumber?: str
 
   return (
     <div className="flex items-center gap-1.5 flex-wrap">
-      <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+      <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-slate-100 dark:bg-stone-800 text-slate-700 dark:text-slate-300">
         {labels[type] || type}
       </span>
       {maskedNumber && (
-        <span className="text-[10px] font-mono text-slate-500 bg-slate-50 dark:bg-slate-800/50 px-2 py-0.5 rounded-full">
+        <span className="text-[10px] font-mono text-slate-500 bg-slate-50 dark:bg-stone-800/50 px-2 py-0.5 rounded-full">
           {maskedNumber}
         </span>
       )}
@@ -336,7 +336,7 @@ export default function RideCard({
 
           {/* No available seats */}
           {mode === "feed" && !isDriver && !hasRequested && ride.available_seats === 0 && ride.status === "active" && (
-            <div className="flex-1 py-3 rounded-lg font-bold text-sm text-center bg-slate-100 dark:bg-slate-800 text-slate-500">
+            <div className="flex-1 py-3 rounded-lg font-bold text-sm text-center bg-slate-100 dark:bg-stone-800 text-slate-500">
               Ride Full
             </div>
           )}
@@ -354,7 +354,7 @@ export default function RideCard({
               {onChatClick && (
                 <button
                   onClick={onChatClick}
-                  className="p-3 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#1D9E75]"
+                  className="p-3 rounded-lg transition-colors border border-slate-200 dark:border-stone-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#1D9E75]"
                   disabled={isProcessing}
                 >
                   <MessageCircle className="w-5 h-5" />

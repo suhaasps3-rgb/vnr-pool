@@ -180,7 +180,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 bottom-0 w-80 bg-white dark:bg-[#111111] z-[70] shadow-2xl flex flex-col border-r border-gray-200 dark:border-white/10"
+              className="fixed top-0 left-0 bottom-0 w-80 bg-white dark:bg-[#17120E] z-[70] shadow-2xl flex flex-col border-r border-gray-200 dark:border-white/10"
             >
               <div className="p-5 border-b border-gray-100 dark:border-white/5 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Menu</h2>
@@ -344,7 +344,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                   <div key={tab.id} className="flex-1 flex flex-col items-center justify-center relative">
                     <button
                       onClick={() => setActiveTab(tab.id)}
-                      className="absolute -top-5 bg-white dark:bg-[#1f1f1f] w-14 h-14 rounded-full flex items-center justify-center shadow-[0_-2px_15px_rgba(0,0,0,0.08)] dark:shadow-[0_-2px_15px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-white/5 transition-transform hover:scale-105 active:scale-95"
+                      className="absolute -top-5 bg-white dark:bg-[#241D17] w-14 h-14 rounded-full flex items-center justify-center shadow-[0_-2px_15px_rgba(0,0,0,0.08)] dark:shadow-[0_-2px_15px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-white/5 transition-transform hover:scale-105 active:scale-95"
                     >
                       <Icon className={cn("w-7 h-7", isActive ? "text-[var(--accent-primary)]" : "text-slate-500 dark:text-slate-400")} />
                     </button>

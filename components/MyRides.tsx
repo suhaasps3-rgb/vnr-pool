@@ -8,12 +8,12 @@ export default function MyRides({ userId, onVehicleSelect }: { userId: string, o
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-2 bg-slate-50 dark:bg-[#0F172A] p-2 rounded-2xl border border-gray-200 dark:border-white/5">
+      <div className="flex gap-2 bg-slate-50 dark:bg-[#17120E] p-2 rounded-2xl border border-gray-200 dark:border-white/5">
         <button
           onClick={() => setSubTab("booked")}
           className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
             subTab === "booked"
-              ? "bg-white dark:bg-[#1E293B] shadow-sm text-[#E8501F] dark:text-[#E8501F]"
+              ? "bg-white dark:bg-[#241D17] shadow-sm text-[#E8501F] dark:text-[#E8501F]"
               : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
           }`}
         >
@@ -23,7 +23,7 @@ export default function MyRides({ userId, onVehicleSelect }: { userId: string, o
           onClick={() => setSubTab("offered")}
           className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
             subTab === "offered"
-              ? "bg-white dark:bg-[#1E293B] shadow-sm text-[#E8501F] dark:text-[#E8501F]"
+              ? "bg-white dark:bg-[#241D17] shadow-sm text-[#E8501F] dark:text-[#E8501F]"
               : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
           }`}
         >
