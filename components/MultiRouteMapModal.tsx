@@ -33,8 +33,8 @@ export default function MultiRouteMapModal({ isOpen, onClose, routes, title = "R
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#0F172A]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                <MapIcon className="w-5 h-5 text-blue-400" />
+              <div className="w-10 h-10 rounded-full bg-[var(--hero-accent)]/20 flex items-center justify-center">
+                <MapIcon className="w-5 h-5 text-[var(--hero-accent)]" />
               </div>
               <div>
                 <h2 className="text-lg font-black text-white">{title}</h2>
@@ -55,7 +55,7 @@ export default function MultiRouteMapModal({ isOpen, onClose, routes, title = "R
             
             {/* Legend / Overlay */}
             <div className="absolute bottom-6 left-6 right-6 z-[400] pointer-events-none flex flex-col items-center gap-3">
-              <div className="bg-blue-500/90 backdrop-blur-md px-4 py-1.5 rounded-full text-white text-xs font-bold shadow-lg flex items-center gap-2">
+              <div className="bg-[var(--hero-accent)]/90 backdrop-blur-md px-4 py-1.5 rounded-full text-white text-xs font-bold shadow-lg flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
                 Click any dot to reveal its full route path
               </div>

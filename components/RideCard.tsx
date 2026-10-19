@@ -44,7 +44,7 @@ function SeatMap({ total, available }: { total: number; available: number }) {
 // ── Vehicle Type Badge ─────────────────────────────────────
 function VehicleTag({ type, vehicleNumber }: { type: string; vehicleNumber?: string }) {
   const colors: Record<string, string> = {
-    car: "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400",
+    car: "bg-[var(--hero-accent)]/10 text-[var(--hero-accent)] dark:bg-[var(--hero-accent)]/10 dark:text-[var(--hero-accent)]",
     auto: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
     bike: "bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400",
   };

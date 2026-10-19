@@ -103,7 +103,7 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
         {/* Progress Bar */}
         <div className="absolute top-0 left-0 h-1 bg-gray-200 dark:bg-white/10 w-full">
           <motion.div 
-            className="h-full bg-blue-500"
+            className="h-full bg-[var(--hero-accent)]"
             initial={{ width: "20%" }}
             animate={{ width: `${(step / 5) * 100}%` }}
             transition={{ duration: 0.3 }}
@@ -129,7 +129,7 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
                     value={formData.full_name}
                     onChange={e => setFormData({...formData, full_name: e.target.value})}
                     placeholder="John Doe"
-                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-[var(--hero-accent)] focus:ring-1 focus:ring-[var(--hero-accent)] transition-all"
                   />
                 </div>
                 <div>
@@ -139,7 +139,7 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
                     value={formData.roll_no}
                     onChange={e => setFormData({...formData, roll_no: e.target.value})}
                     placeholder="21071A05XX"
-                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all uppercase"
+                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-[var(--hero-accent)] focus:ring-1 focus:ring-[var(--hero-accent)] transition-all uppercase"
                   />
                 </div>
               </motion.div>
@@ -159,7 +159,7 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
                     required
                     value={formData.branch}
                     onChange={e => setFormData({...formData, branch: e.target.value})}
-                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-[var(--hero-accent)] focus:ring-1 focus:ring-[var(--hero-accent)] transition-all"
                   >
                     <option value="" disabled>Select your branch</option>
                     {branches.map(b => (
@@ -187,7 +187,7 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
                     value={formData.mobile_number}
                     onChange={e => setFormData({...formData, mobile_number: e.target.value})}
                     placeholder="9876543210"
-                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-[var(--hero-accent)] focus:ring-1 focus:ring-[var(--hero-accent)] transition-all"
                   />
                 </div>
               </motion.div>
@@ -211,7 +211,7 @@ export default function OnboardingForm({ onComplete, userId }: { onComplete: () 
                         onClick={() => setFormData({...formData, gender: g})}
                         className={`p-3 rounded-xl border transition-all ${
                           formData.gender === g 
-                            ? 'bg-blue-50 dark:bg-blue-500/20 border-blue-500 text-blue-700 dark:text-blue-400 font-medium' 
+                            ? 'bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/20 border-[var(--hero-accent)] text-[var(--hero-accent)] dark:text-[var(--hero-accent)] font-medium' 
                             : 'bg-gray-50 dark:bg-[#1A1A1A] border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-white/30'
                         }`}
                       >

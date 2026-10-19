@@ -13,7 +13,7 @@ export default function MyRides({ userId, onVehicleSelect }: { userId: string, o
           onClick={() => setSubTab("booked")}
           className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
             subTab === "booked"
-              ? "bg-white dark:bg-[#1E293B] shadow-sm text-[#2563EB] dark:text-[#3B82F6]"
+              ? "bg-white dark:bg-[#1E293B] shadow-sm text-[#E8501F] dark:text-[#E8501F]"
               : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
           }`}
         >
@@ -23,7 +23,7 @@ export default function MyRides({ userId, onVehicleSelect }: { userId: string, o
           onClick={() => setSubTab("offered")}
           className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
             subTab === "offered"
-              ? "bg-white dark:bg-[#1E293B] shadow-sm text-[#2563EB] dark:text-[#3B82F6]"
+              ? "bg-white dark:bg-[#1E293B] shadow-sm text-[#E8501F] dark:text-[#E8501F]"
               : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
           }`}
         >

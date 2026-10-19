@@ -66,7 +66,7 @@ export function Spotlight({
       ref={containerRef}
       className={cn(
         'pointer-events-none absolute rounded-full bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops),transparent_80%)] blur-xl transition-opacity duration-200',
-        'from-teal-400/20 via-indigo-500/10 to-transparent',
+        'from-teal-400/20 via-[var(--hero-accent)]/10 to-transparent',
         isHovered ? 'opacity-100' : 'opacity-0',
         className
       )}

@@ -274,7 +274,7 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96", 
   if (loading) {
     return (
       <div className={`w-full ${height} bg-slate-900 animate-pulse rounded-2xl flex flex-col items-center justify-center border border-white/5`}>
-        <div className="w-8 h-8 border-4 border-[#3B82F6] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <div className="w-8 h-8 border-4 border-[#E8501F] border-t-transparent rounded-full animate-spin mb-4"></div>
         <span className="text-slate-400 font-medium tracking-wide">Mapping Points...</span>
       </div>
     );
@@ -341,7 +341,7 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96", 
                   {interactiveMultiMode && !isPathLoaded && (
                     <div className="mt-2">
                       {isLoadingThisPath ? (
-                        <span className="text-[10px] text-blue-500 font-bold animate-pulse">Loading Route...</span>
+                        <span className="text-[10px] text-[var(--hero-accent)] font-bold animate-pulse">Loading Route...</span>
                       ) : (
                         <button 
                           onClick={(e) => {
@@ -349,7 +349,7 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96", 
                             e.stopPropagation();
                             fetchPathForRoute(r.id);
                           }}
-                          className="bg-blue-500 text-white text-[10px] px-2 py-1 rounded w-full font-bold"
+                          className="bg-[var(--hero-accent)] text-white text-[10px] px-2 py-1 rounded w-full font-bold"
                         >
                           View Full Path
                         </button>
@@ -406,7 +406,7 @@ export default function MapComponent({ routes, height = "h-64 sm:h-80 md:h-96", 
       {/* Loading overlay for path fetching */}
       {pathLoadingId && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md px-4 py-2 rounded-full z-[1000] border border-white/10 shadow-xl flex items-center gap-3">
-           <div className="w-4 h-4 border-2 border-[#3B82F6] border-t-transparent rounded-full animate-spin"></div>
+           <div className="w-4 h-4 border-2 border-[#E8501F] border-t-transparent rounded-full animate-spin"></div>
            <span className="text-white text-xs font-bold">Fetching route geometry...</span>
         </div>
       )}

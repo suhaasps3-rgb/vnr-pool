@@ -626,15 +626,15 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
         {/* FULL SCREEN OVERLAY LOCK FOR ACTIVE TRIPS */}
         {mode === "feed" && hasActiveTrip && (
           <div className="flex flex-col items-center justify-center py-12 px-6 animate-in fade-in duration-300">
-            <div className="bg-white/90 dark:bg-[#1E293B] p-10 rounded-3xl shadow-2xl border border-blue-200 dark:border-blue-500/20 max-w-md w-full text-center backdrop-blur-xl">
-              <div className="w-20 h-20 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner">
+            <div className="bg-white/90 dark:bg-[#1E293B] p-10 rounded-3xl shadow-2xl border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]/20 max-w-md w-full text-center backdrop-blur-xl">
+              <div className="w-20 h-20 bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner">
               🚗
             </div>
             <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-4">Ride Reserved / In Progress</h2>
             <p className="text-slate-600 dark:text-slate-400 font-medium mb-8">
               You are strictly restricted to one active ride or pending request at a time. You cannot view other rides or book new seats until your current ride is completed or cancelled.
             </p>
-            <p className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
+            <p className="text-sm font-bold text-[var(--hero-accent)] dark:text-[var(--hero-accent)] uppercase tracking-widest">
               Navigate to the "Ride in Progress" tab.
             </p>
           </div>
@@ -644,14 +644,14 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       {mode === "feed" && (
         <>
           {hasActiveTrip && (
-            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-2xl flex items-center justify-between shadow-sm">
+            <div className="mb-6 p-4 bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/10 border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]/20 rounded-2xl flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 text-xl">
+                <div className="w-10 h-10 bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/20 rounded-full flex items-center justify-center text-[var(--hero-accent)] dark:text-[var(--hero-accent)] text-xl">
                   🚗
                 </div>
                 <div>
-                  <h3 className="font-bold text-blue-900 dark:text-blue-100">You have a ride in progress!</h3>
-                  <p className="text-sm text-blue-700 dark:text-blue-300">You cannot book new rides until your current trip is completed. Check the My Rides section.</p>
+                  <h3 className="font-bold text-[var(--hero-accent)] dark:text-[var(--hero-accent)]">You have a ride in progress!</h3>
+                  <p className="text-sm text-[var(--hero-accent)] dark:text-[var(--hero-accent)]">You cannot book new rides until your current trip is completed. Check the My Rides section.</p>
                 </div>
               </div>
             </div>
@@ -660,7 +660,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           {/* Functional Search Bar */}
           {/* Functional Search Bar */}
           <div className="flex flex-col md:flex-row gap-3 p-3 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 items-stretch shadow-sm relative z-[60]">
-            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group z-[60]">
+            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--hero-accent)] dark:hover:border-[var(--hero-accent)]/50 focus-within:border-[#E8501F] focus-within:ring-2 focus-within:ring-[var(--hero-accent)]/25 dark:focus-within:ring-[var(--hero-accent)] transition-all duration-300 group z-[60]">
               <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
               <input 
                 type="text" 
@@ -691,7 +691,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 onClick={handleGetLocation}
                 disabled={gettingLocation}
                 title="Use Current Location"
-                className="p-1.5 rounded-lg text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/20 transition-colors disabled:opacity-50 flex items-center justify-center shrink-0"
+                className="p-1.5 rounded-lg text-[var(--hero-accent)] dark:text-[var(--hero-accent)] hover:bg-[var(--hero-accent)]/10 dark:hover:bg-[var(--hero-accent)]/20 transition-colors disabled:opacity-50 flex items-center justify-center shrink-0"
               >
                 {gettingLocation ? <Loader2 className="w-5 h-5 animate-spin" /> : <LocateFixed className="w-5 h-5" />}
               </button>
@@ -715,7 +715,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               </div>
             </div>
             
-            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300 group z-[55]">
+            <div className="relative flex-1 min-w-0 md:min-w-[200px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--hero-accent)] dark:hover:border-[var(--hero-accent)]/50 focus-within:border-[#E8501F] focus-within:ring-2 focus-within:ring-[var(--hero-accent)]/25 dark:focus-within:ring-[var(--hero-accent)] transition-all duration-300 group z-[55]">
               <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
               <input 
                 type="text" 
@@ -761,7 +761,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               </div>
             </div>
             
-            <div className="flex-[0.5] relative min-w-0 md:min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500/50 focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900 transition-all duration-300">
+            <div className="flex-[0.5] relative min-w-0 md:min-w-[160px] flex items-center gap-2 bg-white dark:bg-[#1E293B] p-3 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--hero-accent)] dark:hover:border-[var(--hero-accent)]/50 focus-within:border-[#E8501F] focus-within:ring-2 focus-within:ring-[var(--hero-accent)]/25 dark:focus-within:ring-[var(--hero-accent)] transition-all duration-300">
               <Calendar className="w-5 h-5 text-slate-400 shrink-0 pointer-events-none" />
               <input 
                 type="date"
@@ -776,7 +776,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
           {/* Filters Bar Redesign */}
           <div className="flex flex-wrap gap-3 mb-6 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-md p-3 rounded-2xl border border-slate-200 dark:border-white/5 shadow-sm">
         <select 
-          className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-[#2563EB] hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 shadow-sm cursor-pointer"
+          className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-[#E8501F] hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 shadow-sm cursor-pointer"
           value={rideCategory}
           onChange={(e) => setRideCategory(e.target.value as any)}
         >
@@ -979,7 +979,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   </div>
                 )}
                 {ride.status === 'in_progress' && (
-                  <div className="absolute top-4 right-4 bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold border border-blue-200 dark:border-blue-500/30 z-10">
+                  <div className="absolute top-4 right-4 bg-[var(--hero-accent)]/10 text-[var(--hero-accent)] dark:bg-[var(--hero-accent)]/20 dark:text-[var(--hero-accent)] px-3 py-1 rounded-full text-[10px] md:text-xs font-bold border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]/30 z-10">
                     IN PROGRESS
                   </div>
                 )}
@@ -990,7 +990,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 )}
                 
                 {mode === "feed" && isAIMatch(ride.origin, ride.destination, searchOrigin, searchDestination, ride.chosen_route_index) && (
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-sky-500/20 to-blue-500/20 text-sky-700 dark:text-sky-300 px-3 md:px-4 py-1 rounded-full text-[8px] md:text-[10px] font-black tracking-widest border border-sky-500/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(14,165,233,0.4)] animate-pulse z-10">
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[var(--hero-accent)]/20 to-[var(--hero-accent)]/20 text-[var(--hero-accent)] dark:text-[var(--hero-accent)] px-3 md:px-4 py-1 rounded-full text-[8px] md:text-[10px] font-black tracking-widest border border-[var(--hero-accent)]/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(232,80,31,0.4)] animate-pulse z-10">
                     ✨ AI MATCH: PERFECT ROUTE OVERLAY
                   </div>
                 )}
@@ -1006,7 +1006,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                           vehicleNumber: ride.vehicle_number,
                         });
                       }}
-                      className="shrink-0 cursor-pointer w-10 h-10 md:w-12 md:h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-lg md:text-xl overflow-hidden shadow-sm hover:scale-105 transition-transform border-2 border-transparent hover:border-indigo-400"
+                      className="shrink-0 cursor-pointer w-10 h-10 md:w-12 md:h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-lg md:text-xl overflow-hidden shadow-sm hover:scale-105 transition-transform border-2 border-transparent hover:border-[var(--hero-accent)]"
                     >
                       {ride.driver?.avatar_url ? (
                         <img src={ride.driver.avatar_url} alt={ride.driver.full_name || "Driver"} className="w-full h-full object-cover" />
@@ -1017,7 +1017,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-bold text-[#0F172A] dark:text-white text-base md:text-lg leading-tight">{ride.driver?.full_name}</h3>
-                        <span className="shrink-0 bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 text-[10px] md:text-xs px-2 py-0.5 rounded-full font-semibold flex items-center gap-1 border border-blue-200 dark:border-blue-500/20">
+                        <span className="shrink-0 bg-[var(--hero-accent)]/10 text-[var(--hero-accent)] dark:bg-[var(--hero-accent)]/10 dark:text-[var(--hero-accent)] text-[10px] md:text-xs px-2 py-0.5 rounded-full font-semibold flex items-center gap-1 border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]/20">
                           ✓ Verified
                         </span>
                       </div>
@@ -1046,7 +1046,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                   <div className="flex flex-col items-center mt-1">
                     <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full border-2 border-[#10B981] bg-white dark:bg-[#1E293B] z-10"></div>
                     <div className="w-0.5 h-8 md:h-10 bg-gray-200 dark:bg-slate-700 -my-1"></div>
-                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#2563EB] z-10"></div>
+                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#E8501F] z-10"></div>
                   </div>
                   
                   {/* Locations & Time */}
@@ -1169,7 +1169,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                       {(isApproved || ride.driver_id === userId) && ride.status !== 'cancelled' && (
                         <button 
                           onClick={() => setSelectedRideId(ride.id)}
-                          className="p-3 bg-slate-100 hover:bg-slate-200 dark:bg-[#0F172A] dark:hover:bg-slate-800 text-[#2563EB] dark:text-[#3B82F6] rounded-xl transition-colors"
+                          className="p-3 bg-slate-100 hover:bg-slate-200 dark:bg-[#0F172A] dark:hover:bg-slate-800 text-[#E8501F] dark:text-[#E8501F] rounded-xl transition-colors"
                         >
                           <MessageCircle className="w-5 h-5" />
                         </button>
@@ -1265,7 +1265,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                           className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
                             isStartDisabled
                               ? 'bg-slate-100 text-slate-400 dark:bg-white/5 dark:text-slate-500 cursor-not-allowed'
-                              : 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500/20'
+                              : 'bg-[var(--hero-accent)]/10 text-[var(--hero-accent)] hover:bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/10 dark:text-[var(--hero-accent)] dark:hover:bg-[var(--hero-accent)]/20'
                           }`}
                         >
                           Start Ride
@@ -1302,8 +1302,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                       {ride.bookings.filter((b: any) => b.status === 'approved').map((booking: any) => (
                         <div key={booking.id} className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/10">
                           <div className="flex items-center gap-3 mb-2">
-                            <div className="w-8 h-8 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center">
-                              <User className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                            <div className="w-8 h-8 bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/20 rounded-full flex items-center justify-center">
+                              <User className="w-4 h-4 text-[var(--hero-accent)] dark:text-[var(--hero-accent)]" />
                             </div>
                             <div>
                               <p className="text-sm font-bold text-[#0F172A] dark:text-white">{booking.passenger?.full_name || 'Passenger'}</p>
@@ -1395,7 +1395,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 onClick={() => setShowMultiRouteMap(true)}
                 className="bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white px-5 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-xl shadow-black/10 dark:shadow-black/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-grab active:cursor-grabbing pointer-events-auto select-none"
               >
-                <LocateFixed className="w-4 h-4 text-blue-400 pointer-events-none" />
+                <LocateFixed className="w-4 h-4 text-[var(--hero-accent)] pointer-events-none" />
                 <span className="pointer-events-none">Route Maps</span>
                 <span className="bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full ml-1 pointer-events-none">
                   {visibleRides.length}
@@ -1408,7 +1408,7 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
               isOpen={showMultiRouteMap}
               onClose={() => setShowMultiRouteMap(false)}
               routes={visibleRides.map((r, i) => {
-                const colors = ["#10B981", "#3B82F6", "#F43F5E", "#8B5CF6", "#F59E0B"];
+                const colors = ["#10B981", "#E8501F", "#F43F5E", "#8B5CF6", "#F59E0B"];
                 return {
                   id: r.id,
                   origin: r.origin,

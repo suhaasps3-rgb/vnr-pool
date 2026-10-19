@@ -58,7 +58,7 @@ export default function BlockedUsersModal({ userId, onClose }: { userId: string,
         <div className="flex-1 overflow-y-auto pr-2 space-y-3">
           {isLoading ? (
             <div className="flex justify-center p-8">
-              <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+              <Loader2 className="w-8 h-8 animate-spin text-[var(--hero-accent)]" />
             </div>
           ) : blockedUsers?.length === 0 ? (
             <div className="text-center p-8 text-gray-500 dark:text-gray-400">
