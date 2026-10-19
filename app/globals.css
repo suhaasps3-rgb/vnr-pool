@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Make Tailwind's font-sans resolve to the app font (set via next/font in layout) */
+@theme inline {
+  --font-sans: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================================
