@@ -184,7 +184,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full mt-1 p-3 pr-10 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className="w-full mt-1 p-3 pr-10 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-[var(--hero-accent)] focus:ring-1 focus:ring-[var(--hero-accent)] transition-all"
                 />
                 <button
                   type="button"
@@ -206,7 +206,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                 value={otp}
                 onChange={e => setOtp(e.target.value)}
                 placeholder="12345678"
-                className="w-full mt-1 p-3 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all tracking-widest text-center font-bold"
+                className="w-full mt-1 p-3 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-[var(--hero-accent)] focus:ring-1 focus:ring-[var(--hero-accent)] transition-all tracking-widest text-center font-bold"
               />
             </div>
           )}
@@ -221,7 +221,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                   value={otp}
                   onChange={e => setOtp(e.target.value)}
                   placeholder="12345678"
-                  className="w-full mt-1 p-3 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all tracking-widest text-center font-bold"
+                  className="w-full mt-1 p-3 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-[var(--hero-accent)] focus:ring-1 focus:ring-[var(--hero-accent)] transition-all tracking-widest text-center font-bold"
                 />
               </div>
               <div>
@@ -233,7 +233,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full mt-1 p-3 pr-10 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full mt-1 p-3 pr-10 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-[var(--hero-accent)] focus:ring-1 focus:ring-[var(--hero-accent)] transition-all"
                   />
                   <button
                     type="button"
@@ -253,7 +253,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                     value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full mt-1 p-3 pr-10 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full mt-1 p-3 pr-10 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-[var(--hero-accent)] focus:ring-1 focus:ring-[var(--hero-accent)] transition-all"
                   />
                   <button
                     type="button"
