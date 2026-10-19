@@ -141,15 +141,15 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
         className={cn("w-full max-w-md p-8", isModal ? "" : "ui-card")}
       >
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          <h1 style={{ fontFamily: "var(--font-display), sans-serif" }} className="text-3xl font-extrabold text-stone-900 dark:text-stone-50 tracking-[-0.03em]">
             VNR Pool
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">Exclusive ride-pooling for VNR VJIET.</p>
+          <p className="text-stone-500 dark:text-stone-400 mt-2">Exclusive ride-pooling for VNR VJIET.</p>
         </div>
 
         <form onSubmit={handleAuth} className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">College Email</label>
+            <label className="text-sm font-medium text-stone-700 dark:text-stone-300">College Email</label>
             <input 
               type="email"
               required
@@ -158,10 +158,10 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
               onChange={e => { setEmail(e.target.value); validateEmail(e.target.value); }}
               onBlur={e => validateEmail(e.target.value)}
               placeholder="rollno@vnrvjiet.in"
-              className={`w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border rounded-xl outline-none focus:ring-1 transition-all disabled:opacity-50 ${
+              className={`w-full mt-1 p-3 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border rounded-xl outline-none focus:ring-1 transition-all disabled:opacity-50 ${
                 emailError
                   ? "border-red-400 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-gray-200 dark:border-white/10 focus:border-blue-500 focus:ring-blue-500"
+                  : "border-stone-200 dark:border-white/10 focus:border-[var(--hero-accent)] focus:ring-[var(--hero-accent)]"
               }`}
             />
             {emailError && (
@@ -176,7 +176,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
 
           {(authMode === "login" || authMode === "signup") && (
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+              <label className="text-sm font-medium text-stone-700 dark:text-stone-300">Password</label>
               <div className="relative">
                 <input 
                   type={showPassword ? "text" : "password"}
@@ -184,7 +184,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full mt-1 p-3 pr-10 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className="w-full mt-1 p-3 pr-10 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
                 <button
                   type="button"
@@ -199,14 +199,14 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
 
           {authMode === "verify_signup_otp" && (
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">8-Digit OTP</label>
+              <label className="text-sm font-medium text-stone-700 dark:text-stone-300">8-Digit OTP</label>
               <input 
                 type="text"
                 required
                 value={otp}
                 onChange={e => setOtp(e.target.value)}
                 placeholder="12345678"
-                className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all tracking-widest text-center font-bold"
+                className="w-full mt-1 p-3 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all tracking-widest text-center font-bold"
               />
             </div>
           )}
@@ -214,18 +214,18 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
           {authMode === "verify_otp" && (
             <>
               <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">8-Digit OTP</label>
+                <label className="text-sm font-medium text-stone-700 dark:text-stone-300">8-Digit OTP</label>
                 <input 
                   type="text"
                   required
                   value={otp}
                   onChange={e => setOtp(e.target.value)}
                   placeholder="12345678"
-                  className="w-full mt-1 p-3 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all tracking-widest text-center font-bold"
+                  className="w-full mt-1 p-3 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all tracking-widest text-center font-bold"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">New Password</label>
+                <label className="text-sm font-medium text-stone-700 dark:text-stone-300">New Password</label>
                 <div className="relative">
                   <input 
                     type={showPassword ? "text" : "password"}
@@ -233,7 +233,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full mt-1 p-3 pr-10 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full mt-1 p-3 pr-10 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                   />
                   <button
                     type="button"
@@ -245,7 +245,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Confirm New Password</label>
+                <label className="text-sm font-medium text-stone-700 dark:text-stone-300">Confirm New Password</label>
                 <div className="relative">
                   <input 
                     type={showPassword ? "text" : "password"}
@@ -253,7 +253,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
                     value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full mt-1 p-3 pr-10 bg-gray-50 dark:bg-[#1A1A1A] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full mt-1 p-3 pr-10 bg-stone-100/70 dark:bg-white/5 text-stone-900 dark:text-white border border-stone-200 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                   />
                   <button
                     type="button"
@@ -270,7 +270,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
           <motion.button
             whileTap={{ scale: 0.98 }}
             disabled={loading}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl flex items-center justify-center transition-colors disabled:opacity-50"
+            className="w-full py-3 bg-[var(--hero-accent)] hover:brightness-95 active:scale-[0.98] text-white font-bold rounded-full shadow-[0_12px_30px_-12px_var(--hero-glow)] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] flex items-center justify-center transition-colors disabled:opacity-50"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
               authMode === "login" ? "Sign In" : 
@@ -285,7 +285,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
             <button 
               type="button"
               onClick={handleForgotPassword}
-              className="text-sm text-blue-600 dark:text-blue-400 font-medium hover:underline"
+              className="text-sm text-[var(--hero-accent)] font-medium hover:underline"
             >
               Forgot your password?
             </button>
@@ -298,7 +298,7 @@ export default function AuthScreen({ onAuthSuccess, isModal = false }: { onAuthS
               setConfirmPassword("");
               setOtp("");
             }}
-            className="text-sm text-gray-600 dark:text-gray-400 font-medium hover:text-gray-900 dark:hover:text-white transition-colors"
+            className="text-sm text-gray-600 dark:text-gray-400 font-medium hover:text-stone-900 dark:hover:text-white transition-colors"
           >
             {authMode === "login" ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
           </button>
