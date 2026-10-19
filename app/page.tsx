@@ -7,9 +7,9 @@ export default async function Page() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  let profile = null;
+  let profile: any = null;
   if (user) {
-    const { data } = await supabase.rpc('get_my_profile').single();
+    const { data } = (await supabase.rpc('get_my_profile').single()) as { data: any };
     profile = data;
   }
 

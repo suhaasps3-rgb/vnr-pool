@@ -32,7 +32,7 @@ export default function Navigation({ userId, onSignOut, activeTab, setActiveTab,
   const { data: userProfile } = useQuery({
     queryKey: ["profile", userId],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_my_profile').single();
+      const { data, error } = (await supabase.rpc('get_my_profile').single()) as { data: any; error: any };
       if (error) throw error;
       return data;
     }

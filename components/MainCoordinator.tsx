@@ -18,7 +18,7 @@ export default function MainCoordinator({ initialUserId, initialProfileCompleted
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       setUserId(user.id);
-      const { data } = await supabase.rpc('get_my_profile').single();
+      const { data } = (await supabase.rpc('get_my_profile').single()) as { data: any };
       if (data?.profile_completed) {
         setProfileCompleted(true);
       }
