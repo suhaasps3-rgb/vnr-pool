@@ -157,7 +157,7 @@ export default function RouteMap({ waypoints, className = "" }: RouteMapProps) {
 
       {loading && (
         <div className="absolute inset-0 z-[1000] bg-[var(--card-bg)] bg-opacity-70 flex flex-col items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-2"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hero-accent)] mb-2"></div>
           <span className="text-sm font-medium text-[var(--text-secondary)]">Mapping Route...</span>
         </div>
       )}
@@ -175,7 +175,7 @@ export default function RouteMap({ waypoints, className = "" }: RouteMapProps) {
         
         {routeCoords.length > 0 && (
           <>
-            <Polyline positions={routeCoords} color="#3b82f6" weight={5} opacity={0.8} />
+            <Polyline positions={routeCoords} color="#E8501F" weight={5} opacity={0.8} />
             <FitBounds coords={routeCoords} />
           </>
         )}

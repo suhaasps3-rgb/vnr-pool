@@ -15,7 +15,7 @@ export function VNRCarPool3DHero({ onAction }: { onAction?: () => void }) {
       <div className="flex flex-col md:flex-row h-full">
         {/* Left Section: VNR Carpool Details */}
         <div className="flex-1 p-8 md:p-12 relative z-10 flex flex-col justify-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold w-fit mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--hero-accent)]/10 border border-[var(--hero-accent)]/20 text-[var(--hero-accent)] text-xs font-semibold w-fit mb-4">
             <ShieldCheck className="w-4 h-4" /> VNR VJIET Exclusive Campus Network
           </div>
 
@@ -43,7 +43,7 @@ export function VNRCarPool3DHero({ onAction }: { onAction?: () => void }) {
           <div className="mt-8 flex items-center gap-4">
             <button 
               onClick={onAction}
-              className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium flex items-center gap-2 transition-all shadow-lg shadow-indigo-500/20"
+              className="px-6 py-3 rounded-xl bg-[var(--hero-accent)] hover:bg-[var(--hero-accent)] text-white font-medium flex items-center gap-2 transition-all shadow-lg shadow-[var(--hero-accent)]/20"
             >
               <Car className="w-4 h-4" /> Find a Ride
             </button>

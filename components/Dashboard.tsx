@@ -136,8 +136,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               onClick={() => setShowMenu(true)}
               className="flex items-center gap-3 hover:opacity-80 transition-opacity text-left"
             >
-              <div className="w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0 border border-blue-200 dark:border-blue-800">
-                <span className="text-blue-600 dark:text-blue-400 font-bold text-sm">
+              <div className="w-9 h-9 rounded-full bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/30 flex items-center justify-center flex-shrink-0 border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]">
+                <span className="text-[var(--hero-accent)] dark:text-[var(--hero-accent)] font-bold text-sm">
                   {firstName.charAt(0).toUpperCase()}
                 </span>
               </div>
@@ -194,8 +194,8 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
 
               <div className="p-6 border-b border-gray-100 dark:border-white/5">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center flex-shrink-0 border border-blue-200 dark:border-blue-800">
-                    <span className="text-blue-600 dark:text-blue-400 font-bold text-xl">
+                  <div className="w-12 h-12 rounded-full bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/40 flex items-center justify-center flex-shrink-0 border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]">
+                    <span className="text-[var(--hero-accent)] dark:text-[var(--hero-accent)] font-bold text-xl">
                       {firstName.charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -212,7 +212,7 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
                 <div className="px-4 space-y-1">
                   <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                     <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300 font-medium">
-                      <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-500">
+                      <div className="p-2 bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/20 rounded-lg text-[var(--hero-accent)]">
                         <Zap className="w-5 h-5" />
                       </div>
                       Theme
@@ -313,12 +313,12 @@ export default function Dashboard({ onSignOut, userId }: { onSignOut: () => void
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">Support</span>
               
               <a href="tel:+919949953311" className="flex items-center justify-center md:justify-start gap-3 px-6 py-3 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200/60 dark:border-white/10 rounded-full transition-all text-sm font-bold text-slate-700 dark:text-slate-300 w-full md:w-auto min-w-[280px]">
-                <Phone className="w-4 h-4 text-blue-500" />
+                <Phone className="w-4 h-4 text-[var(--hero-accent)]" />
                 +91 99499 53311
               </a>
 
               <a href="mailto:support.vnrpool2@gmail.com" className="flex items-center justify-center md:justify-start gap-3 px-6 py-3 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200/60 dark:border-white/10 rounded-full transition-all text-sm font-bold text-slate-700 dark:text-slate-300 w-full md:w-auto min-w-[280px]">
-                <Mail className="w-4 h-4 text-blue-500" />
+                <Mail className="w-4 h-4 text-[var(--hero-accent)]" />
                 support.vnrpool2@gmail.com
               </a>
             </div>

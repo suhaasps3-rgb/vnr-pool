@@ -90,12 +90,12 @@ export default function AIChatBot() {
       >
         <div
           onClick={() => setOpen(true)}
-          className="w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-2xl flex items-center justify-center transition-colors cursor-grab active:cursor-grabbing pointer-events-auto select-none"
+          className="w-14 h-14 rounded-full bg-[var(--hero-accent)] hover:brightness-90 text-white shadow-2xl flex items-center justify-center transition-colors cursor-grab active:cursor-grabbing pointer-events-auto select-none"
           aria-label="Open AI Assistant"
         >
           <MessageCircle className="w-6 h-6 pointer-events-none" />
           {/* Pulse ring */}
-          <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-30 animate-ping pointer-events-none" />
+          <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--hero-accent)] opacity-30 animate-ping pointer-events-none" />
         </div>
       </motion.div>
 
@@ -110,13 +110,13 @@ export default function AIChatBot() {
             className="fixed bottom-[84px] md:bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-24px)] h-[520px] max-h-[calc(100vh-100px)] flex flex-col rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0F172A] backdrop-blur-md"
           >
             {/* Header */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100 dark:border-white/5 bg-blue-50 dark:bg-blue-600/10">
-              <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100 dark:border-white/5 bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/10">
+              <div className="w-9 h-9 rounded-full bg-[var(--hero-accent)] flex items-center justify-center shrink-0">
                 <Bot className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-slate-900 dark:text-white text-sm">Veer — AI Assistant</p>
-                <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Powered by featherless.ai ✨</p>
+                <p className="text-xs text-[var(--hero-accent)] dark:text-[var(--hero-accent)] font-medium">Powered by featherless.ai ✨</p>
               </div>
               <button
                 onClick={() => setOpen(false)}
@@ -137,14 +137,14 @@ export default function AIChatBot() {
                   className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                    <div className="w-7 h-7 rounded-full bg-[var(--hero-accent)] flex items-center justify-center shrink-0 mt-0.5">
                       <Bot className="w-4 h-4 text-white" />
                     </div>
                   )}
                   <div
                     className={`max-w-[80%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
                       msg.role === "user"
-                        ? "bg-blue-600 text-white rounded-tr-sm"
+                        ? "bg-[var(--hero-accent)] text-white rounded-tr-sm"
                         : "bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-slate-100 rounded-tl-sm border border-slate-200/50 dark:border-white/5"
                     }`}
                     dangerouslySetInnerHTML={{ __html: formatText(msg.content) }}
@@ -154,13 +154,13 @@ export default function AIChatBot() {
 
               {loading && (
                 <div className="flex gap-2 items-center">
-                  <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-[var(--hero-accent)] flex items-center justify-center shrink-0">
                     <Bot className="w-4 h-4 text-white" />
                   </div>
                   <div className="bg-slate-100 dark:bg-white/5 px-4 py-2 rounded-2xl rounded-tl-sm flex items-center gap-1.5 border border-slate-200/50 dark:border-white/5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500/80 dark:bg-blue-400 animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500/80 dark:bg-blue-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500/80 dark:bg-blue-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--hero-accent)]/80 dark:bg-[var(--hero-accent)] animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--hero-accent)]/80 dark:bg-[var(--hero-accent)] animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--hero-accent)]/80 dark:bg-[var(--hero-accent)] animate-bounce" style={{ animationDelay: "300ms" }} />
                   </div>
                 </div>
               )}
@@ -178,7 +178,7 @@ export default function AIChatBot() {
                       setInput(prompt);
                       setTimeout(sendMessage, 50);
                     }}
-                    className="text-xs px-3 py-1.5 rounded-full border border-blue-200 dark:border-blue-500/40 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/20 transition-colors font-medium"
+                    className="text-xs px-3 py-1.5 rounded-full border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]/40 text-[var(--hero-accent)] dark:text-[var(--hero-accent)] hover:bg-[var(--hero-accent)]/10 dark:hover:bg-[var(--hero-accent)]/20 transition-colors font-medium"
                   >
                     {prompt}
                   </button>
@@ -194,14 +194,14 @@ export default function AIChatBot() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKey}
                 placeholder="Ask Veer anything..."
-                className="flex-1 bg-slate-100 dark:bg-white/5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500 text-sm px-4 py-2.5 rounded-xl outline-none focus:ring-1 focus:ring-blue-500 border border-slate-200/50 dark:border-white/5 transition-all"
+                className="flex-1 bg-slate-100 dark:bg-white/5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500 text-sm px-4 py-2.5 rounded-xl outline-none focus:ring-1 focus:ring-[var(--hero-accent)] border border-slate-200/50 dark:border-white/5 transition-all"
                 disabled={loading}
               />
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={sendMessage}
                 disabled={!input.trim() || loading}
-                className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors shrink-0"
+                className="w-10 h-10 rounded-xl bg-[var(--hero-accent)] hover:brightness-90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors shrink-0"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 text-white animate-spin" />

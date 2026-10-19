@@ -122,7 +122,7 @@ export default function RateUser({
             />
           </button>
         ))}
-        {rateMutation.isPending && <Loader2 className="w-5 h-5 animate-spin text-[#2563EB] ml-2" />}
+        {rateMutation.isPending && <Loader2 className="w-5 h-5 animate-spin text-[#E8501F] ml-2" />}
       </div>
     </div>
   );

@@ -605,7 +605,7 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
                 type="button" 
                 onClick={fetchAIFare}
                 disabled={aiLoading}
-                className="text-xs font-bold bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 px-3 py-1.5 rounded-lg border border-sky-200 dark:border-sky-500/20 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-colors flex items-center gap-1.5 shadow-sm"
+                className="text-xs font-bold bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/10 text-[var(--hero-accent)] dark:text-[var(--hero-accent)] px-3 py-1.5 rounded-lg border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]/20 hover:bg-[var(--hero-accent)]/10 dark:hover:bg-[var(--hero-accent)]/20 transition-colors flex items-center gap-1.5 shadow-sm"
               >
                 {aiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "✨"}
                 {aiLoading ? "Calculating..." : "AI Fair Fare Suggestion"}
@@ -616,11 +616,11 @@ export default function OfferSeatForm({ userId, onVehicleSelect }: { userId: str
           {formData.ride_category === 'personal_vehicle' && aiReasoning && (
             <motion.div 
               initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-3 bg-sky-50 dark:bg-sky-500/10 text-sky-800 dark:text-sky-300 text-sm font-medium rounded-xl border border-sky-200 dark:border-sky-500/20 leading-relaxed shadow-sm relative"
+              className="mb-6 p-3 bg-[var(--hero-accent)]/10 dark:bg-[var(--hero-accent)]/10 text-[var(--hero-accent)] dark:text-[var(--hero-accent)] text-sm font-medium rounded-xl border border-[var(--hero-accent)]/25 dark:border-[var(--hero-accent)]/20 leading-relaxed shadow-sm relative"
             >
               <div className="flex justify-between items-center mb-1">
                 <span className="font-bold block">🤖 AI Pricing Engine:</span>
-                <span className="text-[10px] text-sky-500/70 font-semibold uppercase tracking-wide">Powered by featherless.ai</span>
+                <span className="text-[10px] text-[var(--hero-accent)]/70 font-semibold uppercase tracking-wide">Powered by featherless.ai</span>
               </div>
               {aiReasoning}
             </motion.div>
