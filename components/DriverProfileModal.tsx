@@ -61,7 +61,7 @@ export default function DriverProfileModal({ driver, vehicleNumber, onClose }: D
 
           {/* Name & Basic Info */}
           <h3 className="text-xl font-bold text-[var(--text-primary)] text-center mb-1">{driver?.full_name}</h3>
-          <p className="text-sm text-slate-500 text-center mb-6">{driver?.branch} • {driver?.roll_no}</p>
+          <p className="text-sm text-slate-500 text-center mb-6">{driver?.roll_no ? `${driver?.branch} • ${driver.roll_no}` : driver?.branch}</p>
 
           {/* Stats Grid */}
           <div className="w-full grid grid-cols-2 gap-3 mb-6">
@@ -78,14 +78,21 @@ export default function DriverProfileModal({ driver, vehicleNumber, onClose }: D
             </div>
           </div>
 
-          {/* Mobile Number Button */}
-          <a 
-            href={`tel:${driver?.mobile_number}`}
-            className="w-full flex items-center justify-center gap-2 bg-[var(--accent-primary)] hover:bg-[#178361] text-white py-3.5 rounded-xl font-bold transition-colors shadow-sm"
-          >
-            <Phone className="w-5 h-5" />
-            Call {driver?.mobile_number}
-          </a>
+          {/* Mobile number: the server only returns it once the booking is approved */}
+          {driver?.mobile_number ? (
+            <a
+              href={`tel:${driver.mobile_number}`}
+              className="w-full flex items-center justify-center gap-2 bg-[var(--accent-primary)] hover:bg-[#178361] text-white py-3.5 rounded-xl font-bold transition-colors shadow-sm"
+            >
+              <Phone className="w-5 h-5" />
+              Call {driver.mobile_number}
+            </a>
+          ) : (
+            <div className="w-full flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800/50 text-slate-500 py-3.5 rounded-xl text-sm font-semibold border border-[var(--border-subtle)]">
+              <Phone className="w-4 h-4" />
+              Phone number is shared once your booking is approved
+            </div>
+          )}
         </div>
       </motion.div>
     </div>

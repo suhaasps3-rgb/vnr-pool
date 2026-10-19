@@ -109,9 +109,7 @@ export default function Profile({ userId }: { userId: string }) {
     queryKey: ["profile", userId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", userId)
+        .rpc("get_my_profile")
         .single();
       if (error) throw error;
       return data;

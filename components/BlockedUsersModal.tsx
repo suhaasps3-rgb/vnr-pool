@@ -16,7 +16,7 @@ export default function BlockedUsersModal({ userId, onClose }: { userId: string,
         .from('blocked_users')
         .select(`
           blocked_id,
-          blocked:users!blocked_id(full_name, branch, roll_no)
+          blocked:users!blocked_id(full_name, branch)
         `)
         .eq('blocker_id', userId);
       
@@ -69,7 +69,7 @@ export default function BlockedUsersModal({ userId, onClose }: { userId: string,
               <div key={block.blocked_id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/10">
                 <div>
                   <h3 className="font-bold text-gray-900 dark:text-white">{block.blocked?.full_name}</h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{block.blocked?.roll_no} • {block.blocked?.branch}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{block.blocked?.branch}</p>
                 </div>
                 <button
                   onClick={() => handleUnblock(block.blocked_id)}

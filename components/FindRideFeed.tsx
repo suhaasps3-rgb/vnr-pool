@@ -121,8 +121,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
     queryFn: async () => {
       const queryStr = `
         *,
-        driver:users!driver_id(full_name, mobile_number, gender, branch, roll_no, avatar_url, rating_sum, rating_count),
-        bookings(id, passenger_id, status, pickup_location, dropoff_location, calculated_price, passenger:users!passenger_id(full_name, gender, roll_no, avatar_url))
+        driver:users!driver_id(full_name, gender, branch, avatar_url, rating_sum, rating_count),
+        bookings(id, passenger_id, status, pickup_location, dropoff_location, calculated_price, passenger:users!passenger_id(full_name, gender, avatar_url))
       `;
 
       if (mode === "feed") {
@@ -231,6 +231,23 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
       }
     }
   });
+
+  // Phone numbers and roll numbers are never sent in the ride feed. The server
+  // returns them only for rides you are part of: the driver of a ride you have
+  // an approved booking on, or the passengers on a ride you drive.
+  const contactSignature = (rides || [])
+    .flatMap((r: any) => (r.bookings || []).map((b: any) => `${b.id}:${b.status}`))
+    .join(',');
+  const { data: contactRows } = useQuery({
+    queryKey: ["ride_contacts", userId, contactSignature],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('get_my_ride_contacts');
+      if (error) throw error;
+      return (data || []) as { ride_id: string; user_id: string; full_name: string; mobile_number: string | null; roll_no: string | null }[];
+    },
+  });
+  const contactFor = (rideId: string, personId: string) =>
+    contactRows?.find(c => c.ride_id === rideId && c.user_id === personId);
 
   const { data: hasActiveTrip } = useQuery({
     queryKey: ["activeTrip", userId],
@@ -560,11 +577,6 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
     } catch (err: any) {
       toast.error(err.message || "Failed to block user.");
     }
-  };
-
-  const maskMobile = (mobile: string, isApproved: boolean) => {
-    if (isApproved) return mobile;
-        return `+91 ${mobile.slice(0, 2)}XXX X${mobile.slice(-4)}`;
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -987,7 +999,13 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                 <div className="flex justify-between items-start mb-4 md:mb-6">
                   <div className="flex items-start md:items-center gap-3 md:gap-4 flex-1 min-w-0">
                     <div 
-                      onClick={() => setSelectedDriverForModal({ driver: ride.driver, vehicleNumber: ride.vehicle_number })}
+                      onClick={() => {
+                        const contact = contactFor(ride.id, ride.driver_id);
+                        setSelectedDriverForModal({
+                          driver: { ...ride.driver, mobile_number: contact?.mobile_number, roll_no: contact?.roll_no },
+                          vehicleNumber: ride.vehicle_number,
+                        });
+                      }}
                       className="shrink-0 cursor-pointer w-10 h-10 md:w-12 md:h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-lg md:text-xl overflow-hidden shadow-sm hover:scale-105 transition-transform border-2 border-transparent hover:border-indigo-400"
                     >
                       {ride.driver?.avatar_url ? (
@@ -1113,9 +1131,11 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                         Women Only
                       </span>
                     )}
-                    <span className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400 font-medium ml-2">
-                      <Shield className="w-4 h-4" /> {maskMobile(ride.driver?.mobile_number, isApproved)}
-                    </span>
+                    {ride.driver_id !== userId && (
+                      <span className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400 font-medium ml-2">
+                        <Shield className="w-4 h-4" /> {contactFor(ride.id, ride.driver_id)?.mobile_number || "Number shared after approval"}
+                      </span>
+                    )}
                     {ride.ride_category === 'personal_vehicle' && ride.vehicle_number && (
                       <span className="bg-orange-50 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 dark:border-orange-500/30 uppercase tracking-widest ml-1 shadow-sm">
                         {/* Mask plate in public feed — only reveal when approved or driver's own ride */}
@@ -1286,8 +1306,8 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                               <User className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                             </div>
                             <div>
-                              <p className="text-sm font-bold text-[#0F172A] dark:text-white">{booking.users?.full_name || 'Passenger'}</p>
-                              <p className="text-xs text-slate-500">{maskMobile(booking.users?.mobile_number, true)}</p>
+                              <p className="text-sm font-bold text-[#0F172A] dark:text-white">{booking.passenger?.full_name || 'Passenger'}</p>
+                              <p className="text-xs text-slate-500">{contactFor(ride.id, booking.passenger_id)?.mobile_number || ''}</p>
                             </div>
                           </div>
                           <RateUser 
@@ -1310,7 +1330,9 @@ export default function FindRideFeed({ userId, onVehicleSelect, mode = "feed", o
                         <div className="text-sm flex-1">
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-gray-900 dark:text-white">{booking.passenger?.full_name}</span>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">({booking.passenger?.roll_no})</span>
+                            {contactFor(ride.id, booking.passenger_id)?.roll_no && (
+                              <span className="text-xs text-gray-500 dark:text-gray-400">({contactFor(ride.id, booking.passenger_id)?.roll_no})</span>
+                            )}
                             {(() => {
                               let renderPrice = booking.calculated_price;
                               if (ride.ride_category === 'auto_split' && baseDynamicSplit) {
