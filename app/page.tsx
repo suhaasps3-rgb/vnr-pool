@@ -9,7 +9,7 @@ export default async function Page() {
 
   let profile = null;
   if (user) {
-    const { data } = await supabase.from('users').select('*').eq('id', user.id).single();
+    const { data } = await supabase.rpc('get_my_profile').single();
     profile = data;
   }
 
