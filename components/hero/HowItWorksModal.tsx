@@ -9,17 +9,17 @@ interface HowItWorksModalProps {
 export default function HowItWorksModal({ isOpen, onClose }: HowItWorksModalProps) {
   const steps = [
     {
-      icon: <Search className="w-6 h-6 text-[#4F7CFF]" />,
+      icon: <Search className="w-6 h-6 text-[var(--hero-accent)]" />,
       title: "Find Your Route",
       description: "Enter your destination or pickup point. The app scans the live network of VNR students heading the same way.",
     },
     {
-      icon: <ShieldCheck className="w-6 h-6 text-[#34C759]" />,
+      icon: <ShieldCheck className="w-6 h-6 text-[var(--hero-success)]" />,
       title: "Secure Matching",
       description: "Connect instantly with 100% verified peers. Dedicated filters ensure safety and comfort for all riders.",
     },
     {
-      icon: <Zap className="w-6 h-6 text-[#FFD84D]" />,
+      icon: <Zap className="w-6 h-6 text-[var(--hero-destination)]" />,
       title: "Instant Split",
       description: "No awkward money talks. The system automatically calculates and splits the fuel cost fairly among passengers.",
     },
@@ -81,7 +81,7 @@ export default function HowItWorksModal({ isOpen, onClose }: HowItWorksModalProp
             <div className="p-6 bg-slate-50 dark:bg-white/5 border-t border-slate-100 dark:border-white/5 text-center">
               <button
                 onClick={onClose}
-                className="w-full py-4 bg-[#4F7CFF] hover:bg-[#3D63CC] text-white font-bold rounded-xl transition-colors shadow-lg shadow-[#4F7CFF]/20"
+                className="w-full py-4 bg-[var(--hero-accent)] hover:brightness-90 text-white font-bold rounded-xl transition-colors shadow-lg shadow-[var(--hero-accent)]/20"
               >
                 Got It, Let's Go!
               </button>

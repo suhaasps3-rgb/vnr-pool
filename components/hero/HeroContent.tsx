@@ -17,62 +17,62 @@ export default function HeroContent({ onJoin }: HeroContentProps) {
       <HowItWorksModal isOpen={showHowItWorks} onClose={() => setShowHowItWorks(false)} />
       <div className="flex flex-col justify-center h-full max-w-xl z-20 relative px-6 md:px-12">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
       >
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-4 sm:mb-6 transition-colors">
-          Every Empty Seat Is An <span className="text-[#4F7CFF] dark:text-[#638fff] drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(79,124,255,0.4)]">Opportunity.</span>
+        <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-5 text-[10px] uppercase tracking-[0.2em] font-semibold text-stone-600 dark:text-stone-300 bg-stone-900/5 dark:bg-white/5 ring-1 ring-stone-900/10 dark:ring-white/10">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--hero-accent)]" />
+          VNR VJIET carpooling
+        </span>
+        <h1 style={{ fontFamily: "var(--font-display), sans-serif" }} className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-stone-900 dark:text-stone-50 leading-[1.05] tracking-[-0.03em] mb-4 sm:mb-6 transition-colors">
+          Every empty seat is an <span className="text-[var(--hero-accent)]">opportunity.</span>
         </h1>
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+        transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1], delay: 0.1 }}
       >
-        <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium mb-10 leading-relaxed max-w-md transition-colors">
+        <p className="text-base sm:text-lg md:text-xl text-stone-600 dark:text-stone-300 font-medium mb-10 leading-relaxed max-w-md transition-colors">
           Turn daily commutes into shared journeys. Save money, reduce traffic, and meet people travelling your way.
         </p>
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+        transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1], delay: 0.2 }}
         className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
       >
         <button
           onClick={onJoin}
-          className="group flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl dark:shadow-[0_0_20px_rgba(255,255,255,0.1)] w-full sm:w-auto"
+          className="group flex items-center justify-between gap-4 bg-[var(--hero-accent)] text-white pl-7 pr-2 py-2 rounded-full font-bold text-lg shadow-[0_12px_30px_-10px_var(--hero-glow)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:brightness-105 active:scale-[0.98] w-full sm:w-auto"
         >
           Join the Ride
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          <span className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px group-hover:scale-105">
+            <ArrowRight className="w-5 h-5" strokeWidth={1.5} />
+          </span>
         </button>
-        
-        <button 
+
+        <button
           onClick={() => setShowHowItWorks(true)}
-          className="group flex items-center justify-center gap-2 bg-white dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all w-full sm:w-auto backdrop-blur-md"
+          className="group flex items-center justify-center gap-2 bg-transparent text-stone-700 dark:text-stone-200 ring-1 ring-stone-900/10 dark:ring-white/15 px-7 py-[18px] rounded-full font-semibold text-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-stone-900/5 dark:hover:bg-white/10 active:scale-[0.98] w-full sm:w-auto"
         >
-          <PlayCircle className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors" />
+          <PlayCircle className="w-5 h-5 text-stone-400 group-hover:text-[var(--hero-accent)] transition-colors" strokeWidth={1.5} />
           See How It Works
         </button>
       </motion.div>
-      
-      {/* Social Proof / Trust */}
-      <motion.div
+
+      <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.6 }}
-        className="hidden md:flex mt-16 items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400 transition-colors"
+        className="hidden md:block mt-16 text-sm font-medium text-stone-500 dark:text-stone-400 transition-colors"
       >
-        <div className="flex -space-x-2">
-          <div className="w-8 h-8 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600">S</div>
-          <div className="w-8 h-8 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-xs font-bold text-emerald-600">P</div>
-          <div className="w-8 h-8 rounded-full border-2 border-white bg-purple-100 flex items-center justify-center text-xs font-bold text-purple-600">A</div>
-        </div>
-        <p>Over <span className="text-slate-900 dark:text-white font-bold">1,200</span> students ride daily.</p>
-      </motion.div>
+        Built by VNR VJIET students, for VNR VJIET students.
+      </motion.p>
       </div>
     </>
   );

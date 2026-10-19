@@ -9,10 +9,10 @@
 
 :root {
   /* --- Hero Landing Page Tokens --- */
-  --hero-bg: #F8FAFC;
-  --hero-accent: #4F7CFF;
-  --hero-success: #10B981;
-  --hero-road: #CBD5E1;
+  --hero-bg: #FAF6EF;
+  --hero-accent: #E8501F;
+  --hero-success: #1F9D6B;
+  --hero-road: #3A322B;
   --hero-glass-bg: rgba(255, 255, 255, 0.7);
   --hero-glass-border: rgba(255, 255, 255, 0.5);
 
@@ -46,10 +46,10 @@
 
 .dark {
   /* --- Hero Landing Page Tokens --- */
-  --hero-bg: #0B0F19;
-  --hero-accent: #638fff;
-  --hero-success: #10B981;
-  --hero-road: #334155;
+  --hero-bg: #110E0B;
+  --hero-accent: #FF6B3D;
+  --hero-success: #2BC48A;
+  --hero-road: #5A4F45;
   --hero-glass-bg: rgba(11, 15, 25, 0.7);
   --hero-glass-border: rgba(255, 255, 255, 0.1);
 

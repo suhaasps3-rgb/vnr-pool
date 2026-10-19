@@ -31,7 +31,7 @@ export default function ProductDemoHUD() {
             <motion.div 
               animate={{ rotate: 360 }} 
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              className="w-12 h-12 rounded-full border-t-2 border-r-2 border-[var(--hero-accent)] flex items-center justify-center shadow-[0_0_15px_rgba(79,124,255,0.3)]"
+              className="w-12 h-12 rounded-full border-t-2 border-r-2 border-[var(--hero-accent)] flex items-center justify-center shadow-[0_0_15px_rgba(232,80,31,0.3)]"
             >
               <Search className="w-5 h-5 text-[var(--hero-accent)]" />
             </motion.div>
@@ -55,7 +55,7 @@ export default function ProductDemoHUD() {
             className="bg-[var(--hero-glass-bg)] backdrop-blur-2xl border border-[var(--hero-glass-border)] shadow-[var(--shadow-large)] p-6 rounded-3xl flex flex-col gap-4 w-full"
           >
             <div className="flex items-center gap-3 mb-2">
-              <CheckCircle2 className="w-6 h-6 text-[var(--hero-success)] drop-shadow-[0_0_8px_rgba(52,199,89,0.4)]" />
+              <CheckCircle2 className="w-6 h-6 text-[var(--hero-success)] drop-shadow-[0_0_8px_rgba(31,157,107,0.4)]" />
               <h3 className="text-slate-900 dark:text-white font-bold text-lg">{passengers.length} compatible riders</h3>
             </div>
             
@@ -74,7 +74,7 @@ export default function ProductDemoHUD() {
                   className="flex items-center justify-between text-sm"
                 >
                   <span className="font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[var(--hero-success)] shadow-[0_0_5px_rgba(52,199,89,0.5)]"></span>
+                    <span className="w-2 h-2 rounded-full bg-[var(--hero-success)] shadow-[0_0_5px_rgba(31,157,107,0.5)]"></span>
                     {p.name}
                   </span>
                   <span className="text-[var(--hero-success)] font-bold">{p.matchScore}% Match</span>
@@ -96,9 +96,9 @@ export default function ProductDemoHUD() {
             <motion.div 
               animate={{ scale: [1, 1.1, 1] }} 
               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              className="w-12 h-12 bg-indigo-50 border border-indigo-100 rounded-full flex items-center justify-center"
+              className="w-12 h-12 bg-[var(--hero-accent)]/10 border border-[var(--hero-accent)]/20 rounded-full flex items-center justify-center"
             >
-              <Route className="w-6 h-6 text-indigo-500" />
+              <Route className="w-6 h-6 text-[var(--hero-accent)]" />
             </motion.div>
             <div>
               <h3 className="text-slate-900 dark:text-white font-bold text-lg">Evaluating alternatives</h3>
