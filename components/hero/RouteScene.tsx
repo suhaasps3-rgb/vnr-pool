@@ -27,14 +27,14 @@ export default function RouteScene() {
   const scale = useTransform(
     smoothedProgress,
     [0, 0.4, 0.6, 0.9, 1],
-    [1.1, 1.15, 1.05, 1.05, 0.7]
+    [0.95, 1, 0.95, 0.95, 0.8]
   );
   
   // Slight camera pan (dolly left/right) to keep the frame alive
   const xOffset = useTransform(
     smoothedProgress,
     [0, 1],
-    [0, isMirrored ? -50 : 50]
+    [0, isMirrored ? -16 : 16]
   );
 
   // Fade out slightly during the "Network Reveal" instead of blurring to prevent GPU lag
